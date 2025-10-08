@@ -30,11 +30,11 @@ public class BallComponent implements Component, Pool.Poolable {
 
         float angle; // Góc bật theo độ
         if (direction == Direction.LEFT) {
-            angle = MathUtils.random(120, 150); // Bật về trái → góc 120-150°
+            angle = MathUtils.random(119, 149); // Bật về trái → góc 120-150°
         } else if (direction == Direction.RIGHT) {
-            angle = MathUtils.random(30, 60);   // Bật về phải → góc 30-60°
+            angle = MathUtils.random(31, 59);   // Bật về phải → góc 30-60°
         } else {
-            angle = MathUtils.random(60, 120);  // Bật thẳng → góc 60-120°
+            angle = MathUtils.random(61, 119);  // Bật thẳng → góc 60-120°
         }
 
         // Reset vận tốc hiện tại để tránh cộng dồn
@@ -64,7 +64,7 @@ public class BallComponent implements Component, Pool.Poolable {
 
         // Áp dụng xung lực ngược trên trục X
         ballB2body.applyLinearImpulse(new Vector2(impulse, 0), ballB2body.getWorldCenter(), true);
-        System.out.println("ReverseX: " + ballB2body.getLinearVelocity());
+        System.out.println("Đảo X: " + ballB2body.getLinearVelocity());
     }
 
     /**
@@ -76,7 +76,7 @@ public class BallComponent implements Component, Pool.Poolable {
 
         // Áp dụng xung lực ngược trên trục Y
         ballB2body.applyLinearImpulse(new Vector2(0, impulse), ballB2body.getWorldCenter(), true);
-        System.out.println("ReverseY: " + ballB2body.getLinearVelocity());
+        System.out.println("Đảo Y: " + ballB2body.getLinearVelocity());
     }
 
     /**
