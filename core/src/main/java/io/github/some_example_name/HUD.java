@@ -17,6 +17,14 @@ public class HUD {
     private int level;
     private int highScore;
     private long startTime;
+    private String mapName;
+
+    public HUD(String mapName) {
+        this.mapName = mapName;
+    }
+    public void setMapName(String mapName) {
+        this.mapName = mapName;
+    }
 
     public HUD() {
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/GUNDAM.ttf"));
@@ -58,10 +66,11 @@ public class HUD {
         long seconds = elapsed % 60;
         String time = String.format("%02d:%02d", minutes, seconds);
 
-        font.draw(batch, "SCORE: " + score, 20, Gdx.graphics.getHeight() - 20);
-        font.draw(batch, "HEALTH: " + health, 20, Gdx.graphics.getHeight() - 50);
-        font.draw(batch, "LEVEL: " + level, 20, Gdx.graphics.getHeight() - 80);
-        font.draw(batch, "HIGHSCORE: " + highScore, 20, Gdx.graphics.getHeight() - 110);
+        font.draw(batch, "Map: " + mapName, 20, Gdx.graphics.getHeight() - 20);
+        font.draw(batch, "SCORE: " + score, 20, Gdx.graphics.getHeight() - 50);
+        font.draw(batch, "HEALTH: " + health, 20, Gdx.graphics.getHeight() - 80);
+        font.draw(batch, "LEVEL: " + level, 20, Gdx.graphics.getHeight() - 110);
+        font.draw(batch, "HIGHSCORE: " + highScore, 20, Gdx.graphics.getHeight() - 140);
         font.draw(batch, "TIME: " + time, Gdx.graphics.getWidth() - 180, Gdx.graphics.getHeight() - 20);
     }
 
