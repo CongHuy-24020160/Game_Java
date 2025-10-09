@@ -78,6 +78,40 @@ public class BallComponent implements Component, Pool.Poolable {
         ballB2body.applyLinearImpulse(new Vector2(0, impulse), ballB2body.getWorldCenter(), true);
         System.out.println("Đảo Y: " + ballB2body.getLinearVelocity());
     }
+    //getter and setter
+    public float getBallSpeed() {
+        return BallSpeed;
+    }
+    public void setBallSpeed(float ballSpeed) {
+        BallSpeed = ballSpeed;
+    }
+    public boolean isDead() {
+        return isDead;
+    }
+    public void setDead(boolean dead) {
+        isDead = dead;
+    }
+    public boolean isCanBounce() {
+        return canBounce;
+    }
+
+    public void setCanBounce(boolean canBounce) {
+        this.canBounce = canBounce;
+    }
+    public boolean isCanLinked() {
+        return canLinked;
+    }
+    public void setCanLinked(boolean canLinked) {
+        this.canLinked = canLinked;
+    }
+    public Vector2 getPreSpeed() {
+        return preSpeed;
+    }
+
+    public void setPreSpeed(Vector2 preSpeed) {
+        this.preSpeed = preSpeed;
+    }
+    
 
     /**
      * Đặt lại trạng thái bóng về mặc định

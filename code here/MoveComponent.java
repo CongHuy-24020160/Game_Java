@@ -17,6 +17,36 @@ public class MoveComponent implements Component, Pool.Poolable {
     // Đánh dấu có được hiển thị hay không
     public boolean hidden = false;
 
+    //getter và setter
+    public Vector3 getPos() {
+        return pos;
+    }
+
+    public void setPos(float x, float y, float z) {
+        this.pos.set(x, y, z);
+    }
+    public Vector2 getAcceleration() {
+        return acceleration;
+    }
+    public void setAcceleration(float x, float y) {
+        this.acceleration.set(x, y);
+    }
+    public float getAngle() {
+        return angle;
+    }
+
+    public void setAngle(float angle) {
+        this.angle = angle;
+    }
+    public boolean isHidden() {
+        return hidden;
+    }
+    
+    public void setHidden(boolean hidden) {
+        this.hidden = hidden;
+    }
+    // reset về trạng thái ban đầu
+
 
     @Override
 
