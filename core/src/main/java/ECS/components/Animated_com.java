@@ -1,11 +1,10 @@
-// sau khi có đủ cấu trúc thì import lại packback vào đây
+package ECS.components;// sau khi có đủ cấu trúc thì import lại packback vào đây
 
 
-// cái class này để đánh dấu là thực thể đó có khả năng chuyển động 
+// cái class này để đánh dấu là thực thể đó có khả năng chuyển động
 
-public package src;
 
 class Animated_com {
 
-    
+
 }

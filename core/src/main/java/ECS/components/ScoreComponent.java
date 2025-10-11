@@ -1,4 +1,4 @@
-//import backage bô đây
+package ECS.components;//import backage bô đây
 
 import com.badlogic.ashley.core.Component;
 

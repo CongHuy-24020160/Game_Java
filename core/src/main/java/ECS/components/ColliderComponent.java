@@ -1,4 +1,4 @@
-// import packages;
+package ECS.components;// import packages;
 
 import com.badlogic.ashlay.core.Component;
 import com.badlogic.ashley.core.Entity;

@@ -1,5 +1,5 @@
-
-// import packback vô đây sau khi code 
+package ECS.components;
+// import packback vô đây sau khi code
 
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
@@ -10,7 +10,7 @@ public class LinkedEntityComponent {
     public Entity getLinkedEntity() {
         return LinkedEntity;
     }
-    
+
     public void setLinkedEntity(Entity carry)  {
         System.out.println(carry);
         this.LinkedEntity = carry;

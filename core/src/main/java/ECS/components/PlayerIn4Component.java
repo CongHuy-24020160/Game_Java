@@ -1,4 +1,4 @@
-package com.taptap.breakout.ecs.components;
+package ECS.components;
 
 import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -34,7 +34,7 @@ public class PlayerIn4Component implements Component, Pool.Poolable {
     public void setSizeLevel(PaddleSize sizeLevel) {
         this.sizeLevel = sizeLevel;
     }
-    
+
 
     @Override
     public void reset() {
