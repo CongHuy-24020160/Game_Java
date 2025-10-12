@@ -5,27 +5,27 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.math.Vector2;
-import com.Hud;
-import com.Utilities;
-import com.ECS.components.*;
-import com.level.LevelManager;
-import com.tlisteners.ScoreChangeListener;
-import com.utils.ParticlesManager;
+import Hud;
+import Utilities;
+import ECS.components.*;
+import level.LevelManager;
+import tlisteners.ScoreChangeListener;
+import utils.ParticlesManager;
 
 /*
     System chịu trách nhiệm xử lý logic *sau khi* các va chạm vật lý xảy ra.
  */
 public class CollisionSystem extends IteratingSystem {
-    private ComponentMapper<CollisionComponent> collisionC
+    private final ComponentMapper<CollisionComponent> collisionC
         = ComponentMapper.getFor(CollisionComponent.class);
-    private ComponentMapper<B2BodyComponent> b2BodyC
+    private final ComponentMapper<B2BodyComponent> b2BodyC
         = ComponentMapper.getFor(B2BodyComponent.class);
-    private ComponentMapper<BallComponent> ballC
+    private final ComponentMapper<BallComponent> ballC
         = ComponentMapper.getFor(BallComponent.class);
-    private ComponentMapper<TypeComponent> typeC
+    private final ComponentMapper<TypeComponent> typeC
         = ComponentMapper.getFor(TypeComponent.class);
-    private ComponentMapper<TextureComponent> textureC =
-        ComponentMapper.getFor(TextureComponent.class);
+    private final ComponentMapper<TextureComponent> textureC
+        = ComponentMapper.getFor(TextureComponent.class);
 
     private final ScoreChangeListener scoreChangeListener;
     private final LevelManager levelManager;

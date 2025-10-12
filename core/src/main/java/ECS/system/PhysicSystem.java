@@ -8,7 +8,7 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
-import components.B2BodyComponent;
+import ECS.components.B2BodyComponent;
 
 public class PhysicSystem extends IteratingSystem {
 

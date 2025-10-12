@@ -7,11 +7,11 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
-import com.Hud;
-import com.Utilities;
-import com.controller.KeyboardController;
-import com.ecs.components.*;
-import com.level.LevelManager;
+import Hud;
+import Utilities;
+import controller.KeyboardController;
+import ecs.components.*;
+import level.LevelManager;
 
 /*
     System chịu trách nhiệm xử lý các tín hiệu điều khiển từ người chơi (bàn phím).

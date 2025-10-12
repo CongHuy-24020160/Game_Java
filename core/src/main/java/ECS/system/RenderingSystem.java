@@ -7,9 +7,9 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
-import com.Utilities;
-import com.ECS.components.B2BodyComponent;
-import com.ECS.components.TextureComponent;
+import Utilities;
+import ECS.components.B2BodyComponent;
+import ECS.components.TextureComponent;
 import java.util.Comparator;
 
 public class RenderingSystem extends IteratingSystem {
