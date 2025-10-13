@@ -1,12 +1,13 @@
-package game.System;
+package ECS.system;
 
-import Hud;
-import Utilities;
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.math.Vector2;
+import Hud;
+import Utilities;
+import ECS.components.*;
 import level.LevelManager;
 import tlisteners.ScoreChangeListener;
 import utils.ParticlesManager;

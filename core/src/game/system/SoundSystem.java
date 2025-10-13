@@ -1,13 +1,13 @@
-package game.System;
+package ECS.system;
 
-import AppPreferences;
-import ECS.components.CollisionComponent;
-import ECS.components.SoundComponent;
-import ECS.components.TypeComponent;
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import AppPreferences;
+import ECS.components.CollisionComponent;
+import ECS.components.SoundComponent;
+import ECS.components.TypeComponent;
 import utils.SoundUtil;
 
 /**

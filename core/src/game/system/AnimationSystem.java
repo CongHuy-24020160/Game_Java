@@ -1,4 +1,4 @@
-package game.System;
+package game.system;
 
 /*
     System để xử lý component animation của entity

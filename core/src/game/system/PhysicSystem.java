@@ -1,6 +1,5 @@
-package game.System;
+package ECS.system;
 
-import ECS.components.B2BodyComponent;
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
@@ -9,6 +8,7 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
+import ECS.components.B2BodyComponent;
 
 public class PhysicSystem extends IteratingSystem {
 

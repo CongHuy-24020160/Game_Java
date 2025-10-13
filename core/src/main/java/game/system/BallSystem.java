@@ -1,16 +1,18 @@
-package game.System;
+package game.system;
 
-import ECS.components.B2BodyComponent;
-import ECS.components.BallComponent;
-import Hud;
-import Utilities;
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.math.Vector2;
-import level.LevelManager;
-import utils.SoundUtil;
+import game.Hud;
+import game.Utilities;
+import game.component.PhysicsBodyComponent;
+import game.component.BallComponent;
+import game.level.LevelManager;
+import game.Utils.UtilSound;
+
+import java.util.logging.Logger;
 
 /*
     System quản lý các logic đặc thù của quả bóng,
@@ -22,14 +24,14 @@ public class BallSystem extends IteratingSystem {
 
     private ComponentMapper<BallComponent> ballMapper
         = ComponentMapper.getFor(BallComponent.class);
-    private ComponentMapper<B2BodyComponent> b2bodyMapper
-        = ComponentMapper.getFor(B2BodyComponent.class);
+    private ComponentMapper<PhysicsBodyComponent> b2bodyMapper
+        = ComponentMapper.getFor(PhysicsBodyComponent.class);
 
     private final Hud hud;
     private final LevelManager levelManager;
 
     public BallSystem(Hud hud, LevelManager levelManager){
-        super(Family.all(BallComponent.class, B2BodyComponent.class).get());
+        super(Family.all(BallComponent.class, PhysicsBodyComponent.class).get());
         this.hud = hud;
         this.levelManager = levelManager;
     }
@@ -37,7 +39,7 @@ public class BallSystem extends IteratingSystem {
     @Override
     protected void processEntity(Entity entity, float v) {
         final BallComponent ballC = ballMapper.get(entity);
-        final B2BodyComponent ballB2body = b2bodyMapper.get(entity);
+        final PhysicsBodyComponent ballB2body = b2bodyMapper.get(entity);
 
         // Bỏ qua nếu bóng đã bị hủy (ví dụ: khi tải màn chơi mới).
         if(ballB2body.isDead) return;
@@ -49,7 +51,7 @@ public class BallSystem extends IteratingSystem {
     /**
      * xử lý va chạm với 3 cạnh trên, trái, và phải của màn hình.
      */
-    private void handleScreenBoundaryCollisions(BallComponent ballC, B2BodyComponent ballB2body) {
+    private void handleScreenBoundaryCollisions(BallComponent ballC, PhysicsBodyComponent ballB2body) {
         final Vector2 ballPosition = ballB2body.body.getPosition();
         final float ballRadius = ballB2body.body.getFixtureList().get(0).getShape().getRadius();
 
@@ -69,20 +71,20 @@ public class BallSystem extends IteratingSystem {
     /**
      * xử lý khi bóng rơi ra khỏi cạnh dưới.
      */
-    private void handleOutOfBounds(BallComponent ballC, B2BodyComponent ballB2body) {
+    private void handleOutOfBounds(BallComponent ballC, PhysicsBodyComponent ballB2body) {
         final Vector2 ballPosition = ballB2body.body.getPosition();
         final float ballRadius = ballB2body.body.getFixtureList().get(0).getShape().getRadius();
 
         // Chỉ thực hiện khi bóng rơi qua cạnh dưới và chưa bị xử lý trước đó.
         if(ballPosition.y - ballRadius <= 0 && !ballC.isDead){
-            SoundUtil.getInstance().playExplosion();
+            UtilSound.getInstance().playExplosion();
 
             // Giảm mạng sống và cập nhật hiển thị.
-            hud.setLives(hud.getLives() - 1);
+            hud.setHealth(hud.getHealth() - 1);
             hud.updateLives();
 
             // Kiểm tra điều kiện thua cuộc.
-            if(hud.getLives() <= 0){
+            if(hud.getHealth() <= 0){
                 hud.showGameOverDialog();
             }
 
@@ -94,7 +96,7 @@ public class BallSystem extends IteratingSystem {
 
             // Đặt lại các thuộc tính của bóng cho lượt chơi tiếp theo.
             ballC.reset();
-            ballC.speed = DEFAULT_BALL_SPEED;
+            ballC.getBallSpeed() = DEFAULT_BALL_SPEED;
         }
     }
 }
