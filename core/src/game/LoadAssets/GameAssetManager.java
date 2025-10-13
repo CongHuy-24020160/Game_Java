@@ -1,4 +1,4 @@
-package LoadAssets;
+package game.LoadAssets;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
