@@ -1,4 +1,4 @@
-// import các package cần thiết
+package game.component;// import các package cần thiết
 import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2; // Vector 2 chiều
@@ -111,7 +111,7 @@ public class BallComponent implements Component, Pool.Poolable {
     public void setPreSpeed(Vector2 preSpeed) {
         this.preSpeed = preSpeed;
     }
-    
+
 
     /**
      * Đặt lại trạng thái bóng về mặc định

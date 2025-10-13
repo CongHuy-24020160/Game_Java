@@ -1,4 +1,4 @@
-// import backage vô đây
+package game.component;// import backage vô đây
 
 import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.math.Vector2;
@@ -41,7 +41,7 @@ public class MoveComponent implements Component, Pool.Poolable {
     public boolean isHidden() {
         return hidden;
     }
-    
+
     public void setHidden(boolean hidden) {
         this.hidden = hidden;
     }

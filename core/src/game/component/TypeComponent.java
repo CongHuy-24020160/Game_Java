@@ -1,4 +1,4 @@
-// import package vô đây
+package game.component;// import package vô đây
 
 import com.badlogic.ashley.core.component;
 

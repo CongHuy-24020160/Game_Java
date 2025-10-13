@@ -1,4 +1,4 @@
-// import packages vô đây
+package game.component;// import packages vô đây
 
 import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;

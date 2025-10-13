@@ -1,4 +1,4 @@
-//import backage bô đây
+package game.component;//import backage bô đây
 
 import com.badlogic.ashley.core.Component;
 
