@@ -6,7 +6,7 @@ import com.badlogic.gdx.utils.Pool;
 /**
  * thực thể này có khả năng va chạm
  */
-public class colliderComponent implements Pool.Poolable, Component {
+public class ColliderComponent implements Pool.Poolable, Component {
     // thực thể mà đối tượng va chạm gần nhất
     public Entity tagertEntity;
     // biến cờ để xác định xem thực thể có thể va chạm hay không
