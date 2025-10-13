@@ -142,5 +142,4 @@ public class MenuScreen implements Screen {
         stage.dispose();
         skin.dispose();
     }
-    }
 }

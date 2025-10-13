@@ -1,7 +1,7 @@
 // import package vô đây
 
 import com.badlogic.ashley.core.component;
-import com.badlogic.gdx.utils.Pool;
+
 /**
  * hàm để xác định loại của thực thể
  */
@@ -21,7 +21,7 @@ public class TypeComponent {
     }
     // reset method to reset the type to OTHER_TYPE
     public void reset() {
-        type = OTHER_TYPE; 
+        type = OTHER_TYPE;
 }
     // constructor
     public TypeComponent(int type) {
