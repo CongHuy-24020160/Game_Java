@@ -41,7 +41,7 @@ public class MenuScreen implements Screen {
         viewport =  new FitViewport(Utilities.VIRTUAL_WIDTH,Utilities.VIRTUAL_HEIGHT);
         stage = new Stage(viewport);
         stage.setDebugAll(false);
-        //skin here
+        skin = game.assetManager.manager.get("ui/uiskin.json", Skin.class);
         backgroundMusic = game.assetManager.manager.get(game.assetManager.backgroundMusic,Music.class);
         backgroundMusic.setLooping(true);
 

@@ -2,12 +2,18 @@ package game.LoadAssets;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.assets.loaders.SkinLoader;
+import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
+import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+
 public class GameAssetManager {
 
     private static volatile GameAssetManager instance;
@@ -27,6 +33,8 @@ public class GameAssetManager {
 
     // Load font
     public final String gameFont = "fonts/GUNDAM.ttf";
+    //Load skin
+    public final String skin = "ui/uiskin.json";
     // Private constructor
     private GameAssetManager() {
         manager = new AssetManager();
@@ -48,12 +56,12 @@ public class GameAssetManager {
     }
     // Fonts can cause errors
     public void queueAddFonts(){
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/GUNDAM.ttf"));
-        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = 36;
-        parameter.color = Color.WHITE;
-        BitmapFont font = generator.generateFont(parameter);
-        generator.dispose();
+        manager.setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(new InternalFileHandleResolver()));
+        manager.setLoader(BitmapFont.class, ".ttf", new FreetypeFontLoader(new InternalFileHandleResolver()));
+        FreetypeFontLoader.FreeTypeFontLoaderParameter fontParameterSmall = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
+        fontParameterSmall.fontFileName = gameFont;
+        fontParameterSmall.fontParameters.size = 18;
+        manager.load(gameFont, BitmapFont.class, fontParameterSmall);
     }
 
     public void queueLoadSound(){
@@ -64,6 +72,10 @@ public class GameAssetManager {
     }
     public void queueLoadMusic(){
         manager.load(backgroundMusic, Music.class);
+    }
+    public void queueLoadSkin(){
+        SkinLoader.SkinParameter params = new SkinLoader.SkinParameter("ui/uiskin.atlas");
+        manager.load(skin, Skin.class, params);
     }
 
     public void dispose(){

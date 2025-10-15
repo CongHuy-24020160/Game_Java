@@ -12,7 +12,7 @@ public class ScreenManager {
     public static final int LOADING = 4;
 
     // screens to load
-    //private LoadingScreen loadingScreen;
+    private LoadingScreen loadingScreen;
     //private PreferencesScreen preferencesScreen;
     private MenuScreen menuScreen;
     private MainScreen mainScreen;
@@ -23,6 +23,9 @@ public class ScreenManager {
     public void changeScreen(int screen){
         switch(screen){
             case MENU:
+                if (ArkanoidGame.DEBUG_MODE){
+                    System.out.println("ScreenManager.java) Changing to Menu Screen");
+                }
                 if(menuScreen == null) menuScreen = new MenuScreen(game);
                 game.setScreen(menuScreen);
                 break;
@@ -31,18 +34,24 @@ public class ScreenManager {
 //                game.setScreen(preferencesScreen);
 //                break;
             case APPLICATION:
+                if (ArkanoidGame.DEBUG_MODE){
+                    System.out.println("ScreenManager.java) Changing to Main Screen");
+                }
                 if(mainScreen == null) mainScreen = new MainScreen(game);
                 game.setScreen(mainScreen);
                 break;
             case ENDGAME:
+                if (ArkanoidGame.DEBUG_MODE){
+                    System.out.println("ScreenManager.java) Changing to End Screen");
+                }
                 if(endScreen == null) endScreen = new EndScreen(game);
                 game.setScreen(endScreen);
                 break;
-//            case LOADING:
-//                if(loadingScreen == null) loadingScreen = new LoadingScreen(game);
-//                if(BreakoutGame.DEBUG_MODE) System.out.println("(ScreenManager.java) Changing to Loading Screen");
-//                game.setScreen(loadingScreen);
-//                break;
+            case LOADING:
+                if(loadingScreen == null) loadingScreen = new LoadingScreen(game);
+                if(ArkanoidGame.DEBUG_MODE) System.out.println("(ScreenManager.java) Changing to Loading Screen");
+                game.setScreen(loadingScreen);
+                break;
         }
     }
 }

@@ -78,8 +78,8 @@ public class BallSystem extends IteratingSystem {
             UtilSound.getInstance().playMissBallSound();
 
             // Giảm mạng sống và cập nhật hiển thị.
-            hud.setHealth(hud.getHealth() - 1);
-            //hud.updateLives();
+            hud.setLives(hud.getLives() - 1);
+            hud.updateLives();
 
             // Kiểm tra điều kiện thua cuộc.
 //            if(hud.getHealth() <= 0){

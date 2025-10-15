@@ -43,7 +43,7 @@ public class ParticleHandler {
     /**
      * Cập nhật trạng thái các hiệu ứng.
      */
-    public void tick(float deltaTime) {
+    public void update(float deltaTime) {
         // Duyệt ngược để tránh lỗi khi loại bỏ phần tử
         for (int i = runningEffects.size - 1; i >= 0; i--) {
             ParticleEffectPool.PooledEffect fx = runningEffects.get(i);
@@ -60,7 +60,7 @@ public class ParticleHandler {
     /**
      * Vẽ toàn bộ hiệu ứng đang hoạt động.
      */
-    public void drawAll(SpriteBatch batch) {
+    public void render(SpriteBatch batch) {
         // Ở đây không begin()/end() để tránh xung đột với các lớp khác
         for (ParticleEffectPool.PooledEffect fx : runningEffects) {
             fx.draw(batch);
@@ -81,7 +81,7 @@ public class ParticleHandler {
     /**
      * Dừng toàn bộ hiệu ứng, để chúng tự hoàn tất rồi biến mất.
      */
-    public void stopNow() {
+    public void stopAll() {
         for (ParticleEffectPool.PooledEffect fx : runningEffects) {
             fx.allowCompletion();
         }

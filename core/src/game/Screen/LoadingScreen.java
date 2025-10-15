@@ -101,15 +101,15 @@ public class LoadingScreen implements Screen {
     private void handleLoadingAssets(){
         switch(currentLoadingStage){
             case IMAGE:
-//                if(ArkanoidGame.DEBUG_MODE) System.out.println("(LoadingScreen) Loading Textures...");
+                if(ArkanoidGame.DEBUG_MODE) System.out.println("(LoadingScreen) Loading Textures...");
                 game.assetManager.queueAddImages();
                 break;
-//            case SKIN:
-////                if(BreakoutGame.DEBUG_MODE) System.out.println("(LoadingScreen) Loading Skin...");
-//                game.assetManager.que();
-//                break;
+            case SKIN:
+                if(ArkanoidGame.DEBUG_MODE) System.out.println("(LoadingScreen) Loading Skin...");
+                game.assetManager.queueLoadSkin();
+                break;
             case SOUND:
-//                if(BreakoutGame.DEBUG_MODE) System.out.println("(LoadingScreen) Loading SoundFX...");
+                if(ArkanoidGame.DEBUG_MODE) System.out.println("(LoadingScreen) Loading SoundFX...");
                 game.assetManager.queueLoadSound();
                 break;
             default:

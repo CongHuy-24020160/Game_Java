@@ -18,12 +18,15 @@ import game.Utils.ParticleHandler;
  */
 public class CollisionSystem extends IteratingSystem {
 
-    public CollisionSystem(Family family, int priority, ScoreChangeListener scoreChangeListener, LevelManager levelManager, Hud hud, ParticleHandler particlesManager) {
-        super(family, priority);
+    public CollisionSystem(Hud hud, LevelManager levelManager, ScoreChangeListener scoreChangeListener) {
+        super(Family.all(ColliderComponent.class, PhysicsBodyComponent.class, BallComponent.class).get());
+
         this.scoreChangeListener = scoreChangeListener;
         this.levelManager = levelManager;
         this.hud = hud;
-        this.particlesManager = particlesManager;
+        //Fixme
+        particlesManager = new ParticleHandler("particles/block-particle.p", "particles");
+        particlesManager.resizeAll(1f);
     }
 
     private final ComponentMapper<ColliderComponent> collisionC
@@ -37,10 +40,10 @@ public class CollisionSystem extends IteratingSystem {
     private final ComponentMapper<TextureComponent> textureC
         = ComponentMapper.getFor(TextureComponent.class);
 
-    private final ScoreChangeListener scoreChangeListener;
-    private final LevelManager levelManager;
-    private final Hud hud;
-    private final ParticleHandler particlesManager;
+    private ScoreChangeListener scoreChangeListener;
+    private LevelManager levelManager;
+    private Hud hud;
+    public ParticleHandler particlesManager;
 
     @Override
     protected void processEntity(Entity entity, float v) {
