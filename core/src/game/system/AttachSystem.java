@@ -5,35 +5,35 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.math.Vector2;
-import game.component.AttachComponent;
-import game.component.B2BodyComponent;
+import game.component.LinkedEntityComponent;
+import game.component.PhysicsBodyComponent;
 
 /*
     System chịu trách nhiệm "gắn" một entity (con) vào một entity khác (cha).
     Trong game này, nó dùng để giữ bóng dính vào thanh trượt trước khi phóng.
  */
 public class AttachSystem extends IteratingSystem {
-    private final ComponentMapper<AttachComponent> attachComponentComponentMapper
-        = ComponentMapper.getFor(AttachComponent.class);
-    private final ComponentMapper<B2BodyComponent> b2BodyComponentComponentMapper
-        = ComponentMapper.getFor(B2BodyComponent.class);
+    private final ComponentMapper<LinkedEntityComponent> attachComponentComponentMapper
+        = ComponentMapper.getFor(LinkedEntityComponent.class);
+    private final ComponentMapper<PhysicsBodyComponent> b2BodyComponentComponentMapper
+        = ComponentMapper.getFor(PhysicsBodyComponent.class);
 
     public AttachSystem(){
-        super(Family.all(AttachComponent.class).get());
+        super(Family.all(LinkedEntityComponent.class).get());
     }
 
     @Override
     protected void processEntity(Entity entity, float v) {
-        final AttachComponent attachComponent = attachComponentComponentMapper.get(entity);
+        final LinkedEntityComponent attachComponent = attachComponentComponentMapper.get(entity);
 
         // Thoát sớm nếu không có entity nào được gắn vào.
-        if(attachComponent.attachedEntity == null) {
+        if(attachComponent == null) {
             return;
         }
 
         // Lấy component vật lý của cả hai đối tượng: cha (entity) và con (attachedEntity).
-        final B2BodyComponent parentB2Body = b2BodyComponentComponentMapper.get(entity);
-        final B2BodyComponent childB2Body = b2BodyComponentComponentMapper.get(attachComponent.attachedEntity);
+        final PhysicsBodyComponent parentB2Body = b2BodyComponentComponentMapper.get(entity);
+        final PhysicsBodyComponent childB2Body = b2BodyComponentComponentMapper.get(attachComponent.LinkedEntity);
 
         // Cập nhật vị trí của đối tượng con theo vị trí của đối tượng cha.
         final Vector2 parentPosition = parentB2Body.body.getPosition();

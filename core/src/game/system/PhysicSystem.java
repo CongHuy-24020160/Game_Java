@@ -1,4 +1,4 @@
-package ECS.system;
+package game.system;
 
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
@@ -8,7 +8,7 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
-import ECS.components.B2BodyComponent;
+import game.component.PhysicsBodyComponent;
 
 public class PhysicSystem extends IteratingSystem {
 
@@ -21,11 +21,11 @@ public class PhysicSystem extends IteratingSystem {
     private final Array<Body> bodiesToRemove;
     private final Array<Entity> entitiesToBeRemoved;
 
-    private final ComponentMapper<B2BodyComponent> b2BodyMapper
-        = ComponentMapper.getFor(B2BodyComponent.class);
+    private final ComponentMapper<PhysicsBodyComponent> b2BodyMapper
+        = ComponentMapper.getFor(PhysicsBodyComponent.class);
 
     public PhysicSystem(World world, PooledEngine engine) {
-        super(Family.all(B2BodyComponent.class).get());
+        super(Family.all(PhysicsBodyComponent.class).get());
         this.world = world;
         this.engine = engine;
         this.bodiesToRemove = new Array<>();
@@ -44,7 +44,7 @@ public class PhysicSystem extends IteratingSystem {
     @Override
     protected void processEntity(Entity entity, float v) {
 
-        final B2BodyComponent b2BodyComponent = b2BodyMapper.get(entity);
+        final PhysicsBodyComponent b2BodyComponent = b2BodyMapper.get(entity);
 
         /**
          * Thêm vào danh sách xóa

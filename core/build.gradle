@@ -16,4 +16,6 @@ dependencies {
   if(enableGraalNative == 'true') {
     implementation "io.github.berstanio:gdx-svmhelper-annotations:$graalHelperVersion"
   }
+
 }
+sourceSets.main.java.srcDirs = [ "src/" ]

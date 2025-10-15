@@ -1,12 +1,12 @@
 //import backage hiệu tại ( util ) vô
-
+package game.Utils;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 // import cái này ( code thêm cái utilities nhé )
-import com.taptap.breakout.Utilities;
+import game.Utilities;
 
 /**
  * Lớp này dùng để điều khiển các hiệu ứng hạt trong game

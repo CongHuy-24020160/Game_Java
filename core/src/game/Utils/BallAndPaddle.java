@@ -1,15 +1,17 @@
+package game.Utils;
 // import các package cần thiết
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
-import com.taptap.breakout.Utilities;
-import com.taptap.breakout.ecs.components.LinkedEntityComponent;
-import com.taptap.breakout.ecs.components.PhiysicsBodyComponent;
+import game.Utilities;
+import game.component.PhysicsBodyComponent;
+//import com.taptap.breakout.ecs.components.PhiysicsBodyComponent;
+import game.component.LinkedEntityComponent;
 
 // class này dùng để quản lý việc gắn quả bóng vào paddle (khi bắt đầu ván hoặc sau khi mất mạng)
 public class BallAndPaddle {
 
     // tạo mapper để lấy component vật lý và liên kết
-    private final ComponentMapper<PhiysicsBodyComponent> bodyMapper = ComponentMapper.getFor(PhiysicsBodyComponent.class);
+    private final ComponentMapper<PhysicsBodyComponent> bodyMapper = ComponentMapper.getFor(PhysicsBodyComponent.class);
     private final ComponentMapper<LinkedEntityComponent> linkMapper = ComponentMapper.getFor(LinkedEntityComponent.class);
 
     // lưu thực thể paddle và ball (final vì không thay đổi trong suốt vòng đời của class)
@@ -25,8 +27,8 @@ public class BallAndPaddle {
     // hàm gắn quả bóng trở lại paddle
     public void attachBallToPaddle() {
         // lấy component vật lý của bóng và paddle
-        PhiysicsBodyComponent ballBody = bodyMapper.get(ball);
-        PhiysicsBodyComponent paddleBody = bodyMapper.get(paddle);
+        PhysicsBodyComponent ballBody = bodyMapper.get(ball);
+        PhysicsBodyComponent paddleBody = bodyMapper.get(paddle);
 
         // dừng chuyển động của bóng
         ballBody.body.setLinearVelocity(0, 0);

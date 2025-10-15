@@ -3,18 +3,18 @@ package game.LoadAssets;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.TextureData;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
-
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 public class GameAssetManager {
 
     private static volatile GameAssetManager instance;
     public final AssetManager manager;
     // Load background
-    public final String backgroundImage = "images/background1.png";
+
+    public final String gameImagaes = "images/ArkanoidGame.atlas";
 
     // Load sound
     public final String hitBrickSound = "sounds/ball_hit_brick.wav";
@@ -44,9 +44,9 @@ public class GameAssetManager {
     }
 
     public void queueAddImages(){
-        manager.load(backgroundImage, TextureData.class);
+        manager.load(gameImagaes, TextureAtlas.class);
     }
-
+    // Fonts can cause errors
     public void queueAddFonts(){
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/GUNDAM.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();

@@ -3,16 +3,7 @@ package game.LoadAssets;
 import com.badlogic.gdx.physics.box2d.*;
 
 public class BodyFactory {
-    // ONE_HIT - Takes one hit to get destroyed
-    // TWO_HIT - Takes two hits to get destroyed
-    // UNBREAKABLE - Block is unbreakable
-    // PASSTHROUGH - Ball is able to break the block and pass through instead of bouncing back from it
-    public enum BlockType {ONE_HIT, TWO_HIT, UNBREAKABLE, PASSTHROUGH}
-
-    // PLASTIC - takes one hit
-    // HARDENED - takes two hit
-    // STEEL - unbreakable
-    // PUFF - pass through
+    public enum BlockType {ONE_HIT, TWO_HIT, UNBREAKABLE, PASSTHROUGH};
     public enum Material {PLASTIC, HARDENED, STEEL, PUFF}
 
     // singleton
@@ -92,5 +83,4 @@ public class BodyFactory {
         circleShape.dispose();
         return boxBody;
     }
-
 }

@@ -15,11 +15,11 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Disposable;
-import com.taptap.breakout.BreakoutGame;
-import com.taptap.breakout.Utilities;
-import com.taptap.breakout.ecs.components.*;
-import com.taptap.breakout.loader.BodyFactory;
-import com.taptap.breakout.utils.PaddleAndBall;
+import game.ArkanoidGame;
+import game.Utilities;
+import game.component.*;
+import game.LoadAssets.BodyFactory;
+import game.Utils.BallAndPaddle;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
@@ -29,7 +29,7 @@ public class LevelLoader implements Disposable {
     private TmxMapLoader mapLoader;
     private TiledMap map;
     private World world;
-    private BreakoutGame game;
+    private ArkanoidGame game;
     private PooledEngine en;
     private OrthogonalTiledMapRenderer mapRenderer;
     public OrthogonalTiledMapRenderer getMapRenderer(){return mapRenderer;}
@@ -37,26 +37,27 @@ public class LevelLoader implements Disposable {
     private TextureAtlas textures;
 
     public int numOfBlocksLeft;
-    public PaddleAndBall paddleAndBall;
+    public BallAndPaddle paddleAndBall;
 
-    private static Map<Integer, Texture> brickTextures = new HashMap<>();
+    // Don't understand with this code
+//    private static Map<Integer, Texture> brickTextures = new HashMap<>();
+//
+//    public static void loadTextures() {
+//        brickTextures.put(1, new Texture("Brick1_4.png"));
+//        brickTextures.put(2, new Texture("Brick2_4.png"));
+//        brickTextures.put(3, new Texture("Brick3_4.png"));
+//        brickTextures.put(4, new Texture("Brick4_4.png"));
+//        brickTextures.put(5, new Texture("Brick5_4.png"));
+//        brickTextures.put(6, new Texture("Brick6_4.png"));
+//        brickTextures.put(7, new Texture("Brick7_4.png"));
+//        brickTextures.put(8, new Texture("Brick8_4.png"));
+//        brickTextures.put(9, new Texture("Brick9_4.png"));
+//        brickTextures.put(10, new Texture("Brick_unbreakable2.png"));
+//    }
 
-    public static void loadTextures() {
-        brickTextures.put(1, new Texture("Brick1_4.png"));
-        brickTextures.put(2, new Texture("Brick2_4.png"));
-        brickTextures.put(3, new Texture("Brick3_4.png"));
-        brickTextures.put(4, new Texture("Brick4_4.png"));
-        brickTextures.put(5, new Texture("Brick5_4.png"));
-        brickTextures.put(6, new Texture("Brick6_4.png"));
-        brickTextures.put(7, new Texture("Brick7_4.png"));
-        brickTextures.put(8, new Texture("Brick8_4.png"));
-        brickTextures.put(9, new Texture("Brick9_4.png"));
-        brickTextures.put(10, new Texture("Brick_unbreakable2.png"));
-    }
-
-    public static Texture getBrickTexture(int id) {
-        return brickTextures.getOrDefault(id, null);
-    }
+//    public static Texture getBrickTexture(int id) {
+//        return brickTextures.getOrDefault(id, null);
+//    }
 
     public static int[][] loadMap(String path) {
         FileHandle file = Gdx.files.internal(path);
@@ -73,7 +74,9 @@ public class LevelLoader implements Disposable {
         return map;
     }
 
-    public LevelLoader(BreakoutGame game, World world, PooledEngine en, String mapFilePath){
+
+
+    public LevelLoader(ArkanoidGame game, World world, PooledEngine en, String mapFilePath){
         this.world = world;
         this.en = en;
         this.game = game;
@@ -81,7 +84,7 @@ public class LevelLoader implements Disposable {
         mapLoader = new TmxMapLoader();
         map = mapLoader.load(mapFilePath);
         mapRenderer = new OrthogonalTiledMapRenderer(map, 1/ Utilities.PPM);
-        textures = game.assetManager.manager.get(game.assetManager.gameImages);
+        textures = game.assetManager.manager.get(game.assetManager.gameImagaes);
         loadWorld();
     }
 
@@ -98,18 +101,18 @@ public class LevelLoader implements Disposable {
         Entity ballEntity = en.createEntity();
         renderBall(ballEntity);
         renderPlayer(playerEntity, ballEntity);
-        paddleAndBall = new PaddleAndBall(playerEntity, ballEntity);
+        paddleAndBall = new BallAndPaddle(playerEntity, ballEntity);
     }
 
     private void renderPlayer(Entity playerEntity, Entity ballEntity){
-        if(BreakoutGame.DEBUG_MODE) System.out.println("(LevelLoader) Rendering Player");
-        PlayerComponent pc = en.createComponent(PlayerComponent.class);
+        if(ArkanoidGame.DEBUG_MODE) System.out.println("(LevelLoader) Rendering Player");
+        PlayerIn4Component pc = en.createComponent(PlayerIn4Component.class);
         TextureComponent tc = en.createComponent(TextureComponent.class);
-        TransformComponent tranC = en.createComponent(TransformComponent.class);
-        CollisionComponent cc = en.createComponent(CollisionComponent.class);
+        MoveComponent tranC = en.createComponent(MoveComponent.class);
+        ColliderComponent cc = en.createComponent(ColliderComponent.class);
         TypeComponent typeC = en.createComponent(TypeComponent.class);
-        B2BodyComponent b2bodyC = en.createComponent(B2BodyComponent.class);
-        AttachComponent attachC = en.createComponent(AttachComponent.class);
+        PhysicsBodyComponent b2bodyC = en.createComponent(PhysicsBodyComponent.class);
+        LinkedEntityComponent attachC = en.createComponent(LinkedEntityComponent.class);
 
         // create box2d body
         b2bodyC.body = bodyFactory.makeBoxPolyBody(
@@ -124,17 +127,17 @@ public class LevelLoader implements Disposable {
         );
 
         b2bodyC.body.setUserData(playerEntity);
-        typeC.type = TypeComponent.PLAYER;
-        attachC.setAttachedEntity(ballEntity);
+        typeC.type = TypeComponent.PLAYER_TYPE;
+        attachC.setLinkedEntity(ballEntity);
 
         // load texture
-        tc.region = new TextureRegion(
+        tc.currImage = new TextureRegion(
             textures.findRegion("paddle-sheet-removebg-preview(1)"),
             0, 0, 100, 30
         );
 
         // load transform
-        tranC.position.set(b2bodyC.body.getPosition().x, b2bodyC.body.getPosition().y, 0);
+        tranC.pos.set(b2bodyC.body.getPosition().x, b2bodyC.body.getPosition().y, 0);
 
         playerEntity.add(pc);
         playerEntity.add(tc);
@@ -149,24 +152,24 @@ public class LevelLoader implements Disposable {
     }
 
     private void renderBall(Entity ballEntity){
-        if(BreakoutGame.DEBUG_MODE) System.out.println("(LevelLoader) Rendering Ball");
+        if(ArkanoidGame.DEBUG_MODE) System.out.println("(LevelLoader) Rendering Ball");
         TextureComponent tc = en.createComponent(TextureComponent.class);
-        TransformComponent tranC = en.createComponent(TransformComponent.class);
-        CollisionComponent cc = en.createComponent(CollisionComponent.class);
+        MoveComponent tranC = en.createComponent(MoveComponent.class);
+        ColliderComponent cc = en.createComponent(ColliderComponent.class);
         TypeComponent typeC = en.createComponent(TypeComponent.class);
-        B2BodyComponent b2bodyC = en.createComponent(B2BodyComponent.class);
+        PhysicsBodyComponent b2bodyC = en.createComponent(PhysicsBodyComponent.class);
         BallComponent ballC = en.createComponent(BallComponent.class);
-        SoundComponent soundComponent = en.createComponent(SoundComponent.class);
+        SoundEffectComponent soundComponent = en.createComponent(SoundEffectComponent.class);
 
         // add sound fx
-        soundComponent.soundEffects.put("ding1", (Sound) game.assetManager.manager.get(game.assetManager.ding1Sound));
-        soundComponent.soundEffects.put("ding2", (Sound) game.assetManager.manager.get(game.assetManager.ding2Sound));
-        soundComponent.soundEffects.put("explode", (Sound) game.assetManager.manager.get(game.assetManager.explosionSound));
+        soundComponent.soundEffects.put("ding1", (Sound) game.assetManager.manager.get(game.assetManager.hitBrickSound));
+        soundComponent.soundEffects.put("ding2", (Sound) game.assetManager.manager.get(game.assetManager.hitWallSound));
+        //soundComponent.soundEffects.put("explode", (Sound) game.assetManager.manager.get(game.assetManager.explosionSound));
 
-        ballC.speed = 5f;
+        ballC.BallSpeed = 5f;
 
         // load texture
-        tc.region = new TextureRegion(
+        tc.currImage = new TextureRegion(
             textures.findRegion("ball-sheet-removebg-preview"),
             8, 31, 25, 25
         );
@@ -175,7 +178,7 @@ public class LevelLoader implements Disposable {
         b2bodyC.body = bodyFactory.makeCirclePolyBody(
             Utilities.getPPMWidth() / 2,
             Utilities.convertToPPM(Utilities.PADDLE_HEIGHT + 25),
-            Utilities.convertToPPM(tc.region.getRegionWidth()),
+            Utilities.convertToPPM(tc.currImage.getRegionWidth()),
             null,
             BodyDef.BodyType.DynamicBody,
             true,
@@ -183,10 +186,10 @@ public class LevelLoader implements Disposable {
         );
 
         b2bodyC.body.setUserData(ballEntity);
-        typeC.type = TypeComponent.BALL;
+        typeC.type = TypeComponent.BALL_TYPE;
 
         // load transform
-        tranC.position.set(b2bodyC.body.getPosition().x, b2bodyC.body.getPosition().y, 0);
+        tranC.pos.set(b2bodyC.body.getPosition().x, b2bodyC.body.getPosition().y, 0);
 
         ballEntity.add(tc);
         ballEntity.add(tranC);
@@ -201,9 +204,9 @@ public class LevelLoader implements Disposable {
     private void renderBlocks(){
         for(MapObject object : map.getLayers().get(1).getObjects().getByType(RectangleMapObject.class)){
             Entity blockEntity = en.createEntity();
-            B2BodyComponent b2Body = en.createComponent(B2BodyComponent.class);
+            PhysicsBodyComponent b2Body = en.createComponent(PhysicsBodyComponent.class);
             TextureComponent tc = en.createComponent(TextureComponent.class);
-            CollisionComponent collision = en.createComponent(CollisionComponent.class);
+            ColliderComponent collision = en.createComponent(ColliderComponent.class);
             TypeComponent type = en.createComponent(TypeComponent.class);
             ScoreComponent scoreComponent = en.createComponent(ScoreComponent.class);
 
@@ -216,21 +219,21 @@ public class LevelLoader implements Disposable {
             switch(color){
                 case "red":
                     // load red block texture
-                    tc.region = new TextureRegion(
+                    tc.currImage = new TextureRegion(
                         textures.findRegion("blocks-sheet-removebg-preview"),
                         1, 2, 34, 32
                     );
                     break;
                 case "purple":
                     // load purple block texture
-                    tc.region = new TextureRegion(
+                    tc.currImage = new TextureRegion(
                         textures.findRegion("blocks-sheet-removebg-preview"),
                         41, 2, 34, 32
                     );
                     break;
                 case "yellow":
                     // load yellow block texture
-                    tc.region = new TextureRegion(
+                    tc.currImage = new TextureRegion(
                         textures.findRegion("blocks-sheet-removebg-preview"),
                         81, 2, 34, 32
                     );
@@ -250,7 +253,7 @@ public class LevelLoader implements Disposable {
                 false);
 
 
-            type.type = TypeComponent.BLOCK;
+            type.type = TypeComponent.BLOCK_TYPE;
             b2Body.body.setUserData(blockEntity);
 
             blockEntity.add(b2Body);
@@ -263,56 +266,56 @@ public class LevelLoader implements Disposable {
             numOfBlocksLeft++;
         }
         // thêm phần đọc cho txt
-        int[][] mapData = loadMap("maps/level1.txt"); // đường dẫn map txt của bạn
-        float startX = 2;
-        float startY = 150;
-        float blockWidth = 32;
-        float blockHeight = 16;
-
-        for (int row = 0; row < mapData.length; row++) {
-            for (int col = 0; col < mapData[row].length; col++) {
-                int id = mapData[row][col];
-                if (id == 0) continue;
-
-                Texture tex = brickTextures.get(id);
-                if (tex == null) continue;
-
-                Entity blockEntity = en.createEntity();
-                B2BodyComponent b2Body = en.createComponent(B2BodyComponent.class);
-                TextureComponent tc = en.createComponent(TextureComponent.class);
-                CollisionComponent collision = en.createComponent(CollisionComponent.class);
-                TypeComponent type = en.createComponent(TypeComponent.class);
-                ScoreComponent scoreComponent = en.createComponent(ScoreComponent.class);
-
-                tc.region = new TextureRegion(tex);
-
-                float x = startX + col * blockWidth;
-                float y = startY - row * blockHeight;
-
-                b2Body.body = bodyFactory.makeBoxPolyBody(
-                    Utilities.convertToPPM(x),
-                    Utilities.convertToPPM(y),
-                    Utilities.convertToPPM(blockWidth),
-                    Utilities.convertToPPM(blockHeight),
-                    BodyFactory.Material.PLASTIC,
-                    BodyDef.BodyType.StaticBody,
-                    true,
-                    false
-                );
-
-                type.type = TypeComponent.BLOCK;
-                b2Body.body.setUserData(blockEntity);
-
-                blockEntity.add(b2Body);
-                blockEntity.add(tc);
-                blockEntity.add(collision);
-                blockEntity.add(type);
-                blockEntity.add(scoreComponent);
-                en.addEntity(blockEntity);
-
-                numOfBlocksLeft++;
-            }
-        }
+//        int[][] mapData = loadMap("maps/level1.txt"); // đường dẫn map txt của bạn
+//        float startX = 2;
+//        float startY = 150;
+//        float blockWidth = 32;
+//        float blockHeight = 16;
+//
+//        for (int row = 0; row < mapData.length; row++) {
+//            for (int col = 0; col < mapData[row].length; col++) {
+//                int id = mapData[row][col];
+//                if (id == 0) continue;
+//
+//                Texture tex = brickTextures.get(id);
+//                if (tex == null) continue;
+//
+//                Entity blockEntity = en.createEntity();
+//                PhysicsBodyComponent b2Body = en.createComponent(PhysicsBodyComponent.class);
+//                TextureComponent tc = en.createComponent(TextureComponent.class);
+//                ColliderComponent collision = en.createComponent(ColliderComponent.class);
+//                TypeComponent type = en.createComponent(TypeComponent.class);
+//                ScoreComponent scoreComponent = en.createComponent(ScoreComponent.class);
+//
+//                tc.currImage = new TextureRegion(tex);
+//
+//                float x = startX + col * blockWidth;
+//                float y = startY - row * blockHeight;
+//
+//                b2Body.body = bodyFactory.makeBoxPolyBody(
+//                    Utilities.convertToPPM(x),
+//                    Utilities.convertToPPM(y),
+//                    Utilities.convertToPPM(blockWidth),
+//                    Utilities.convertToPPM(blockHeight),
+//                    BodyFactory.Material.PLASTIC,
+//                    BodyDef.BodyType.StaticBody,
+//                    true,
+//                    false
+//                );
+//
+//                type.type = TypeComponent.BLOCK_TYPE;
+//                b2Body.body.setUserData(blockEntity);
+//
+//                blockEntity.add(b2Body);
+//                blockEntity.add(tc);
+//                blockEntity.add(collision);
+//                blockEntity.add(type);
+//                blockEntity.add(scoreComponent);
+//                en.addEntity(blockEntity);
+//
+//                numOfBlocksLeft++;
+//            }
+//        }
     }
 
     @Override
@@ -324,10 +327,10 @@ public class LevelLoader implements Disposable {
         if (mapRenderer != null) {
             mapRenderer.dispose();
         }
-        for (Texture t : brickTextures.values()) {
-            t.dispose();
-        }
-        brickTextures.clear();
+//        for (Texture t : brickTextures.values()) {
+//            t.dispose();
+//        }
+//        brickTextures.clear();
 
     }
 

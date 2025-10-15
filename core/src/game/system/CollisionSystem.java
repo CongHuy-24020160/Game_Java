@@ -1,25 +1,35 @@
-package ECS.system;
+package game.system;
 
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.math.Vector2;
-import Hud;
-import Utilities;
-import ECS.components.*;
-import level.LevelManager;
-import tlisteners.ScoreChangeListener;
-import utils.ParticlesManager;
+import game.Hud;
+import game.Utilities;
+import game.component.*;
+import game.component.TypeComponent;
+import game.level.LevelManager;
+import game.ScoreChangeListener;
+import game.Utils.ParticleHandler;
 
 /*
     System chịu trách nhiệm xử lý logic *sau khi* các va chạm vật lý xảy ra.
  */
 public class CollisionSystem extends IteratingSystem {
-    private final ComponentMapper<CollisionComponent> collisionC
-        = ComponentMapper.getFor(CollisionComponent.class);
-    private final ComponentMapper<B2BodyComponent> b2BodyC
-        = ComponentMapper.getFor(B2BodyComponent.class);
+
+    public CollisionSystem(Family family, int priority, ScoreChangeListener scoreChangeListener, LevelManager levelManager, Hud hud, ParticleHandler particlesManager) {
+        super(family, priority);
+        this.scoreChangeListener = scoreChangeListener;
+        this.levelManager = levelManager;
+        this.hud = hud;
+        this.particlesManager = particlesManager;
+    }
+
+    private final ComponentMapper<ColliderComponent> collisionC
+        = ComponentMapper.getFor(ColliderComponent.class);
+    private final ComponentMapper<PhysicsBodyComponent> b2BodyC
+        = ComponentMapper.getFor(PhysicsBodyComponent.class);
     private final ComponentMapper<BallComponent> ballC
         = ComponentMapper.getFor(BallComponent.class);
     private final ComponentMapper<TypeComponent> typeC
@@ -30,38 +40,29 @@ public class CollisionSystem extends IteratingSystem {
     private final ScoreChangeListener scoreChangeListener;
     private final LevelManager levelManager;
     private final Hud hud;
-    private final ParticlesManager particlesManager;
-
-    public CollisionSystem(ScoreChangeListener scoreChangeListener, LevelManager levelManager, Hud hud, ParticlesManager particlesManager) {
-        // System này chỉ xử lý các Entity có CollisionComponent (tức là vừa xảy ra va chạm).
-        super(Family.all(CollisionComponent.class).get());
-        this.scoreChangeListener = scoreChangeListener;
-        this.levelManager = levelManager;
-        this.hud = hud;
-        this.particlesManager = particlesManager;
-    }
+    private final ParticleHandler particlesManager;
 
     @Override
     protected void processEntity(Entity entity, float v) {
         // Lấy các component cần thiết bằng mapper đã khai báo.
-        final CollisionComponent collision = collisionC.get(entity);
-        final Entity otherEntity = collision.collisionEntity;
+        final ColliderComponent collision = collisionC.get(entity);
+        final Entity otherEntity = collision.tagertEntity;
 
         // Bỏ qua nếu không có va chạm nào được ghi nhận.
         if (otherEntity == null) return;
 
         // Tạm dừng logic va chạm khi có dialog (ví dụ: menu) đang hiển thị.
-        if (hud.isDialogVisible()) return;
-
+//        if (hud.isDialog()) return;
+//
         final TypeComponent entityType = typeC.get(entity);
 
         // Chỉ xử lý va chạm bắt nguồn từ quả bóng
-        if (entityType.type == TypeComponent.BALL) {
+        if (entityType.type == TypeComponent.BALL_TYPE) {
             handleBallCollision(entity, otherEntity);
         }
 
         // Đặt lại va chạm để chuẩn bị cho khung hình tiếp theo.
-        collision.collisionEntity = null;
+        collision.tagertEntity = null;
     }
 
     /**
@@ -75,10 +76,10 @@ public class CollisionSystem extends IteratingSystem {
 
         // Phân loại va chạm dựa trên loại của đối tượng kia.
         switch (otherType.type) {
-            case TypeComponent.PLAYER:
+            case TypeComponent.PLAYER_TYPE:
                 handleBallPlayerCollision(ballEntity, otherEntity);
                 break;
-            case TypeComponent.BLOCK:
+            case TypeComponent.BLOCK_TYPE:
                 handleBallBlockCollision(ballEntity, otherEntity);
                 break;
         }
@@ -88,8 +89,8 @@ public class CollisionSystem extends IteratingSystem {
      * tính toán và áp dụng góc nảy cho bóng.
      */
     private void handleBallPlayerCollision(Entity ballEntity, Entity playerEntity) {
-        final B2BodyComponent ballB2body = b2BodyC.get(ballEntity);
-        final B2BodyComponent playerB2body = b2BodyC.get(playerEntity);
+        final PhysicsBodyComponent ballB2body = b2BodyC.get(ballEntity);
+        final PhysicsBodyComponent playerB2body = b2BodyC.get(playerEntity);
         final BallComponent ball = ballC.get(ballEntity);
 
         final Vector2 ballPosition = ballB2body.body.getPosition();
@@ -107,7 +108,7 @@ public class CollisionSystem extends IteratingSystem {
         }
 
         // Tạo và áp dụng lực nảy mới cho bóng.
-        Vector2 force = new Vector2(0, 1).setAngleDeg(angle).scl(ball.speed);
+        Vector2 force = new Vector2(0, 1).setAngleDeg(angle).scl(ball.BallSpeed);
         ballB2body.body.setLinearVelocity(force);
     }
 
@@ -115,21 +116,22 @@ public class CollisionSystem extends IteratingSystem {
      * xử lý hậu quả của việc phá gạch.
      */
     private void handleBallBlockCollision(Entity ballEntity, Entity blockEntity) {
-        final B2BodyComponent blockB2Body = b2BodyC.get(blockEntity);
+        final PhysicsBodyComponent blockB2Body = b2BodyC.get(blockEntity);
 
         // Cộng điểm cho người chơi.
         scoreChangeListener.onScoreChanged(100);
 
         // Giảm số lượng gạch còn lại trên màn chơi.
-        levelManager.currentLevel.blockCount--;
+        levelManager.currentLevel.numOfBlocksLeft--;
 
         // Kiểm tra điều kiện hoàn thành màn chơi.
-        if (levelManager.currentLevel.blockCount <= 0) {
-            hud.showLevelCompletedDialog();
+        if (levelManager.currentLevel.numOfBlocksLeft <= 0) {
+            // FIXME
+//            hud.showLevelCompletedDialog();
         }
 
         // Tạo hiệu ứng hạt tại vị trí gạch vỡ.
-        particlesManager.spawn(blockB2Body.body.getPosition().x, blockB2Body.body.getPosition().y);
+        particlesManager.trigger(blockB2Body.body.getPosition().x, blockB2Body.body.getPosition().y);
 
         // Đánh dấu viên gạch là "cần hủy" để PhysicsSystem xử lý việc xóa nó.
         blockB2Body.setToDestroy = true;

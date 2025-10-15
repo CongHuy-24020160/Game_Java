@@ -5,9 +5,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.TimeUtils;
 
-public class HUD {
+public class Hud {
     private BitmapFont font; // write on the screen
     private int score;
     private int health;
@@ -16,14 +17,58 @@ public class HUD {
     private long startTime;
     private String mapName;
 
-    public HUD(String mapName) {
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    public int getHealth() {
+        return health;
+    }
+
+    public void setHealth(int health) {
+        this.health = health;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    public int getHighScore() {
+        return highScore;
+    }
+
+    public void setHighScore(int highScore) {
+        this.highScore = highScore;
+    }
+
+    public long getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(long startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getMapName() {
+        return mapName;
+    }
+
+    public Hud(String mapName) {
         this.mapName = mapName;
     }
     public void setMapName(String mapName) {
         this.mapName = mapName;
     }
 
-    public HUD() {
+    public Hud() {
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/GUNDAM.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         // parameter : size and colour of letters
@@ -55,6 +100,17 @@ public class HUD {
     public void resetTimer() {
         startTime = TimeUtils.millis();
     }
+//    public void updateLives(){
+//        logger.info("Updating Lives");
+//        livesTable.clearChildren();
+//        livesTable.add(livesLabel);
+//        for(int i = 0; i < lives; i++){
+//            logger.info("Update Lives: " + lives);
+//            ballImage = new Image(ballTexture);
+//            ballImage.setScale(0.85f);
+//            livesTable.add(ballImage);
+//        }
+//    }
 
     public void render(SpriteBatch batch) {
         // batch : bút vẽ của libgdx

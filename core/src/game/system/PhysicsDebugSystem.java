@@ -1,4 +1,4 @@
-package ECS.system;
+package game.system;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
