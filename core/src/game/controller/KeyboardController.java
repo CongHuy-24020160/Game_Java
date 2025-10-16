@@ -42,6 +42,7 @@ public class KeyboardController implements InputProcessor {
                 keyProcessed = true;
                 break;
             case Input.Keys.SPACE:
+                if(ArkanoidGame.DEBUG_MODE) System.out.println("(KeyboardController) Pressed Space");
                 space = true;
                 keyProcessed = true;
                 break;
@@ -70,6 +71,7 @@ public class KeyboardController implements InputProcessor {
                 keyProcessed = true;
                 break;
             case Input.Keys.SPACE:
+                if(ArkanoidGame.DEBUG_MODE) System.out.println("(KeyboardController) Released Space");
                 space = false;
                 keyProcessed = true;
                 break;

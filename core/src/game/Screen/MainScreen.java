@@ -63,6 +63,7 @@ public class MainScreen implements Screen,ScoreChangeListener {
     }
     @Override
     public void show(){
+        System.out.println("Hello from MainScreen.java");
         logger.info("show");
         levelManager.loadLevel(1);
 
@@ -87,19 +88,27 @@ public class MainScreen implements Screen,ScoreChangeListener {
 
     @Override
     public void render(float delta){
+        // Clear screen
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        levelManager.renderLevel();
+
+        // Update logic game
         update(delta);
 
 
         engine.update(delta);
 
+        camera.update();
+        spriteBatch.setProjectionMatrix(camera.combined);
+
+        spriteBatch.begin();
+        levelManager.renderLevel();
+
         collisionSystem.particlesManager.render(spriteBatch);
 
         // not error
         hud.render();
-
+        spriteBatch.end();
     }
 
     @Override

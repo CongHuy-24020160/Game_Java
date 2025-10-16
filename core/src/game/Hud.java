@@ -78,7 +78,7 @@ public class Hud implements Disposable {
         skin = game.assetManager.manager.get("ui/uiskin.json", Skin.class);
         //Fixme
         ballTexture = new TextureRegion(
-            textures.findRegion("ball-sheet-removebg-preview"),
+            textures.findRegion("Ball_small-blue"),
             8, 31, 25, 25
         );
         if (ballTexture.getTexture() == null){

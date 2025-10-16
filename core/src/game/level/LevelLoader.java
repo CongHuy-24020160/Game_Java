@@ -129,12 +129,13 @@ public class LevelLoader implements Disposable {
         b2bodyC.body.setUserData(playerEntity);
         typeC.type = TypeComponent.PLAYER_TYPE;
         attachC.setLinkedEntity(ballEntity);
-
+        System.out.println("Player body created");
         // load texture
         tc.currImage = new TextureRegion(
-            textures.findRegion("paddle-sheet-removebg-preview(1)"),
+            textures.findRegion("Player"),
             0, 0, 100, 30
         );
+        System.out.println("Code run here");
 
         // load transform
         tranC.pos.set(b2bodyC.body.getPosition().x, b2bodyC.body.getPosition().y, 0);
@@ -148,7 +149,7 @@ public class LevelLoader implements Disposable {
         playerEntity.add(attachC);
 
         en.addEntity(playerEntity);
-
+        System.out.println("Player added to engine");
     }
 
     private void renderBall(Entity ballEntity){
@@ -170,9 +171,12 @@ public class LevelLoader implements Disposable {
 
         // load texture
         tc.currImage = new TextureRegion(
-            textures.findRegion("ball-sheet-removebg-preview"),
+            textures.findRegion("Ball_small-blue"),
             8, 31, 25, 25
         );
+        if (tc.currImage == null) {
+            System.out.println("this is null");
+        }
 
         // create box2d body
         b2bodyC.body = bodyFactory.makeCirclePolyBody(
@@ -199,9 +203,11 @@ public class LevelLoader implements Disposable {
         ballEntity.add(ballC);
         ballEntity.add(soundComponent);
         en.addEntity(ballEntity);
+        System.out.println("Ball added to engine");
     }
 
     private void renderBlocks(){
+        if(ArkanoidGame.DEBUG_MODE) System.out.println("(LevelLoader) Rendering Blocks");
         for(MapObject object : map.getLayers().get(1).getObjects().getByType(RectangleMapObject.class)){
             Entity blockEntity = en.createEntity();
             PhysicsBodyComponent b2Body = en.createComponent(PhysicsBodyComponent.class);
@@ -220,21 +226,21 @@ public class LevelLoader implements Disposable {
                 case "red":
                     // load red block texture
                     tc.currImage = new TextureRegion(
-                        textures.findRegion("blocks-sheet-removebg-preview"),
+                        textures.findRegion("Brick1"),
                         1, 2, 34, 32
                     );
                     break;
                 case "purple":
                     // load purple block texture
                     tc.currImage = new TextureRegion(
-                        textures.findRegion("blocks-sheet-removebg-preview"),
+                        textures.findRegion("Brick2"),
                         41, 2, 34, 32
                     );
                     break;
                 case "yellow":
                     // load yellow block texture
                     tc.currImage = new TextureRegion(
-                        textures.findRegion("blocks-sheet-removebg-preview"),
+                        textures.findRegion("Brick3"),
                         81, 2, 34, 32
                     );
                     break;
@@ -264,6 +270,7 @@ public class LevelLoader implements Disposable {
             en.addEntity(blockEntity);
 
             numOfBlocksLeft++;
+            System.out.println("Block added to engine");
         }
         // thêm phần đọc cho txt
 //        int[][] mapData = loadMap("maps/level1.txt"); // đường dẫn map txt của bạn

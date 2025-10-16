@@ -60,7 +60,7 @@ public class GameAssetManager {
         manager.setLoader(BitmapFont.class, ".ttf", new FreetypeFontLoader(new InternalFileHandleResolver()));
         FreetypeFontLoader.FreeTypeFontLoaderParameter fontParameterSmall = new FreetypeFontLoader.FreeTypeFontLoaderParameter();
         fontParameterSmall.fontFileName = gameFont;
-        fontParameterSmall.fontParameters.size = 18;
+        fontParameterSmall.fontParameters.size = 36;
         manager.load(gameFont, BitmapFont.class, fontParameterSmall);
     }
 

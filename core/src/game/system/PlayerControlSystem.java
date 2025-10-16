@@ -77,7 +77,9 @@ public class PlayerControlSystem extends IteratingSystem {
 
         // Xử lý phóng bóng
         if (keyCon.space) {
+            System.out.println("Code go here: launch ball! ");
             handleLaunchBall(attachComponent);
+            System.out.println("Code went here: launch ball!");
         }
 
         // Xử lý mở menu
