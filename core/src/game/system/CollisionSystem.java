@@ -130,7 +130,7 @@ public class CollisionSystem extends IteratingSystem {
         // Kiểm tra điều kiện hoàn thành màn chơi.
         if (levelManager.currentLevel.numOfBlocksLeft <= 0) {
             // FIXME
-//            hud.showLevelCompletedDialog();
+            hud.showGameOverDialog();
         }
 
         // Tạo hiệu ứng hạt tại vị trí gạch vỡ.

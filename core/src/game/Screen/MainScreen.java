@@ -48,7 +48,7 @@ public class MainScreen implements Screen,ScoreChangeListener {
         camera.setToOrtho(false,viewport.getWorldWidth(), viewport.getScreenHeight());
         camera.position.set(viewport.getWorldWidth()/2,viewport.getWorldHeight()/2,0);
 
-        collisionSystem = new CollisionSystem(hud,levelManager, this);
+
         keyboardController = new KeyboardController();
         world = new World(new Vector2(0,0),true);
         world.setContactListener(new B2dContactListener());
@@ -57,6 +57,8 @@ public class MainScreen implements Screen,ScoreChangeListener {
         engine = new PooledEngine();
         levelManager = new LevelManager(game,world,engine,camera);
         hud = new Hud(game, levelManager);
+        collisionSystem = new CollisionSystem(hud,levelManager, this);
+
         // Hud
 
         spriteBatch.setProjectionMatrix(camera.combined);
