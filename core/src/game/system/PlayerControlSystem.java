@@ -52,7 +52,7 @@ public class PlayerControlSystem extends IteratingSystem {
 
         final PhysicsBodyComponent b2body = b2BodyMapper.get(entity);
         final LinkedEntityComponent attachComponent = attachMapper.get(entity);
-        final float width = Utilities.PADDLE_WIDTH; // Giả sử chiều rộng paddle là hằng số
+        final float width = Utilities.convertToPPM(Utilities.PADDLE_WIDTH); // Giả sử chiều rộng paddle là hằng số
 
         // Xử lý di chuyển trái/phải
         if (keyCon.left && b2body.body.getPosition().x - width / 2 > Utilities.PADDLE_PADDING) {
@@ -77,9 +77,7 @@ public class PlayerControlSystem extends IteratingSystem {
 
         // Xử lý phóng bóng
         if (keyCon.space) {
-            System.out.println("Code go here: launch ball! ");
             handleLaunchBall(attachComponent);
-            System.out.println("Code went here: launch ball!");
         }
 
         // Xử lý mở menu

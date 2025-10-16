@@ -179,6 +179,7 @@ public class Hud implements Disposable {
 
     // Example method to show the level completion dialog
     public void showLevelCompleteDialog() {
+        logger.info("Showing Level Complete Dialog");
         openDialog(
             level < LevelManager.MAX_LEVELS ? "Congratulations! You've completed Level " + level + "." : "Your final score is: " + score,
             level < LevelManager.MAX_LEVELS ? "Next Level" : "Menu",
@@ -188,7 +189,7 @@ public class Hud implements Disposable {
                 public void clicked(InputEvent event, float x, float y) {
                     if (level < LevelManager.MAX_LEVELS) {
                         levelManager.loadLevel(++level);
-
+                        System.out.println("They clicked");
                         userChoice = UserChoice.NEXT_LEVEL;
                     }else{
                         // reset game state

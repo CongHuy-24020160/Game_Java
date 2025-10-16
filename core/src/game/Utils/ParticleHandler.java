@@ -62,9 +62,13 @@ public class ParticleHandler {
      */
     public void render(SpriteBatch batch) {
         // Ở đây không begin()/end() để tránh xung đột với các lớp khác
+        batch.begin();
         for (ParticleEffectPool.PooledEffect fx : runningEffects) {
+
             fx.draw(batch);
+
         }
+        batch.end();
     }
 
     /**

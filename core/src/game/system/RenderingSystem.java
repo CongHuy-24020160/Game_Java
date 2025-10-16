@@ -28,12 +28,12 @@ public class RenderingSystem extends IteratingSystem {
     public void update(float deltaTime) {
         // Chúng ta chỉ gọi batch.begin() một lần duy nhất
         // trước khi vẽ tất cả các đối tượng.
-        batch.begin();
+//        batch.begin();
 
         super.update(deltaTime);
         // Sau khi đã vẽ xong tất cả các đối tượng,
         // chúng ta gọi batch.end() một lần duy nhất.
-        batch.end();
+//        batch.end();
     }
 
     @Override
@@ -50,10 +50,11 @@ public class RenderingSystem extends IteratingSystem {
         final float height = Utilities.convertToPPM(texture.currImage.getRegionHeight());
         final float originX = width * 0.5f; // Tọa độ tâm X
         final float originY = height * 0.5f; // Tọa độ tâm Y
-
+        batch.begin();
         batch.draw(texture.currImage,
             b2body.body.getPosition().x - originX, // Vị trí X
             b2body.body.getPosition().y - originY, // Vị trí Y
             width, height);
+        batch.end();
     }
 }

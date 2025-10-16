@@ -57,9 +57,12 @@ public class MainScreen implements Screen,ScoreChangeListener {
         engine = new PooledEngine();
         levelManager = new LevelManager(game,world,engine,camera);
         hud = new Hud(game, levelManager);
-        collisionSystem = new CollisionSystem(hud,levelManager, this);
 
-        // Hud
+
+
+        particleHandler = new ParticleHandler("particles/test.p", "particles");
+        particleHandler.resizeAll(1f);
+        particleHandler.trigger(10, 20);
 
         spriteBatch.setProjectionMatrix(camera.combined);
     }
@@ -75,11 +78,12 @@ public class MainScreen implements Screen,ScoreChangeListener {
 
         engine.addSystem(new BallSystem(hud,levelManager));
         engine.addSystem(new AttachSystem());
+        collisionSystem = new CollisionSystem(hud,levelManager, this);
         engine.addSystem(collisionSystem);
         engine.addSystem(new SoundSystem(game.getGameSettings()));
         engine.addSystem(new PlayerControlSystem(keyboardController,hud,levelManager));
 
-        inputMultiplexer.addProcessor(keyboardController);
+        inputMultiplexer.addProcessor(hud.getStage());
         inputMultiplexer.addProcessor(keyboardController);
         Gdx.input.setInputProcessor(inputMultiplexer);
     }
@@ -97,20 +101,19 @@ public class MainScreen implements Screen,ScoreChangeListener {
         // Update logic game
         update(delta);
 
-
-        engine.update(delta);
-
         camera.update();
         spriteBatch.setProjectionMatrix(camera.combined);
 
-        spriteBatch.begin();
+//        spriteBatch.begin();
+
         levelManager.renderLevel();
+
+        engine.update(delta);
 
         collisionSystem.particlesManager.render(spriteBatch);
 
-        // not error
         hud.render();
-        spriteBatch.end();
+//        spriteBatch.end();
     }
 
     @Override
