@@ -104,7 +104,7 @@ public class MainScreen implements Screen,ScoreChangeListener {
         camera.update();
         spriteBatch.setProjectionMatrix(camera.combined);
 
-//        spriteBatch.begin();
+       // spriteBatch.begin();
 
         levelManager.renderLevel();
 
@@ -112,8 +112,8 @@ public class MainScreen implements Screen,ScoreChangeListener {
 
         collisionSystem.particlesManager.render(spriteBatch);
 
+        //spriteBatch.end();
         hud.render();
-//        spriteBatch.end();
     }
 
     @Override

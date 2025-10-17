@@ -42,16 +42,23 @@ public class LoadingScreen implements Screen {
     public void show() {
         stage = new Stage();
 
-        // add fonts
+        // 1. Chỉ queue font, KHÔNG gọi finishLoading()
         game.assetManager.queueAddFonts();
+
+        // Chờ cho font tải xong để có thể dùng cho Label
         game.assetManager.manager.finishLoading();
 
-        // loading table
+        // --- Bắt đầu queue TẤT CẢ các tài nguyên khác ở đây ---
+        System.out.println("(LoadingScreen) Queuing all assets...");
+        game.assetManager.queueAddImages();
+        game.assetManager.queueLoadSkin();
+        game.assetManager.queueLoadSound();
+        game.assetManager.queueLoadMusic(); // <-- THÊM DÒNG QUAN TRỌNG NÀY
+
+        // --- Thiết lập UI ---
         table = new Table();
         table.setFillParent(true);
         table.setDebug(false);
-
-        // title label
         loadingTitle = new Label("Loading.", new Label.LabelStyle(
             game.assetManager.manager.get(game.assetManager.gameFont, BitmapFont.class), Color.WHITE));
         table.add(loadingTitle);
@@ -60,24 +67,29 @@ public class LoadingScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0,0,0,1); //  clear the screen
+        Gdx.gl.glClearColor(0,0,0,1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        if(game.assetManager.manager.update()){
-            loadingtimer += delta;
-            handleLoadingAssets();
-
-            if(currentLoadingStage > NUM_OF_STAGES && loadingtimer >= loadingDuration){
-
-                // change to menu screen
-                game.screenManager.changeScreen(ScreenManager.MENU);
-            }
+        // 2. Vòng lặp render chỉ cần làm một việc: update trình quản lý
+        // manager.update() sẽ trả về true khi TẤT CẢ đã tải xong.
+        if (game.assetManager.manager.update()) {
+            // Đã tải xong, chuyển màn hình
+            game.screenManager.changeScreen(ScreenManager.MENU);
         }
 
-        handleLoadingTitle(delta);
-        stage.act();
+        // (Tùy chọn) Hiển thị tiến trình thực tế
+        float progress = game.assetManager.manager.getProgress();
+        handleLoadingTitle(delta, progress); // Truyền progress vào để hiển thị
+
+        stage.act(delta);
         stage.draw();
     }
+
+    // Sửa lại hàm này để hiển thị %
+    private void handleLoadingTitle(float delta, float progress){
+        loadingTitle.setText("Loading... " + (int)(progress * 100) + "%");
+    }
+
 
     private void handleLoadingTitle(float delta){
         loadingStateTimer += delta;

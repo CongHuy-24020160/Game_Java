@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -14,47 +13,47 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import game.ArkanoidGame;
 import game.Utilities;
 
-import java.awt.*;
-import java.util.logging.Logger;
-import game.ArkanoidGame;
-
 public class MenuScreen implements Screen {
-    private static final Logger logger = Logger.getLogger(MenuScreen.class.getName());
-    private static final boolean DEBUG = true;
-
     private ArkanoidGame game;
     private Viewport viewport;
-
     private Stage stage;
+
+    // Các biến này sẽ được khởi tạo trong show()
     private Table table;
     private Skin skin;
-
     private Label title;
-    private TextButton startGame,settings,exit;
-
+    private TextButton startGame, settings, exit;
     private Music backgroundMusic;
 
-    public MenuScreen(ArkanoidGame game){
+    /**
+     * Hàm khởi tạo chỉ nên làm những việc cơ bản nhất,
+     * không lấy tài nguyên ở đây.
+     */
+    public MenuScreen(ArkanoidGame game) {
         this.game = game;
-        viewport =  new FitViewport(Utilities.VIRTUAL_WIDTH,Utilities.VIRTUAL_HEIGHT);
-        stage = new Stage(viewport);
-        stage.setDebugAll(false);
-        skin = game.assetManager.manager.get("ui/uiskin.json", Skin.class);
-        backgroundMusic = game.assetManager.manager.get(game.assetManager.backgroundMusic,Music.class);
-        backgroundMusic.setLooping(true);
+        this.viewport = new FitViewport(Utilities.VIRTUAL_WIDTH, Utilities.VIRTUAL_HEIGHT);
+        this.stage = new Stage(viewport);
+    }
 
-        if (game.getGameSettings().isMusicEnabled()){
+    @Override
+    public void show() {
+        // --- LẤY TÀI NGUYÊN Ở ĐÂY ---
+        // Đây là thời điểm an toàn nhất để lấy tài nguyên đã được tải
+        this.skin = game.assetManager.manager.get("ui/uiskin.json", Skin.class);
+        this.backgroundMusic = game.assetManager.manager.get(game.assetManager.backgroundMusic, Music.class);
+
+        backgroundMusic.setLooping(true);
+        backgroundMusic.setVolume(game.getGameSettings().getMusicVolume());
+        if (game.getGameSettings().isMusicEnabled()) {
             backgroundMusic.play();
-        }
-        else {
+        } else {
             backgroundMusic.pause();
         }
-        backgroundMusic.setVolume(game.getGameSettings().getMusicVolume());
-    }
-    @Override
-    public void show(){
+
+        // --- Bắt đầu xây dựng UI ---
         stage.clear();
         Gdx.input.setInputProcessor(stage);
 
@@ -62,57 +61,52 @@ public class MenuScreen implements Screen {
         table.setFillParent(true);
         table.setDebug(false);
 
-        //title = new Label("Arkanoid"); set title
+        title = new Label("Arkanoid", skin);
 
-        // buttons
+        // Nút Start Game
         startGame = new TextButton("Start Game", skin);
         startGame.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                System.out.println("Start Game");
-
-                // change to main screen
                 game.screenManager.changeScreen(ScreenManager.APPLICATION);
             }
         });
 
+        // Nút Settings
         settings = new TextButton("Settings", skin);
         settings.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                System.out.println("Settings");
-
-                // change to setting screen
                 game.screenManager.changeScreen(ScreenManager.PREFERENCES);
             }
         });
 
+        // Nút Exit
         exit = new TextButton("Exit", skin);
         exit.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                System.out.println("Exit");
-
-                // exit
                 Gdx.app.exit();
             }
         });
 
-        table.add(title).fillX().uniformX();
-        table.row().pad(40, 0, 20, 0);
-        table.add(startGame);
-        table.row().pad(20);
-        table.add(settings);
-        table.row().pad(20);
-        table.add(exit);
+        // Thêm các thành phần vào table
+        table.add(title).expandX().padBottom(50);
+        table.row();
+        table.add(startGame).width(300).height(60).pad(10);
+        table.row();
+        table.add(settings).width(300).height(60).pad(10);
+        table.row();
+        table.add(exit).width(300).height(60).pad(10);
+
         stage.addActor(table);
     }
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0,0,0,1); //  clear the screen
+        Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        stage.act();
+        stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
         stage.draw();
     }
 
@@ -122,24 +116,17 @@ public class MenuScreen implements Screen {
     }
 
     @Override
-    public void pause() {
-
-    }
+    public void pause() {}
 
     @Override
-    public void resume() {
-
-    }
+    public void resume() {}
 
     @Override
-    public void hide() {
-
-    }
+    public void hide() {}
 
     @Override
     public void dispose() {
-        backgroundMusic.dispose();
+        // Giải phóng tài nguyên khi không cần nữa
         stage.dispose();
-        skin.dispose();
     }
 }

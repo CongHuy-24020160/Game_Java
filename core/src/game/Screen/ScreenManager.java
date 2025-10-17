@@ -13,7 +13,7 @@ public class ScreenManager {
 
     // screens to load
     private LoadingScreen loadingScreen;
-    //private PreferencesScreen preferencesScreen;
+    private PreferenceScreen preferencesScreen;
     private MenuScreen menuScreen;
     private MainScreen mainScreen;
     private EndScreen endScreen;
@@ -29,10 +29,10 @@ public class ScreenManager {
                 if(menuScreen == null) menuScreen = new MenuScreen(game);
                 game.setScreen(menuScreen);
                 break;
-//            case PREFERENCES:
-//                if(preferencesScreen == null) preferencesScreen = new PreferencesScreen(game);
-//                game.setScreen(preferencesScreen);
-//                break;
+            case PREFERENCES:
+                if(preferencesScreen == null) preferencesScreen = new PreferenceScreen(game);
+                game.setScreen(preferencesScreen);
+                break;
             case APPLICATION:
                 if (ArkanoidGame.DEBUG_MODE){
                     System.out.println("ScreenManager.java) Changing to Main Screen");
