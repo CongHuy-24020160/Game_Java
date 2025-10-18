@@ -1,12 +1,13 @@
-// import package vô đây
+package game.component;// import package vô đây
 
-import com.badlogic.ashley.core.component;
+import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.utils.Pool;
+
 /**
  * hàm để xác định loại của thực thể
  */
 
-public class TypeComponent {
+public class TypeComponent implements Component, Pool.Poolable {
     public static final int PLAYER_TYPE = 1 ;
     public static final int BALL_TYPE = 2;
     public static final int BLOCK_TYPE = 3;
@@ -21,7 +22,7 @@ public class TypeComponent {
     }
     // reset method to reset the type to OTHER_TYPE
     public void reset() {
-        type = OTHER_TYPE; 
+        type = OTHER_TYPE;
 }
     // constructor
     public TypeComponent(int type) {
