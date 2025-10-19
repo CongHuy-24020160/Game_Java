@@ -20,6 +20,7 @@ public class LevelManager implements Disposable {
     private PooledEngine en;
     private ArkanoidGame game;
     public LevelLoader currentLevel;
+    public boolean isLevelCompleted = false;
 
     public LevelManager(ArkanoidGame game, World world, PooledEngine en, OrthographicCamera cam){
         this.world = world;

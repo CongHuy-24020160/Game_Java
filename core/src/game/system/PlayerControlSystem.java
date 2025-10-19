@@ -46,9 +46,12 @@ public class PlayerControlSystem extends IteratingSystem {
     protected void processEntity(Entity entity, float v) {
         // Nếu có dialog đang hiển thị hoặc màn chơi đã kết thúc, vô hiệu hóa điều khiển.
         // FIXME
-//        if(hud.isDialogVisible() || lvlManager.isLevelCompleted()){
-//            return;
-//        }
+       // if( (hud.getDialog() != null && hud.getDialog().isVisible()) || lvlManager.isLevelCompleted ){
+       //     // Dừng paddle lại ngay lập tức
+       //     final PhysicsBodyComponent b2body = b2BodyMapper.get(entity);
+       //     b2body.body.setLinearVelocity(0, 0);
+       //     return; // Bỏ qua phần còn lại của hàm
+     //   }
 
         final PhysicsBodyComponent b2body = b2BodyMapper.get(entity);
         final LinkedEntityComponent attachComponent = attachMapper.get(entity);
@@ -81,10 +84,15 @@ public class PlayerControlSystem extends IteratingSystem {
         }
 
         // Xử lý mở menu
-        //FIXME
-//        if (keyCon.escape) {
-//            hud.showMenuDialog();
-//        }
+        //FIXME - đã fix
+        if (keyCon.escape) {
+            // Chỉ hiển thị dialog nếu chưa có dialog nào khác đang mở
+            if (hud.getDialog() == null || !hud.getDialog().isVisible()) {
+                hud.showMenuDialog();
+            }
+            // Reset cờ 'escape' ngay lập tức để không bị gọi 60 lần/giây
+            keyCon.escape = false;
+        }
     }
 
     //Component chứa thông tin về bóng đang dính vào thanh trượt.
