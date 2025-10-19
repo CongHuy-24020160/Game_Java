@@ -20,15 +20,13 @@ public class BallSystem extends IteratingSystem {
     // tốc độ mặc định của bóng.
     private static final float DEFAULT_BALL_SPEED = 5f;
 
-    private ComponentMapper<BallComponent> ballMapper
-        = ComponentMapper.getFor(BallComponent.class);
-    private ComponentMapper<PhysicsBodyComponent> b2bodyMapper
-        = ComponentMapper.getFor(PhysicsBodyComponent.class);
+    private ComponentMapper<BallComponent> ballMapper = ComponentMapper.getFor(BallComponent.class);
+    private ComponentMapper<PhysicsBodyComponent> b2bodyMapper = ComponentMapper.getFor(PhysicsBodyComponent.class);
 
     private final Hud hud;
     private final LevelManager levelManager;
 
-    public BallSystem(Hud hud, LevelManager levelManager){
+    public BallSystem(Hud hud, LevelManager levelManager) {
         super(Family.all(BallComponent.class, PhysicsBodyComponent.class).get());
         this.hud = hud;
         this.levelManager = levelManager;
@@ -40,7 +38,8 @@ public class BallSystem extends IteratingSystem {
         final PhysicsBodyComponent ballB2body = b2bodyMapper.get(entity);
 
         // Bỏ qua nếu bóng đã bị hủy (ví dụ: khi tải màn chơi mới).
-        if(ballB2body.isDead) return;
+        if (ballB2body.isDead)
+            return;
 
         handleScreenBoundaryCollisions(ballC, ballB2body);
         handleOutOfBounds(ballC, ballB2body);
@@ -54,13 +53,13 @@ public class BallSystem extends IteratingSystem {
         final float ballRadius = ballB2body.body.getFixtureList().get(0).getShape().getRadius();
 
         // Va chạm với cạnh trên
-        if(ballPosition.y + ballRadius >= Utilities.getPPMHeight()){
+        if (ballPosition.y + ballRadius >= Utilities.getPPMHeight()) {
             ballC.reverseY(ballB2body.body);
             ballC.canBounce = true;
         }
 
         // Va chạm với cạnh trái hoặc phải
-        if(ballPosition.x + ballRadius >= Utilities.getPPMWidth() || ballPosition.x - ballRadius <= 0){
+        if (ballPosition.x + ballRadius >= Utilities.getPPMWidth() || ballPosition.x - ballRadius <= 0) {
             ballC.reverseX(ballB2body.body);
             ballC.canBounce = true;
         }
@@ -81,10 +80,10 @@ public class BallSystem extends IteratingSystem {
             hud.setLives(hud.getLives() - 1);
             hud.updateLives();
 
-            // Kiểm tra điều kiện thua cuộc.
-//            if(hud.getHealth() <= 0){
-//                hud.showGameOverDialog();
-//            }
+             // Kiểm tra điều kiện thua cuộc.
+           if(hud.getLives() <= 0){
+               hud.showGameOverDialog();
+           }
 
             // Đánh dấu bóng là đã "chết" trong lượt này để tránh xử lý nhiều lần.
             ballC.isDead = true;
