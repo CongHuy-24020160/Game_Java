@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g3d.particles.ParticleSystem;
+import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Logger;
@@ -102,9 +103,10 @@ public class MainScreen implements Screen,ScoreChangeListener {
         update(delta);
 
         camera.update();
+
         spriteBatch.setProjectionMatrix(camera.combined);
 
-       // spriteBatch.begin();
+
 
         levelManager.renderLevel();
 
@@ -112,7 +114,7 @@ public class MainScreen implements Screen,ScoreChangeListener {
 
         collisionSystem.particlesManager.render(spriteBatch);
 
-        //spriteBatch.end();
+
         hud.render();
     }
 

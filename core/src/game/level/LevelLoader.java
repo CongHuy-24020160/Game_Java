@@ -26,8 +26,8 @@ import com.badlogic.gdx.graphics.Texture;
 
 public class LevelLoader implements Disposable {
     private BodyFactory bodyFactory;
-    private TmxMapLoader mapLoader;
-    private TiledMap map;
+    public TmxMapLoader mapLoader;
+    public TiledMap map;
     private World world;
     private ArkanoidGame game;
     private PooledEngine en;
@@ -129,13 +129,11 @@ public class LevelLoader implements Disposable {
         b2bodyC.body.setUserData(playerEntity);
         typeC.type = TypeComponent.PLAYER_TYPE;
         attachC.setLinkedEntity(ballEntity);
-        System.out.println("Player body created");
         // load texture
         tc.currImage = new TextureRegion(
             textures.findRegion("Player"),
-            0, 0, 100, 30
+            0, 0, 74, 26
         );
-        System.out.println("Code run here");
 
         // load transform
         tranC.pos.set(b2bodyC.body.getPosition().x, b2bodyC.body.getPosition().y, 0);
@@ -172,11 +170,8 @@ public class LevelLoader implements Disposable {
         // load texture
         tc.currImage = new TextureRegion(
             textures.findRegion("Ball_small-blue"),
-            8, 31, 25, 25
+            0, 0, 13, 12
         );
-        if (tc.currImage == null) {
-            System.out.println("this is null");
-        }
 
         // create box2d body
         b2bodyC.body = bodyFactory.makeCirclePolyBody(
@@ -220,28 +215,28 @@ public class LevelLoader implements Disposable {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 
             MapProperties properties = object.getProperties();
-            String color = (String) properties.get("color");
+            String blockType = (String) properties.get("BlockType");
 
-            switch(color){
-                case "red":
+            switch(blockType){
+                case "Brick_1":
                     // load red block texture
                     tc.currImage = new TextureRegion(
                         textures.findRegion("Brick1"),
-                        1, 2, 34, 32
+                        0, 0, 40, 15
                     );
                     break;
-                case "purple":
+                case "Brick_2":
                     // load purple block texture
                     tc.currImage = new TextureRegion(
                         textures.findRegion("Brick2"),
-                        41, 2, 34, 32
+                        0, 0, 40, 15
                     );
                     break;
-                case "yellow":
+                case "Brick_3":
                     // load yellow block texture
                     tc.currImage = new TextureRegion(
                         textures.findRegion("Brick3"),
-                        81, 2, 34, 32
+                        0, 0, 40, 15
                     );
                     break;
             }
