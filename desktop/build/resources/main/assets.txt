@@ -16,10 +16,17 @@ images/Brick_unbreakable2.png
 images/Frame.png
 images/Player.png
 images/Player_flash.png
+levels/ArkanoidGame.tsx
+levels/Background1.tsx
+levels/MapProject.tiled-project
+levels/MapProject.tiled-session
 levels/background.tsx
 levels/blockbreaker-blocks.tsx
 levels/blockbreaker-spritesheet.tsx
 levels/blockbreaker-spritesheet_-_Copy-removebg-preview.tsx
+levels/level0_1.tmx
+levels/level0_2.tmx
+levels/level0_3.tmx
 levels/level1.tmx
 levels/level2.tmx
 levels/level3.tmx

@@ -6,6 +6,7 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import game.ArkanoidGame;
 import game.Hud;
 import game.Utilities;
 import game.component.*;
@@ -92,6 +93,35 @@ public class CollisionSystem extends IteratingSystem {
     /**
      * tính toán và áp dụng góc nảy cho bóng.
      */
+//    private void handleBallPlayerCollision(Entity ballEntity, Entity playerEntity) {
+//        final PhysicsBodyComponent ballB2body = b2BodyC.get(ballEntity);
+//        final PhysicsBodyComponent playerB2body = b2BodyC.get(playerEntity);
+//        final BallComponent ball = ballC.get(ballEntity);
+//
+//        final Vector2 ballPosition = ballB2body.body.getPosition();
+//        final Vector2 playerPosition = playerB2body.body.getPosition();
+//        final float paddleWidth = Utilities.convertToPPM(Utilities.PADDLE_WIDTH);
+//        float relativeIntersectX = ballPosition.x - playerPosition.x ;
+//        float normalizedIntersectX = relativeIntersectX / paddleWidth;
+//        float maxBoucedAngle = (float)Math.toDegrees(150);
+//        // Mặc định nảy thẳng lên.
+//        float angle = 90;
+//
+//        float bounceAngle = normalizedIntersectX * maxBoucedAngle;
+//
+//        // Tính toán vị trí va chạm tương đối trên thanh trượt để quyết định góc nảy.
+//        if (ballPosition.x < playerPosition.x - paddleWidth / 6) { // Va chạm phần bên trái của thanh trượt
+//            angle = 135;
+//        } else if (ballPosition.x > playerPosition.x + paddleWidth / 6) { // Va chạm phần bên phải
+//            angle = 45;
+//        }
+//        System.out.println("angle: "+bounceAngle);
+//        System.out.println("normalizedIntersectX: "+normalizedIntersectX);
+//
+//        // Tạo và áp dụng lực nảy mới cho bóng.
+//        Vector2 force = new Vector2(1, 1).setAngleDeg(bounceAngle).scl(ball.BallSpeed);
+//        ballB2body.body.setLinearVelocity(force);
+//    }
     private void handleBallPlayerCollision(Entity ballEntity, Entity playerEntity) {
         final PhysicsBodyComponent ballB2body = b2BodyC.get(ballEntity);
         final PhysicsBodyComponent playerB2body = b2BodyC.get(playerEntity);
@@ -101,19 +131,35 @@ public class CollisionSystem extends IteratingSystem {
         final Vector2 playerPosition = playerB2body.body.getPosition();
         final float paddleWidth = Utilities.convertToPPM(Utilities.PADDLE_WIDTH);
 
-        // Mặc định nảy thẳng lên.
-        float angle = 90;
+        // Tính vị trí va chạm tương đối (từ -1 -> 1)
+        float relativeIntersectX = ballPosition.x - playerPosition.x;
+        float normalizedIntersectX = relativeIntersectX / (paddleWidth / 2f);
 
-        // Tính toán vị trí va chạm tương đối trên thanh trượt để quyết định góc nảy.
-        if (ballPosition.x < playerPosition.x - paddleWidth / 6) { // Va chạm phần bên trái của thanh trượt
-            angle = 135;
-        } else if (ballPosition.x > playerPosition.x + paddleWidth / 6) { // Va chạm phần bên phải
-            angle = 45;
+        // Giới hạn giá trị để tránh nảy quá gắt
+        normalizedIntersectX = MathUtils.clamp(normalizedIntersectX, -1f, 1f);
+
+        // Góc nảy tối đa tính từ phương thẳng đứng (đơn vị: độ)
+        float maxBounceAngle = 60f;
+
+        // Góc phản xạ = 90° ± (normalizedIntersectX * maxBounceAngle)
+        // (vì 90° là hướng thẳng lên)
+        float bounceAngle = 90f - normalizedIntersectX * maxBounceAngle;
+
+        // In ra debug
+        if (ArkanoidGame.DEBUG_MODE){
+            System.out.println("relativeIntersectX: " + relativeIntersectX);
+            System.out.println("normalizedIntersectX: " + normalizedIntersectX);
+            System.out.println("bounceAngle: " + bounceAngle);
         }
 
-        // Tạo và áp dụng lực nảy mới cho bóng.
-        Vector2 force = new Vector2(0, 1).setAngleDeg(angle).scl(ball.BallSpeed);
-        ballB2body.body.setLinearVelocity(force);
+        // Tính vector vận tốc mới từ góc nảy
+        Vector2 velocity = new Vector2(1, 0).setAngleDeg(bounceAngle).scl(ball.BallSpeed);
+
+        // Đảm bảo bóng luôn đi lên (y > 0)
+        if (velocity.y < 0) velocity.y *= -1;
+
+        // Gán vận tốc mới
+        ballB2body.body.setLinearVelocity(velocity);
     }
 
     /**
