@@ -101,10 +101,11 @@ public class Hud implements Disposable {
         skin = game.assetManager.manager.get("ui/uiskin.json", Skin.class);
 
         // Lấy texture quả bóng hiển thị mạng sống
-        ballTexture = new TextureRegion(
-            textures.findRegion("Ball_small-blue"),
-            8, 31, 25, 25
-        );
+        // = new TextureRegion(
+        //  textures.findRegion("Ball_small-blue"),
+         //   8, 31, 25, 25
+       // );
+        ballTexture = textures.findRegion("Ball_small-blue");
         if (ballTexture.getTexture() == null){
             System.out.println("Ball Texture is null");
         }

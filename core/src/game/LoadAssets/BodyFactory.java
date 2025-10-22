@@ -32,8 +32,11 @@ public class BodyFactory {
                 case HARDENED:
                 case STEEL:
                     fixtureDef.density = 1f;
-                    fixtureDef.friction = 0.3f;
-                    fixtureDef.restitution = 0.1f;
+                    fixtureDef.friction = 0.3f; // Giữ nguyên
+
+
+                    fixtureDef.restitution = 1.0f; // Thay 0.1f thành 1.0f
+
                     break;
                 case PUFF:
                     fixtureDef.density = 1f;

@@ -75,7 +75,9 @@ public class CollisionSystem extends IteratingSystem {
      * @param otherEntity Entity mà quả bóng đã va chạm.
      */
     private void handleBallCollision(Entity ballEntity, Entity otherEntity) {
+
         final TypeComponent otherType = typeC.get(otherEntity);
+
 
         if (otherType == null) return;
 
@@ -123,9 +125,23 @@ public class CollisionSystem extends IteratingSystem {
 //        ballB2body.body.setLinearVelocity(force);
 //    }
     private void handleBallPlayerCollision(Entity ballEntity, Entity playerEntity) {
+        final BallComponent ball = ballC.get(ballEntity);
+// 1. Chọn hệ số làm chậm (ví dụ: 0.8f = giảm 20% tốc độ sau mỗi lần chạm)
+        final float SLOW_DOWN_FACTOR = 0.8f;
+
+// 2. Đặt tốc độ tối thiểu để bóng không dừng hẳn
+        final float MIN_BALL_SPEED = 3.5f;
+
+// 3. Giảm tốc độ của bóng
+        ball.BallSpeed = ball.BallSpeed * SLOW_DOWN_FACTOR;
+
+// 4. Đảm bảo tốc độ không bao giờ thấp hơn mức tối thiểu
+        if (ball.BallSpeed < MIN_BALL_SPEED) {
+            ball.BallSpeed = MIN_BALL_SPEED;
+        }
         final PhysicsBodyComponent ballB2body = b2BodyC.get(ballEntity);
         final PhysicsBodyComponent playerB2body = b2BodyC.get(playerEntity);
-        final BallComponent ball = ballC.get(ballEntity);
+
 
         final Vector2 ballPosition = ballB2body.body.getPosition();
         final Vector2 playerPosition = playerB2body.body.getPosition();
@@ -167,39 +183,39 @@ public class CollisionSystem extends IteratingSystem {
      */
     private void handleBallBlockCollision(Entity ballEntity, Entity blockEntity) {
         final PhysicsBodyComponent blockB2Body = b2BodyC.get(blockEntity);
-        final PhysicsBodyComponent ballB2Body = b2BodyC.get(ballEntity);
-        final BallComponent ball = ballC.get(ballEntity);
-        final TextureComponent blockTexture = textureC.get(blockEntity);
+        // final PhysicsBodyComponent ballB2Body = b2BodyC.get(ballEntity);
+        //final BallComponent ball = ballC.get(ballEntity);
+        //final TextureComponent blockTexture = textureC.get(blockEntity);
 
-        Vector2 ballPosition = ballB2Body.body.getPosition();
-        Vector2 blockPosition = blockB2Body.body.getPosition();
-        ballB2Body.body.setLinearVelocity(0, 0);
-        Vector2 force = new Vector2(0, 0);
-        float angle = 0;
+        //Vector2 ballPosition = ballB2Body.body.getPosition();
+        //Vector2 blockPosition = blockB2Body.body.getPosition();
+        //ballB2Body.body.setLinearVelocity(0, 0);
+        //Vector2 force = new Vector2(0, 0);
+        //float angle = 0;
 
-        if(ballPosition.x <=
-            blockPosition.x - Utilities.convertToPPM((float) blockTexture.currImage.getRegionWidth() /2)){ // LEFT
-            force = new Vector2(-1, 0);
-            angle = MathUtils.random(-150, 150);
-        }else if(ballPosition.x >=
-            blockPosition.x + Utilities.convertToPPM((float) blockTexture.currImage.getRegionWidth() /2)){ // RIGHT
-            force = new Vector2(1, 0);
-            angle = MathUtils.random(-30, 30);
-        }
+        //if(ballPosition.x <=
+            //blockPosition.x - Utilities.convertToPPM((float) blockTexture.currImage.getRegionWidth() /2)){ // LEFT
+            //force = new Vector2(-1, 0);
+            //angle = MathUtils.random(-150, 150);
+        //}else if(ballPosition.x >=
+            //blockPosition.x + Utilities.convertToPPM((float) blockTexture.currImage.getRegionWidth() /2)){ // RIGHT
+            // force = new Vector2(1, 0);
+            // angle = MathUtils.random(-30, 30);
+       // }
 
-        if(ballPosition.y >=
-            blockPosition.y - Utilities.convertToPPM((float) blockTexture.currImage.getRegionWidth() /2)){ // TOP
-            force = new Vector2(0, 1);
-            angle = MathUtils.random(60, 120);
-        }else if(ballPosition.y <=
-            blockPosition.y + Utilities.convertToPPM((float) blockTexture.currImage.getRegionWidth() /2)){ // DOWN
-            force = new Vector2(0, -1);
-            angle = MathUtils.random(-120, -60);
-        }
+        // if(ballPosition.y >=
+            // blockPosition.y - Utilities.convertToPPM((float) blockTexture.currImage.getRegionWidth() /2)){ // TOP
+            // force = new Vector2(0, 1);
+           //  angle = MathUtils.random(60, 120);
+      // }else if(ballPosition.y <=
+           // blockPosition.y + Utilities.convertToPPM((float) blockTexture.currImage.getRegionWidth() /2)){ // DOWN
+           // force = new Vector2(0, -1);
+           // angle = MathUtils.random(-120, -60);
+      //  }
 
-        force.nor().scl(ball.BallSpeed);
-        force.setAngleDeg(angle);
-        ballB2Body.body.applyLinearImpulse(force, ballB2Body.body.getWorldCenter(), true);
+        //force.nor().scl(ball.BallSpeed);
+        //force.setAngleDeg(angle);
+        //ballB2Body.body.applyLinearImpulse(force, ballB2Body.body.getWorldCenter(), true);
         // Cộng điểm cho người chơi.
         scoreChangeListener.onScoreChanged(100);
 
@@ -208,7 +224,7 @@ public class CollisionSystem extends IteratingSystem {
 
         // Kiểm tra điều kiện hoàn thành màn chơi.
         if (levelManager.currentLevel.numOfBlocksLeft <= 0) {
-            hud.showLevelCompleteDialog();
+           hud.showLevelCompleteDialog();
           //  levelManager.currentLevel.isL = true;
         }
 
@@ -219,4 +235,4 @@ public class CollisionSystem extends IteratingSystem {
         blockB2Body.setToDestroy = true;
 
     }
-}
+    }

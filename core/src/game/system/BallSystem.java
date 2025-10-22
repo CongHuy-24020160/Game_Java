@@ -33,6 +33,9 @@ public class BallSystem extends IteratingSystem {
     }
 
     @Override
+
+
+
     protected void processEntity(Entity entity, float v) {
         final BallComponent ballC = ballMapper.get(entity);
         final PhysicsBodyComponent ballB2body = b2bodyMapper.get(entity);
@@ -44,6 +47,7 @@ public class BallSystem extends IteratingSystem {
         handleScreenBoundaryCollisions(ballC, ballB2body);
         handleOutOfBounds(ballC, ballB2body);
     }
+
 
     /**
      * xử lý va chạm với 3 cạnh trên, trái, và phải của màn hình.

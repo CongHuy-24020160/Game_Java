@@ -165,7 +165,7 @@ public class LevelLoader implements Disposable {
         soundComponent.soundEffects.put("ding2", (Sound) game.assetManager.manager.get(game.assetManager.hitWallSound));
         //soundComponent.soundEffects.put("explode", (Sound) game.assetManager.manager.get(game.assetManager.explosionSound));
 
-        ballC.BallSpeed = 5f;
+        ballC.BallSpeed = 3f;
 
         // load texture
         tc.currImage = new TextureRegion(
@@ -178,7 +178,10 @@ public class LevelLoader implements Disposable {
             Utilities.getPPMWidth() / 2,
             Utilities.convertToPPM(Utilities.PADDLE_HEIGHT + 25),
             Utilities.convertToPPM(tc.currImage.getRegionWidth()),
-            null,
+
+
+            BodyFactory.Material.PLASTIC,
+
             BodyDef.BodyType.DynamicBody,
             true,
             false
