@@ -32,22 +32,101 @@ public class BallSystem extends IteratingSystem {
         this.levelManager = levelManager;
     }
 
+
+    /* protected void processEntity(Entity entity, float v) {
+
+        final BallComponent ballC = ballMapper.get(entity);
+        final PhysicsBodyComponent ballB2body = b2bodyMapper.get(entity);
+        // Bỏ qua nếu bóng đã bị hủy
+        if (ballB2body.isDead)
+            return;
+
+        // CHỈ CHẠY CODE KIỂM SOÁT TỐC ĐỘ/CHỐNG KẸT KHI BÓNG ĐÃ RỜI PADDLE
+        // (Kiểm tra !ballC.canLinked)
+        if (!ballC.canLinked) {
+
+            // --- BẮT ĐẦU CODE CHỐNG KẸT (Nảy vô hạn) & CHỐNG VĂNG ---
+            Vector2 currentVelocity = ballB2body.body.getLinearVelocity();
+            float desiredSpeed = ballC.BallSpeed;
+
+            // 1. KIỂM TRA VÀ SỬA LỖI "KHÓA NGANG" (vận tốc Y quá nhỏ)
+            // Math.abs là hàm lấy giá trị tuyệt đối
+            if (Math.abs(currentVelocity.y) < 0.5f) { // Nếu kẹt ngang
+                // "Hích" nhẹ cho bóng bay lên (hoặc xuống)
+                currentVelocity.y = Math.signum(currentVelocity.y) * 0.5f;
+                // Nếu vận tốc y = 0, mặc định cho bay lên
+                if (currentVelocity.y == 0) currentVelocity.y = 0.5f;
+            }
+
+            // 2. KIỂM TRA VÀ SỬA LỖI "KHÓA DỌC" (vận tốc X quá nhỏ)
+            if (Math.abs(currentVelocity.x) < 0.5f) { // Nếu kẹt dọc
+                // "Hích" nhẹ cho bóng bay sang ngang
+                currentVelocity.x = Math.signum(currentVelocity.x) * 0.5f;
+                // Nếu vận tốc x = 0, mặc định cho bay sang phải
+                if (currentVelocity.x == 0) currentVelocity.x = 0.5f;
+            }
+
+            // Bỏ qua nếu bóng đã bị hủy (ví dụ: khi tải màn chơi mới).
+            if (ballB2body.isDead)
+                return;
+
+            handleScreenBoundaryCollisions(ballC, ballB2body);
+            handleOutOfBounds(ballC, ballB2body);
+        }
+    } */
+
     @Override
-
-
-
     protected void processEntity(Entity entity, float v) {
         final BallComponent ballC = ballMapper.get(entity);
         final PhysicsBodyComponent ballB2body = b2bodyMapper.get(entity);
 
-        // Bỏ qua nếu bóng đã bị hủy (ví dụ: khi tải màn chơi mới).
+        // Bỏ qua nếu bóng đã bị hủy
         if (ballB2body.isDead)
             return;
 
+        // 1. CHẠY CÁC HÀM CŨ TRƯỚC
+        // Hàm này có thể sẽ gọi reverseX/reverseY và làm hỏng vận tốc Y
         handleScreenBoundaryCollisions(ballC, ballB2body);
         handleOutOfBounds(ballC, ballB2body);
-    }
 
+
+        // 2. CHẠY CODE SỬA LỖI (CHỐNG KẸT/VĂNG) SAU CÙNG
+        // Code này sẽ "ghi đè" lên bất kỳ lỗi nào do reverseX gây ra
+        if (!ballC.canLinked) {
+
+            Vector2 currentVelocity = ballB2body.body.getLinearVelocity();
+            float desiredSpeed = ballC.BallSpeed;
+            boolean isStuck = false;
+
+            // 1. KIỂM TRA "KHÓA NGANG"
+            if (Math.abs(currentVelocity.y) < 0.5f) {
+                currentVelocity.y = Math.signum(currentVelocity.y) * 0.5f;
+                if (currentVelocity.y == 0) currentVelocity.y = 0.5f;
+                isStuck = true;
+            }
+
+            // 2. KIỂM TRA "KHÓA DỌC"
+            if (Math.abs(currentVelocity.x) < 0.5f) {
+                currentVelocity.x = Math.signum(currentVelocity.x) * 0.5f;
+                if (currentVelocity.x == 0) currentVelocity.x = 0.5f;
+                isStuck = true;
+            }
+
+            // 3. ÁP DỤNG LOGIC
+            if (isStuck) {
+                // NẾU BỊ KẸT: Áp dụng vận tốc đã "hích".
+                // Nó sẽ thoát khỏi vòng lặp vô hạn.
+                ballB2body.body.setLinearVelocity(currentVelocity);
+            }
+            else {
+                // NẾU KHÔNG BỊ KẸT: Chạy code "chống văng" (chuẩn hóa)
+                if (currentVelocity.len() > 0 && currentVelocity.len() != desiredSpeed) {
+                    ballB2body.body.setLinearVelocity(currentVelocity.nor().scl(desiredSpeed));
+                }
+            }
+
+        } // Đóng 'if (!ballC.canLinked)'
+    }
 
     /**
      * xử lý va chạm với 3 cạnh trên, trái, và phải của màn hình.
@@ -84,10 +163,10 @@ public class BallSystem extends IteratingSystem {
             hud.setLives(hud.getLives() - 1);
             hud.updateLives();
 
-             // Kiểm tra điều kiện thua cuộc.
-           if(hud.getLives() <= 0){
-               hud.showGameOverDialog();
-           }
+            // Kiểm tra điều kiện thua cuộc.
+            if(hud.getLives() <= 0){
+                hud.showGameOverDialog();
+            }
 
             // Đánh dấu bóng là đã "chết" trong lượt này để tránh xử lý nhiều lần.
             ballC.isDead = true;
@@ -97,7 +176,9 @@ public class BallSystem extends IteratingSystem {
 
             // Đặt lại các thuộc tính của bóng cho lượt chơi tiếp theo.
             ballC.reset();
+            ballC.canLinked = true; // báo rằng bóng đã dc gắn lại
             ballC.setBallSpeed(DEFAULT_BALL_SPEED);
+            ballB2body.body.setLinearVelocity(0, 0);
         }
     }
 }
