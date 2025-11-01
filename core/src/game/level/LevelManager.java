@@ -21,6 +21,8 @@ public class LevelManager implements Disposable {
     private ArkanoidGame game;
     public LevelLoader currentLevel;
     public boolean isLevelCompleted = false;
+    public boolean loadNextLevelFlag = false;
+    public int currentLevelNumber = 0;
 
     public LevelManager(ArkanoidGame game, World world, PooledEngine en, OrthographicCamera cam){
         this.world = world;
@@ -31,6 +33,8 @@ public class LevelManager implements Disposable {
 
     public void loadLevel(int level){
         cleanupCurrentLevel();
+        this.currentLevelNumber = level;
+        this.isLevelCompleted = false;
 
         switch (level){
             case 1:
@@ -88,6 +92,9 @@ public class LevelManager implements Disposable {
 
         // Clear the current level
         currentLevel = null;
+    }
+    public ArkanoidGame getGame() {
+        return this.game;
     }
 
     @Override

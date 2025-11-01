@@ -25,8 +25,9 @@ public class MenuScreen implements Screen {
     private Table table;
     private Skin skin;
     private Label title;
-    private TextButton startGame, settings, exit;
+    private TextButton startGame, settings, exit, highScores; // ⭐️ SỬA DÒNG NÀY ⭐️
     private Music backgroundMusic;
+
 
     /**
      * Hàm khởi tạo chỉ nên làm những việc cơ bản nhất,
@@ -90,12 +91,25 @@ public class MenuScreen implements Screen {
             }
         });
 
+// ... (code nút exit)
+
+// ⭐️ THÊM KHỐI CODE NÀY ⭐️
+        highScores = new TextButton("High Scores", skin);
+        highScores.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                game.screenManager.changeScreen(ScreenManager.HIGHSCORE);
+            }
+        });
+
         // Thêm các thành phần vào table
         table.add(title).expandX().padBottom(50);
         table.row();
         table.add(startGame).width(300).height(60).pad(10);
         table.row();
         table.add(settings).width(300).height(60).pad(10);
+        table.row();
+        table.add(highScores).width(300).height(60).pad(10); // ⭐️ THÊM DÒNG NÀY ⭐️
         table.row();
         table.add(exit).width(300).height(60).pad(10);
 

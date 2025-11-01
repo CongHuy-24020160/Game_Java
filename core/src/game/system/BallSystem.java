@@ -5,12 +5,15 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.math.Vector2;
+import game.ArkanoidGame;
 import game.Hud;
 import game.Utilities;
 import game.component.PhysicsBodyComponent;
 import game.component.BallComponent;
 import game.level.LevelManager;
 import game.Utils.UtilSound;
+import game.Utils.ScoreManager;
+import game.Screen.ScreenManager;
 
 /*
     System quản lý các logic đặc thù của quả bóng,
@@ -25,6 +28,7 @@ public class BallSystem extends IteratingSystem {
 
     private final Hud hud;
     private final LevelManager levelManager;
+
 
     public BallSystem(Hud hud, LevelManager levelManager) {
         super(Family.all(BallComponent.class, PhysicsBodyComponent.class).get());
@@ -165,20 +169,35 @@ public class BallSystem extends IteratingSystem {
 
             // Kiểm tra điều kiện thua cuộc.
             if(hud.getLives() <= 0){
-                hud.showGameOverDialog();
+
+                // ⭐️ BẮT ĐẦU LOGIC BXH MỚI ⭐️
+
+                int finalScore = hud.getScore();
+                ballC.isDead = true; // Đánh dấu bóng chết
+
+                // KIỂM TRA ĐIỂM CAO
+                if (ScoreManager.getInstance().isHighScore(finalScore)) {
+                    // LÀ ĐIỂM CAO -> ĐI TỚI MÀN NHẬP TÊN
+                    levelManager.getGame().lastScore = finalScore; // Dùng "cầu nối"
+                    levelManager.getGame().screenManager.changeScreen(ScreenManager.ENTER_HIGHSCORE);
+                } else {
+                    // KHÔNG PHẢI ĐIỂM CAO -> VỀ MÀN ENDGAME
+                    // (Bạn có thể dùng EndScreen hoặc GameOverDialog tùy ý)
+                    levelManager.getGame().screenManager.changeScreen(ScreenManager.ENDGAME);
+                }
+                // ⭐️ KẾT THÚC LOGIC BXH MỚI ⭐️
+
+            } else {
+
+                // ⭐️ CHƯA HẾT MẠNG -> RESET BÓNG (Code cũ của bạn) ⭐️
+                ballC.isDead = true;
+                levelManager.currentLevel.paddleAndBall.attachBallToPaddle();
+                ballC.reset();
+                ballC.canLinked = true; // báo rằng bóng đã dc gắn lại
+                ballC.setBallSpeed(DEFAULT_BALL_SPEED);
+                ballB2body.body.setLinearVelocity(0, 0);
             }
-
-            // Đánh dấu bóng là đã "chết" trong lượt này để tránh xử lý nhiều lần.
-            ballC.isDead = true;
-
-            // Đặt lại vị trí của bóng về thanh trượt.
-            levelManager.currentLevel.paddleAndBall.attachBallToPaddle();
-
-            // Đặt lại các thuộc tính của bóng cho lượt chơi tiếp theo.
-            ballC.reset();
-            ballC.canLinked = true; // báo rằng bóng đã dc gắn lại
-            ballC.setBallSpeed(DEFAULT_BALL_SPEED);
-            ballB2body.body.setLinearVelocity(0, 0);
         }
     }
-}
+    }
+

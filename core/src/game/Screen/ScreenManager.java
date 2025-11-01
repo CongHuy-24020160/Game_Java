@@ -10,6 +10,8 @@ public class ScreenManager {
     public static final int APPLICATION = 2;
     public static final int ENDGAME = 3;
     public static final int LOADING = 4;
+    public static final int HIGHSCORE = 5;       // ⭐️ THÊM DÒNG NÀY ⭐️
+    public static final int ENTER_HIGHSCORE = 6;
 
     // screens to load
     private LoadingScreen loadingScreen;
@@ -17,6 +19,8 @@ public class ScreenManager {
     private MenuScreen menuScreen;
     private MainScreen mainScreen;
     private EndScreen endScreen;
+    private HighScoreScreen highScoreScreen;       // ⭐️ THÊM DÒNG NÀY ⭐️
+    private EnterHighScoreScreen enterHighScoreScreen;
 
     public ScreenManager(ArkanoidGame game){this.game = game;}
 
@@ -51,6 +55,15 @@ public class ScreenManager {
                 if(loadingScreen == null) loadingScreen = new LoadingScreen(game);
                 if(ArkanoidGame.DEBUG_MODE) System.out.println("(ScreenManager.java) Changing to Loading Screen");
                 game.setScreen(loadingScreen);
+                break;
+            case HIGHSCORE: // ⭐️ THÊM KHỐI NÀY ⭐️
+                if(highScoreScreen == null) highScoreScreen = new HighScoreScreen(game);
+                game.setScreen(highScoreScreen);
+                break;
+            case ENTER_HIGHSCORE: // ⭐️ THÊM KHỐI NÀY ⭐️
+                // Luôn tạo mới để nó lấy điểm 'lastScore' mới nhất
+                enterHighScoreScreen = new EnterHighScoreScreen(game);
+                game.setScreen(enterHighScoreScreen);
                 break;
         }
     }
