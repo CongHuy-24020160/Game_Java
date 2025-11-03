@@ -2,6 +2,7 @@ package game;
 
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -9,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -229,6 +231,22 @@ public class Hud implements Disposable {
             negativeButton.addListener(negativeListener);
             dialog.button(negativeButton);
         }
+
+        dialog.addListener(new InputListener() {
+            @Override
+            public boolean keyDown(InputEvent event, int keycode) {
+                // Chỉ xử lý khi dialog là NEXT_LEVEL và người chơi nhấn SPACE
+                if (dialogType == DialogType.NEXT_LEVEL && keycode == Input.Keys.SPACE) {
+
+                    if (positiveListener != null) {
+                        // Tự động "click" vào nút "Next Level"
+                        positiveListener.clicked(null, 0, 0);
+                        return true; // Báo là đã xử lý phím
+                    }
+                }
+                return false; // Bỏ qua các phím khác
+            }
+        });
 
         dialog.show(stage);
         dialog.setVisible(true);
