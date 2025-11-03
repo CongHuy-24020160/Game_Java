@@ -58,14 +58,14 @@ public class PlayerControlSystem extends IteratingSystem {
         final float width = Utilities.convertToPPM(Utilities.PADDLE_WIDTH); // Giả sử chiều rộng paddle là hằng số
 
         // Xử lý di chuyển trái/phải
-        if (keyCon.left && b2body.body.getPosition().x - width / 2 > Utilities.PADDLE_PADDING) {
+        if (keyCon.left && !keyCon.right && b2body.body.getPosition().x - width / 2 > Utilities.PADDLE_PADDING) {
             float targetVelocityX = -PADDLE_SPEED;
             // Dùng MathUtils.lerp để tạo ra chuyển động mượt mà hơn là thay đổi vận tốc đột ngột.
             b2body.body.setLinearVelocity(
                 MathUtils.lerp(b2body.body.getLinearVelocity().x, targetVelocityX, LERP_ALPHA),
                 b2body.body.getLinearVelocity().y
             );
-        } else if (keyCon.right && b2body.body.getPosition().x + width / 2 + Utilities.PADDLE_PADDING < Utilities.getPPMWidth()) {
+        } else if (keyCon.right && !keyCon.left && b2body.body.getPosition().x + width / 2 + Utilities.PADDLE_PADDING < Utilities.getPPMWidth()) {
             b2body.body.setLinearVelocity(
                 MathUtils.lerp(b2body.body.getLinearVelocity().x, PADDLE_SPEED, LERP_ALPHA),
                 b2body.body.getLinearVelocity().y

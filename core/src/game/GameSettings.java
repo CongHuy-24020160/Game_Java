@@ -10,7 +10,7 @@ public class GameSettings {
     private static final String MUSIC_ENABLED = "musicEnabled";
     private static final String SOUND_ENABLED = "soundEnabled";
     private static final String SOUND_VOLUME = "volume";
-    private static final String GAME_NAME = "Arkanoid";
+    private static final String GAME_NAME = "ARKANOID";
 
     private GameSettings(){
         if (instance != null){
