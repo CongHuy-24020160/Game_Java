@@ -34,12 +34,21 @@ public class MainScreen implements Screen,ScoreChangeListener {
     private PooledEngine engine;
     private LevelManager levelManager;
     private Hud hud;
+
     private CollisionSystem collisionSystem;
+    private PhysicSystem physicSystem;
+    private BallSystem ballSystem;
+    private PlayerControlSystem playerControlSystem;
+    private AttachSystem attachSystem;
+    private SoundSystem soundSystem;
+    private RenderingSystem renderingSystem;
+
     private InputMultiplexer inputMultiplexer;
     private KeyboardController keyboardController;
     private World world;
     private SpriteBatch spriteBatch;
     private ParticleHandler particleHandler;
+
     public MainScreen(ArkanoidGame game){
         this.game = game;
         spriteBatch = new SpriteBatch();
@@ -57,7 +66,7 @@ public class MainScreen implements Screen,ScoreChangeListener {
 
         engine = new PooledEngine();
         levelManager = new LevelManager(game,world,engine,camera);
-        hud = new Hud(game, levelManager);
+        hud = new Hud(game, this, levelManager);
 
 
 
@@ -77,15 +86,23 @@ public class MainScreen implements Screen,ScoreChangeListener {
         hud.setScore(0);
         hud.setLevel(1);
         hud.updateLives();
-        engine.addSystem(new RenderingSystem(spriteBatch,camera));
-        engine.addSystem(new PhysicSystem(world,engine));
 
-        engine.addSystem(new BallSystem(hud,levelManager));
-        engine.addSystem(new AttachSystem());
-        collisionSystem = new CollisionSystem(hud,levelManager, this);
+        physicSystem = new PhysicSystem(world, engine);
+        ballSystem = new BallSystem(hud, levelManager);
+        attachSystem = new AttachSystem();
+        soundSystem = new SoundSystem(game.getGameSettings());
+        playerControlSystem = new PlayerControlSystem(keyboardController, hud, levelManager);
+        collisionSystem = new CollisionSystem(this, hud, levelManager, this);
+        renderingSystem = new RenderingSystem(spriteBatch, camera);
+        engine.addSystem(renderingSystem);
+        engine.addSystem(physicSystem);
+
+        engine.addSystem(ballSystem);
+        engine.addSystem(attachSystem);
+
         engine.addSystem(collisionSystem);
-        engine.addSystem(new SoundSystem(game.getGameSettings()));
-        engine.addSystem(new PlayerControlSystem(keyboardController,hud,levelManager));
+        engine.addSystem(soundSystem);
+        engine.addSystem(playerControlSystem);
 
         inputMultiplexer.addProcessor(hud.getStage());
         inputMultiplexer.addProcessor(keyboardController);
@@ -119,6 +136,33 @@ public class MainScreen implements Screen,ScoreChangeListener {
 
 
         hud.render();
+    }
+
+    /**
+     * Tạm dừng các hệ thống logic game chính.
+     * Rendering và HUD vẫn chạy.
+     */
+    public void pauseGameSystems() {
+        System.out.println("Hệ thống game đã TẠM DỪNG!");
+        if (physicSystem != null) physicSystem.setProcessing(false);
+        if (ballSystem != null) ballSystem.setProcessing(false);
+        if (playerControlSystem != null) playerControlSystem.setProcessing(false);
+        if (attachSystem != null) attachSystem.setProcessing(false);
+        if (collisionSystem != null) collisionSystem.setProcessing(false); // Dừng xử lý va chạm mới
+        if (soundSystem != null) soundSystem.setProcessing(false);
+    }
+
+    /**
+     * Khởi động lại các hệ thống logic game.
+     */
+    public void resumeGameSystems() {
+        System.out.println("Hệ thống game đã TIẾP TỤC!");
+        if (physicSystem != null) physicSystem.setProcessing(true);
+        if (ballSystem != null) ballSystem.setProcessing(true);
+        if (playerControlSystem != null) playerControlSystem.setProcessing(true);
+        if (attachSystem != null) attachSystem.setProcessing(true);
+        if (collisionSystem != null) collisionSystem.setProcessing(true);
+        if (soundSystem != null) soundSystem.setProcessing(true);
     }
 
     @Override

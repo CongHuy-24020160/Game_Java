@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import game.ArkanoidGame;
 import game.Hud;
+import game.Screen.MainScreen;
 import game.Utilities;
 import game.component.*;
 import game.component.TypeComponent;
@@ -30,10 +31,13 @@ public class CollisionSystem extends IteratingSystem {
     private Hud hud;
     public ParticleHandler particlesManager;
 
+    private MainScreen mainScreen;
+
     // ⭐️ SỬA LỖI: Hàm khởi tạo (Constructor) phải NHẬN và GÁN 3 biến này ⭐️
-    public CollisionSystem(Hud hud, LevelManager levelManager, ScoreChangeListener scoreChangeListener) {
+    public CollisionSystem(MainScreen mainScreen, Hud hud, LevelManager levelManager, ScoreChangeListener scoreChangeListener) {
         super(Family.all(ColliderComponent.class, PhysicsBodyComponent.class, BallComponent.class).get());
 
+        this.mainScreen = mainScreen;
         this.scoreChangeListener = scoreChangeListener;
         this.levelManager = levelManager; // Gán biến
         this.hud = hud; // Gán biến
@@ -175,6 +179,7 @@ public class CollisionSystem extends IteratingSystem {
 
                 // *** CHƯA PHẢI MÀN CUỐI -> HIỆN BẢNG "NEXT LEVEL" ***
                 hud.showLevelCompleteDialog();
+                mainScreen.pauseGameSystems(); // Tạm dừng hệ thống game khi thang 1 level
             }
 
             return; // Đã xử lý xong, thoát hàm

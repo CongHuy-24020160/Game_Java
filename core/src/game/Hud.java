@@ -16,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import game.Screen.MainScreen;
 import game.component.BallComponent;
 import game.level.LevelManager;
 import game.Screen.ScreenManager;
@@ -36,6 +37,8 @@ public class Hud implements Disposable {
 
     /** Tham chiếu đến game chính */
     private ArkanoidGame game;
+
+    private MainScreen mainScreen;
 
     /** Stage chứa các actor giao diện HUD */
     private Stage stage;
@@ -90,10 +93,11 @@ public class Hud implements Disposable {
      * @param game Tham chiếu đến game chính.
      * @param levelManager Quản lý các cấp độ của trò chơi.
      */
-    public Hud(ArkanoidGame game, LevelManager levelManager){
+    public Hud(ArkanoidGame game, MainScreen mainScreen, LevelManager levelManager){
         if(DEBUG_MODE) logger.info("Constructor");
 
         this.game = game;
+        this.mainScreen = mainScreen;
         this.levelManager = levelManager;
 
         // Lấy atlas và skin từ AssetManager
@@ -248,6 +252,8 @@ public class Hud implements Disposable {
                         levelManager.loadLevel(++level);
                         System.out.println("They clicked");
                         userChoice = UserChoice.NEXT_LEVEL;
+                        //  Khởi động lại các hệ thống game
+                        mainScreen.resumeGameSystems();
                     }else{
                         // reset game state
                         level = 1;
@@ -286,6 +292,7 @@ public class Hud implements Disposable {
                     handleDialogClosed();
                     userChoice = UserChoice.RETRY;
                     updateLives();
+                    mainScreen.resumeGameSystems();
                 }
             },
 
@@ -299,6 +306,8 @@ public class Hud implements Disposable {
                     game.screenManager.changeScreen(ScreenManager.MENU);
                     handleDialogClosed();
                     userChoice = UserChoice.MENU;
+
+                    mainScreen.resumeGameSystems();
                 }
             },
             DialogType.GAME_OVER
@@ -324,6 +333,7 @@ public class Hud implements Disposable {
                     game.screenManager.changeScreen(ScreenManager.MENU);
                     handleDialogClosed();
                     userChoice = UserChoice.MENU;
+                    mainScreen.resumeGameSystems();
                 }
             },
             new ClickListener(){
@@ -331,6 +341,7 @@ public class Hud implements Disposable {
                 public void clicked(InputEvent event, float x, float y) {
                     handleDialogClosed();
                     userChoice = UserChoice.CANCEL;
+                    mainScreen.resumeGameSystems();
                 }
             },
             DialogType.MENU
