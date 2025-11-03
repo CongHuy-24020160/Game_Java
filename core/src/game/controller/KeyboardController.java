@@ -34,6 +34,11 @@ public class KeyboardController implements InputProcessor {
      * Khởi tạo bộ điều khiển bàn phím.
      * Mặc định tất cả các phím đều chưa được nhấn.
      */
+
+    public boolean hasMouseMoved = false;
+
+    public boolean mouseClick; // Trạng thái nhấn chuột
+
     public KeyboardController() {
         mouseLocation = new Vector2();
     }
@@ -47,6 +52,8 @@ public class KeyboardController implements InputProcessor {
         right = false;
         space = false;
         escape = false;
+        hasMouseMoved = false;
+        mouseClick = false;
     }
 
     /**
@@ -145,21 +152,41 @@ public class KeyboardController implements InputProcessor {
         return false;
     }
 
+    @Override
+    public boolean mouseMoved(int screenX, int screenY) {
+        // Lưu lại tọa độ pixel (screen coordinates) của chuột
+        mouseLocation.set(screenX, screenY);
+        // Đặt cờ thành true để PlayerControlSystem biết và xử lý
+        hasMouseMoved = true;
+        return true; // Trả về true để báo rằng ta đã xử lý sự kiện này
+    }
+
+
+
     /**
      * Gọi khi người chơi chạm xuống (dành cho màn hình cảm ứng hoặc chuột).
      * Không dùng trong lớp này.
      */
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        return false;
+        // Kiểm tra xem có phải là chuột phải không
+        if (button == Input.Buttons.RIGHT || button == Input.Buttons.LEFT) {
+            mouseClick = true; // Đặt cờ thành true
+            return true; // Đã xử lý
+        }
+        return false; // Bỏ qua các nút chuột khác
     }
-
     /**
      * Gọi khi người chơi nhả chuột hoặc ngón tay.
      */
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        return false;
+        // Kiểm tra xem có phải là chuột phải không
+        if (button == Input.Buttons.RIGHT || button == Input.Buttons.LEFT) {
+            mouseClick = false; // Đặt cờ thành false
+            return true; // Đã xử lý
+        }
+        return false; // Bỏ qua các nút chuột khác
     }
 
     /**
@@ -175,14 +202,6 @@ public class KeyboardController implements InputProcessor {
      */
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
-        return false;
-    }
-
-    /**
-     * Gọi khi chuột di chuyển trên màn hình.
-     */
-    @Override
-    public boolean mouseMoved(int screenX, int screenY) {
         return false;
     }
 

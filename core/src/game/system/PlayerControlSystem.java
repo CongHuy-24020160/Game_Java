@@ -7,6 +7,8 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import game.Hud;
 import game.Utilities;
 import game.controller.KeyboardController;
@@ -34,12 +36,17 @@ public class PlayerControlSystem extends IteratingSystem {
     private final Hud hud;
     private final LevelManager lvlManager;
 
-    public PlayerControlSystem(KeyboardController keyCon, Hud hud, LevelManager lvlManager){
+    private final Viewport viewport;
+    private final Vector3 worldCoordinates;
+
+    public PlayerControlSystem(KeyboardController keyCon, Hud hud, LevelManager lvlManager, Viewport viewport){
         // System này chỉ xử lý các Entity có PlayerComponent (chính là thanh trượt).
         super(Family.all(PlayerIn4Component.class).get());
         this.keyCon = keyCon;
         this.hud = hud;
         this.lvlManager = lvlManager;
+        this.viewport = viewport;
+        this.worldCoordinates = new Vector3();
     }
 
     @Override
@@ -57,8 +64,34 @@ public class PlayerControlSystem extends IteratingSystem {
         final LinkedEntityComponent attachComponent = attachMapper.get(entity);
         final float width = Utilities.convertToPPM(Utilities.PADDLE_WIDTH); // Giả sử chiều rộng paddle là hằng số
 
+        // Ưu tiên 1: Kiểm tra chuột
+        if (keyCon.hasMouseMoved) {
+            // Lấy tọa độ X của chuột (tính bằng pixel)
+            worldCoordinates.set(keyCon.mouseLocation.x, 0, 0);
+
+            // Dùng viewport để "unproject" (chuyển đổi) tọa độ pixel sang tọa độ thế giới (mét)
+            viewport.unproject(worldCoordinates);
+
+            float targetX = worldCoordinates.x;
+
+            // Chặn không cho paddle đi ra khỏi màn hình
+            float paddleWidthMeters = Utilities.convertToPPM(Utilities.PADDLE_WIDTH);
+            float minX = paddleWidthMeters / 2f;
+            float maxX = Utilities.getPPMWidth() - (paddleWidthMeters / 2f);
+            targetX = MathUtils.clamp(targetX, minX, maxX);
+
+            // Đặt paddle đến vị trí của chuột (chỉ đổi X, giữ nguyên Y)
+            b2body.body.setTransform(targetX, b2body.body.getPosition().y, b2body.body.getAngle());
+
+            // Dừng mọi di chuyển cũ (từ bàn phím)
+            b2body.body.setLinearVelocity(0, 0);
+
+            // Reset cờ, chờ lần di chuyển chuột tiếp theo
+            keyCon.hasMouseMoved = false;
+        }
+        // Xử lý bàn phím
         // Xử lý di chuyển trái/phải
-        if (keyCon.left && !keyCon.right && b2body.body.getPosition().x - width / 2 > Utilities.PADDLE_PADDING) {
+        else if (keyCon.left && !keyCon.right && b2body.body.getPosition().x - width / 2 > Utilities.PADDLE_PADDING) {
             float targetVelocityX = -PADDLE_SPEED;
             // Dùng MathUtils.lerp để tạo ra chuyển động mượt mà hơn là thay đổi vận tốc đột ngột.
             b2body.body.setLinearVelocity(
@@ -79,7 +112,7 @@ public class PlayerControlSystem extends IteratingSystem {
         }
 
         // Xử lý phóng bóng
-        if (keyCon.space) {
+        if (keyCon.space || keyCon.mouseClick) {
             handleLaunchBall(attachComponent);
         }
 

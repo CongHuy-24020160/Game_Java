@@ -91,7 +91,7 @@ public class MainScreen implements Screen,ScoreChangeListener {
         ballSystem = new BallSystem(hud, levelManager);
         attachSystem = new AttachSystem();
         soundSystem = new SoundSystem(game.getGameSettings());
-        playerControlSystem = new PlayerControlSystem(keyboardController, hud, levelManager);
+        playerControlSystem = new PlayerControlSystem(keyboardController, hud, levelManager,viewport);
         collisionSystem = new CollisionSystem(this, hud, levelManager, this);
         renderingSystem = new RenderingSystem(spriteBatch, camera);
         engine.addSystem(renderingSystem);
