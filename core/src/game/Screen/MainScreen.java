@@ -34,6 +34,7 @@ public class MainScreen implements Screen, ScoreChangeListener {
     private PooledEngine engine;
     private LevelManager levelManager;
     private Hud hud;
+    private boolean gamePaused = false;
 
     private CollisionSystem collisionSystem;
     private PhysicSystem physicSystem;
@@ -92,7 +93,7 @@ public class MainScreen implements Screen, ScoreChangeListener {
         ballSystem = new BallSystem(hud, levelManager);
         attachSystem = new AttachSystem();
         soundSystem = new SoundSystem(game.getGameSettings());
-        playerControlSystem = new PlayerControlSystem(keyboardController, hud, levelManager, viewport);
+        playerControlSystem = new PlayerControlSystem(keyboardController, hud, levelManager, viewport, this);
         collisionSystem = new CollisionSystem(this, engine, world, hud, levelManager, this);
         renderingSystem = new RenderingSystem(spriteBatch, camera);
         powerUpSystem = new PowerUpSystem(hud);
@@ -155,6 +156,7 @@ public class MainScreen implements Screen, ScoreChangeListener {
         if (attachSystem != null) attachSystem.setProcessing(false);
         if (collisionSystem != null) collisionSystem.setProcessing(false); // Dừng xử lý va chạm mới
         if (soundSystem != null) soundSystem.setProcessing(false);
+        gamePaused = true;
     }
 
     /**
@@ -168,6 +170,14 @@ public class MainScreen implements Screen, ScoreChangeListener {
         if (attachSystem != null) attachSystem.setProcessing(true);
         if (collisionSystem != null) collisionSystem.setProcessing(true);
         if (soundSystem != null) soundSystem.setProcessing(true);
+        gamePaused = false;
+    }
+
+    /**
+     * Kiểm tra xem game có đang pause (bởi menu) hay không
+     */
+    public boolean isPaused() {
+        return gamePaused;
     }
 
     @Override

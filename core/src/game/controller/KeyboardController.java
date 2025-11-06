@@ -30,6 +30,7 @@ public class KeyboardController implements InputProcessor {
     /** Vị trí chuột (dành cho trường hợp điều khiển bằng chuột). */
     public Vector2 mouseLocation;
 
+    public boolean p_pause;
     /**
      * Khởi tạo bộ điều khiển bàn phím.
      * Mặc định tất cả các phím đều chưa được nhấn.
@@ -54,6 +55,7 @@ public class KeyboardController implements InputProcessor {
         escape = false;
         hasMouseMoved = false;
         mouseClick = false;
+        p_pause = false;
     }
 
     /**
@@ -92,6 +94,10 @@ public class KeyboardController implements InputProcessor {
 
             case Input.Keys.ESCAPE:
                 escape = true;
+                keyProcessed = true;
+                break;
+            case Input.Keys.P:
+                p_pause = true;
                 keyProcessed = true;
                 break;
         }
@@ -136,6 +142,10 @@ public class KeyboardController implements InputProcessor {
             case Input.Keys.ESCAPE:
                 System.out.println("Releasing Escape key");
                 escape = false;
+                keyProcessed = true;
+                break;
+            case Input.Keys.P: // ⭐️ THÊM CASE NÀY
+                p_pause = false;
                 keyProcessed = true;
                 break;
         }

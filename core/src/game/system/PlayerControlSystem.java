@@ -14,6 +14,7 @@ import game.Utilities;
 import game.controller.KeyboardController;
 import game.component.*;
 import game.level.LevelManager;
+import game.Screen.MainScreen;
 
 /*
     System chịu trách nhiệm xử lý các tín hiệu điều khiển từ người chơi (bàn phím).
@@ -35,16 +36,18 @@ public class PlayerControlSystem extends IteratingSystem {
     private final KeyboardController keyCon;
     private final Hud hud;
     private final LevelManager lvlManager;
+    private final MainScreen mainScreen;
 
     private final Viewport viewport;
     private final Vector3 worldCoordinates;
 
-    public PlayerControlSystem(KeyboardController keyCon, Hud hud, LevelManager lvlManager, Viewport viewport) {
+    public PlayerControlSystem(KeyboardController keyCon, Hud hud, LevelManager lvlManager, Viewport viewport, MainScreen mainScreen) {
         // System này chỉ xử lý các Entity có PlayerComponent (chính là thanh trượt).
         super(Family.all(PlayerIn4Component.class).get());
         this.keyCon = keyCon;
         this.hud = hud;
         this.lvlManager = lvlManager;
+        this.mainScreen = mainScreen;
         this.viewport = viewport;
         this.worldCoordinates = new Vector3();
     }
@@ -111,13 +114,21 @@ public class PlayerControlSystem extends IteratingSystem {
             );
         }
 
+        if (keyCon.p_pause) {
+            // Chỉ chạy nếu game chưa bị pause
+            if (!mainScreen.isPaused()) {
+                mainScreen.pauseGameSystems(); // Dừng game
+                //hud.showPauseDialog();       // Hiện hộp thoại (sẽ tạo ở Bước 5)
+            }
+            keyCon.p_pause = false; // Xử lý phím xong, reset ngay
+        }
+
         // Xử lý phóng bóng
         if (keyCon.space || keyCon.mouseClick) {
             handleLaunchBall(attachComponent);
         }
 
         // Xử lý mở menu
-        //FIXME - đã fix
         if (keyCon.escape) {
             // Chỉ hiển thị dialog nếu chưa có dialog nào khác đang mở
             if (hud.getDialog() == null || !hud.getDialog().isVisible()) {
