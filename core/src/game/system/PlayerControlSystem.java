@@ -39,7 +39,7 @@ public class PlayerControlSystem extends IteratingSystem {
     private final Viewport viewport;
     private final Vector3 worldCoordinates;
 
-    public PlayerControlSystem(KeyboardController keyCon, Hud hud, LevelManager lvlManager, Viewport viewport){
+    public PlayerControlSystem(KeyboardController keyCon, Hud hud, LevelManager lvlManager, Viewport viewport) {
         // System này chỉ xử lý các Entity có PlayerComponent (chính là thanh trượt).
         super(Family.all(PlayerIn4Component.class).get());
         this.keyCon = keyCon;
@@ -53,12 +53,12 @@ public class PlayerControlSystem extends IteratingSystem {
     protected void processEntity(Entity entity, float v) {
         // Nếu có dialog đang hiển thị hoặc màn chơi đã kết thúc, vô hiệu hóa điều khiển.
         // FIXME
-       // if( (hud.getDialog() != null && hud.getDialog().isVisible()) || lvlManager.isLevelCompleted ){
-       //     // Dừng paddle lại ngay lập tức
-       //     final PhysicsBodyComponent b2body = b2BodyMapper.get(entity);
-       //     b2body.body.setLinearVelocity(0, 0);
-       //     return; // Bỏ qua phần còn lại của hàm
-     //   }
+        // if( (hud.getDialog() != null && hud.getDialog().isVisible()) || lvlManager.isLevelCompleted ){
+        //     // Dừng paddle lại ngay lập tức
+        //     final PhysicsBodyComponent b2body = b2BodyMapper.get(entity);
+        //     b2body.body.setLinearVelocity(0, 0);
+        //     return; // Bỏ qua phần còn lại của hàm
+        //   }
 
         final PhysicsBodyComponent b2body = b2BodyMapper.get(entity);
         final LinkedEntityComponent attachComponent = attachMapper.get(entity);

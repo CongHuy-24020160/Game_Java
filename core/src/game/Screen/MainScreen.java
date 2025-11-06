@@ -198,4 +198,5 @@ public class MainScreen implements Screen,ScoreChangeListener {
     public void onScoreChanged(int i) {
         hud.setScore(hud.getScore() + i);
     }
+
 }

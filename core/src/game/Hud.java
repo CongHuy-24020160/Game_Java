@@ -37,41 +37,59 @@ public class Hud implements Disposable {
     // dùng default live để đỡ phải gán nhiều
     private static final int DEFAULT_LIVES = 5;
 
-    /** Tham chiếu đến game chính */
+    /**
+     * Tham chiếu đến game chính
+     */
     private ArkanoidGame game;
 
     private MainScreen mainScreen;
 
-    /** Stage chứa các actor giao diện HUD */
+    /**
+     * Stage chứa các actor giao diện HUD
+     */
     private Stage stage;
 
-    /** Trả về Stage để có thể thêm Actor từ bên ngoài */
-    public Stage getStage(){return stage;}
+    /**
+     * Trả về Stage để có thể thêm Actor từ bên ngoài
+     */
+    public Stage getStage() {
+        return stage;
+    }
 
     private Skin skin;
     private TextureAtlas textures;
     private Viewport viewport;
     private LevelManager levelManager;
 
-    /** Hộp thoại hiện tại (Menu, Next Level, v.v...) */
+    /**
+     * Hộp thoại hiện tại (Menu, Next Level, v.v...)
+     */
     private Dialog dialog;
 
-    /** Trả về dialog hiện tại */
-    public Dialog getDialog(){return dialog;}
+    /**
+     * Trả về dialog hiện tại
+     */
+    public Dialog getDialog() {
+        return dialog;
+    }
 
-    /** Biến cờ cho biết dialog vừa được mở hoặc đóng */
+    /**
+     * Biến cờ cho biết dialog vừa được mở hoặc đóng
+     */
     public boolean dialogJustOpened, dialogJustClosed;
 
     /**
      * Các loại dialog có thể xuất hiện.
      */
     public enum DialogType {NEXT_LEVEL, MENU, FINAL, GAME_OVER}
+
     public DialogType lastDialogType;
 
     /**
      * Các lựa chọn của người dùng khi tương tác dialog.
      */
-    public enum UserChoice{NEXT_LEVEL, RETRY, MENU, CANCEL, NONE}
+    public enum UserChoice {NEXT_LEVEL, RETRY, MENU, CANCEL, NONE}
+
     public UserChoice userChoice = UserChoice.NONE;
 
     // Bảng chứa các thành phần HUD
@@ -81,22 +99,41 @@ public class Hud implements Disposable {
     private Image ballImage;
     private int score, level, lives;
 
-    /** Getter và setter cho điểm, cấp độ, mạng */
-    public int getScore(){return score;}
-    public void setScore(int score) { this.score = score; }
-    public int getLevel(){return level;}
-    public void setLevel(int level) { this.level = level; }
-    public int getLives(){return lives;}
-    public void setLives(int lives) { this.lives = lives; }
+    /**
+     * Getter và setter cho điểm, cấp độ, mạng
+     */
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    public int getLives() {
+        return lives;
+    }
+
+    public void setLives(int lives) {
+        this.lives = lives;
+    }
 
     /**
      * Khởi tạo HUD.
      *
-     * @param game Tham chiếu đến game chính.
+     * @param game         Tham chiếu đến game chính.
      * @param levelManager Quản lý các cấp độ của trò chơi.
      */
-    public Hud(ArkanoidGame game, MainScreen mainScreen, LevelManager levelManager){
-        if(DEBUG_MODE) logger.info("Constructor");
+    public Hud(ArkanoidGame game, MainScreen mainScreen, LevelManager levelManager) {
+        if (DEBUG_MODE) logger.info("Constructor");
 
         this.game = game;
         this.mainScreen = mainScreen;
@@ -109,17 +146,17 @@ public class Hud implements Disposable {
         // Lấy texture quả bóng hiển thị mạng sống
         // = new TextureRegion(
         //  textures.findRegion("Ball_small-blue"),
-         //   8, 31, 25, 25
-       // );
+        //   8, 31, 25, 25
+        // );
         ballTexture = textures.findRegion("Ball_small-blue");
-        if (ballTexture.getTexture() == null){
+        if (ballTexture.getTexture() == null) {
             System.out.println("Ball Texture is null");
         }
 
         // Giá trị khởi tạo
         score = 0;
         level = 1;
-        lives = DEFAULT_LIVES ; // tăng mạng để game đỡ khó
+        lives = DEFAULT_LIVES; // tăng mạng để game đỡ khó
 
         // Khởi tạo viewport và stage cho HUD
         viewport = new FitViewport(Utilities.VIRTUAL_WIDTH, Utilities.VIRTUAL_HEIGHT,
@@ -147,7 +184,7 @@ public class Hud implements Disposable {
         livesTable = new Table();
         livesTable.setDebug(false);
         livesTable.add(livesLabel);
-        for(int i = 0; i < lives; i++){
+        for (int i = 0; i < lives; i++) {
             ballImage = new Image(ballTexture);
             ballImage.setScale(0.85f);
             livesTable.add(ballImage);
@@ -166,7 +203,7 @@ public class Hud implements Disposable {
     /**
      * Cập nhật thông tin HUD (điểm, mạng, cấp độ) theo giá trị hiện tại.
      */
-    public void update(){
+    public void update() {
         levelLabel.setText("Level " + level);
         scoreLabel.setText(String.format(Locale.getDefault(), "Score: %06d", score));
     }
@@ -174,7 +211,7 @@ public class Hud implements Disposable {
     /**
      * Vẽ HUD lên màn hình.
      */
-    public void render(){
+    public void render() {
         stage.act();
         stage.draw();
     }
@@ -182,11 +219,11 @@ public class Hud implements Disposable {
     /**
      * Cập nhật lại phần hiển thị mạng sống khi người chơi mất hoặc được thêm mạng.
      */
-    public void updateLives(){
+    public void updateLives() {
         logger.info("Updating Lives");
         livesTable.clearChildren();
         livesTable.add(livesLabel);
-        for(int i = 0; i < lives; i++){
+        for (int i = 0; i < lives; i++) {
             logger.info("Update Lives: " + lives);
             ballImage = new Image(ballTexture);
             ballImage.setScale(0.85f);
@@ -197,7 +234,7 @@ public class Hud implements Disposable {
     /**
      * Gọi khi kích thước màn hình thay đổi để cập nhật viewport.
      *
-     * @param width chiều rộng mới
+     * @param width  chiều rộng mới
      * @param height chiều cao mới
      */
     public void resize(int width, int height) {
@@ -207,26 +244,26 @@ public class Hud implements Disposable {
     /**
      * Mở dialog với các nút xác nhận/hủy tuỳ chỉnh.
      *
-     * @param message Nội dung thông báo
+     * @param message            Nội dung thông báo
      * @param positiveButtonText Nhãn nút xác nhận
      * @param negativeButtonText Nhãn nút hủy
-     * @param positiveListener Sự kiện khi nhấn xác nhận
-     * @param negativeListener Sự kiện khi nhấn hủy
-     * @param dialogType Loại dialog đang mở
+     * @param positiveListener   Sự kiện khi nhấn xác nhận
+     * @param negativeListener   Sự kiện khi nhấn hủy
+     * @param dialogType         Loại dialog đang mở
      */
     private void openDialog(String message, String positiveButtonText, String negativeButtonText,
-                            ClickListener positiveListener, ClickListener negativeListener, DialogType dialogType){
+                            ClickListener positiveListener, ClickListener negativeListener, final DialogType dialogType) {
         dialog = new Dialog("", skin);
         dialog.setModal(true);
         dialog.text(message);
 
-        if(positiveButtonText != null){
+        if (positiveButtonText != null) {
             TextButton positiveButton = new TextButton(positiveButtonText, skin);
             positiveButton.addListener(positiveListener);
             dialog.button(positiveButton);
         }
 
-        if(negativeButtonText != null){
+        if (negativeButtonText != null) {
             TextButton negativeButton = new TextButton(negativeButtonText, skin);
             negativeButton.addListener(negativeListener);
             dialog.button(negativeButton);
@@ -235,8 +272,8 @@ public class Hud implements Disposable {
         dialog.addListener(new InputListener() {
             @Override
             public boolean keyDown(InputEvent event, int keycode) {
-                // Chỉ xử lý khi dialog là NEXT_LEVEL và người chơi nhấn SPACE
-                if (dialogType == DialogType.NEXT_LEVEL && keycode == Input.Keys.SPACE) {
+                // Chỉ xử lý khi dialog là NEXT_LEVEL và người chơi nhấn ENTER
+                if (dialogType == DialogType.NEXT_LEVEL && keycode == Input.Keys.SPACE {
 
                     if (positiveListener != null) {
                         // Tự động "click" vào nút "Next Level"
@@ -272,10 +309,10 @@ public class Hud implements Disposable {
                         userChoice = UserChoice.NEXT_LEVEL;
                         //  Khởi động lại các hệ thống game
                         mainScreen.resumeGameSystems();
-                    }else{
+                    } else {
                         // reset game state
                         level = 1;
-                        lives = DEFAULT_LIVES ;
+                        lives = DEFAULT_LIVES;
                         score = 0;
 
                         // quay về menu
@@ -293,7 +330,7 @@ public class Hud implements Disposable {
     /**
      * Hiển thị dialog "Game Over" khi người chơi thua.
      */
-    public void showGameOverDialog(){
+    public void showGameOverDialog() {
         openDialog(
             "Game Over",
             "Retry",
@@ -304,7 +341,7 @@ public class Hud implements Disposable {
                     // reset lại game
                     logger.info("clicked on retry");
                     level = 1;
-                    lives = DEFAULT_LIVES ;
+                    lives = DEFAULT_LIVES;
                     score = 0;
                     levelManager.loadLevel(level);
                     handleDialogClosed();
@@ -314,7 +351,7 @@ public class Hud implements Disposable {
                 }
             },
 
-            new ClickListener(){
+            new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     logger.info("clicked on menu");
@@ -335,7 +372,7 @@ public class Hud implements Disposable {
     /**
      * Hiển thị dialog xác nhận khi người chơi mở menu tạm dừng.
      */
-    public void showMenuDialog(){
+    public void showMenuDialog() {
         System.out.println("Show Menu Dialog");
         openDialog(
             "Exit Game?",
@@ -354,7 +391,7 @@ public class Hud implements Disposable {
                     mainScreen.resumeGameSystems();
                 }
             },
-            new ClickListener(){
+            new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     handleDialogClosed();
@@ -369,9 +406,10 @@ public class Hud implements Disposable {
     /**
      * Xử lý khi dialog được đóng, ẩn dialog và cập nhật trạng thái.
      */
-    private void handleDialogClosed(){
+    private void handleDialogClosed() {
         logger.info("Dialog Closed");
-        Hud.this.dialog.setVisible(false);
+        //Hud.this.dialog.setVisible(false);
+        Hud.this.dialog.remove();
         dialogJustClosed = true;
     }
 
