@@ -21,7 +21,6 @@ import game.Utils.ScoreManager;
 
 public class EnterHighScoreScreen implements Screen {
     private ArkanoidGame game;
-    private Viewport viewport;
     private Stage stage;
 
     private Skin skin;
@@ -38,9 +37,9 @@ public class EnterHighScoreScreen implements Screen {
     public EnterHighScoreScreen(ArkanoidGame game) {
         this.game = game;
         // Dùng kích thước ảo (VIRTUAL_WIDTH/HEIGHT) giống như MenuScreen của bạn
-        this.viewport = new FitViewport(Utilities.VIRTUAL_WIDTH, Utilities.VIRTUAL_HEIGHT);
+        Viewport viewport = new FitViewport(Utilities.VIRTUAL_WIDTH, Utilities.VIRTUAL_HEIGHT);
         this.stage = new Stage(viewport);
-        
+
         // Lấy điểm số cuối cùng từ biến tạm (chúng ta sẽ tạo biến này sau)
         this.currentScore = game.lastScore;
     }
@@ -61,7 +60,7 @@ public class EnterHighScoreScreen implements Screen {
 
         nameField = new TextField("", skin);
         nameField.setMessageText("Enter Your Name");
-        
+
         submitButton = new TextButton("Submit", skin);
         submitButton.addListener(new ChangeListener() {
             @Override
@@ -83,7 +82,7 @@ public class EnterHighScoreScreen implements Screen {
 
     private void handleSubmit() {
         String playerName = nameField.getText();
-        
+
         if (playerName == null || playerName.trim().isEmpty()) {
             playerName = "PLAYER";
         }
@@ -100,9 +99,25 @@ public class EnterHighScoreScreen implements Screen {
         stage.draw();
     }
 
-    @Override public void resize(int width, int height) { stage.getViewport().update(width, height, true); }
-    @Override public void pause() {}
-    @Override public void resume() {}
-    @Override public void hide() {}
-    @Override public void dispose() { stage.dispose(); }
+    @Override
+    public void resize(int width, int height) {
+        stage.getViewport().update(width, height, true);
+    }
+
+    @Override
+    public void pause() {
+    }
+
+    @Override
+    public void resume() {
+    }
+
+    @Override
+    public void hide() {
+    }
+
+    @Override
+    public void dispose() {
+        stage.dispose();
+    }
 }

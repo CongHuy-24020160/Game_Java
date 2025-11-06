@@ -20,49 +20,50 @@ public class ScreenManager {
     private MainScreen mainScreen;
     private EndScreen endScreen;
     private HighScoreScreen highScoreScreen;       // ⭐️ THÊM DÒNG NÀY ⭐️
-    private EnterHighScoreScreen enterHighScoreScreen;
 
-    public ScreenManager(ArkanoidGame game){this.game = game;}
+    public ScreenManager(ArkanoidGame game) {
+        this.game = game;
+    }
 
-    public void changeScreen(int screen){
-        switch(screen){
+    public void changeScreen(int screen) {
+        switch (screen) {
             case MENU:
-                if (ArkanoidGame.DEBUG_MODE){
+                if (ArkanoidGame.DEBUG_MODE) {
                     System.out.println("ScreenManager.java) Changing to Menu Screen");
                 }
-                if(menuScreen == null) menuScreen = new MenuScreen(game);
+                if (menuScreen == null) menuScreen = new MenuScreen(game);
                 game.setScreen(menuScreen);
                 break;
             case PREFERENCES:
-                if(preferencesScreen == null) preferencesScreen = new PreferenceScreen(game);
+                if (preferencesScreen == null) preferencesScreen = new PreferenceScreen(game);
                 game.setScreen(preferencesScreen);
                 break;
             case APPLICATION:
-                if (ArkanoidGame.DEBUG_MODE){
+                if (ArkanoidGame.DEBUG_MODE) {
                     System.out.println("ScreenManager.java) Changing to Main Screen");
                 }
-                if(mainScreen == null) mainScreen = new MainScreen(game);
+                if (mainScreen == null) mainScreen = new MainScreen(game);
                 game.setScreen(mainScreen);
                 break;
             case ENDGAME:
-                if (ArkanoidGame.DEBUG_MODE){
+                if (ArkanoidGame.DEBUG_MODE) {
                     System.out.println("ScreenManager.java) Changing to End Screen");
                 }
-                if(endScreen == null) endScreen = new EndScreen(game);
+                if (endScreen == null) endScreen = new EndScreen(game);
                 game.setScreen(endScreen);
                 break;
             case LOADING:
-                if(loadingScreen == null) loadingScreen = new LoadingScreen(game);
-                if(ArkanoidGame.DEBUG_MODE) System.out.println("(ScreenManager.java) Changing to Loading Screen");
+                if (loadingScreen == null) loadingScreen = new LoadingScreen(game);
+                if (ArkanoidGame.DEBUG_MODE) System.out.println("(ScreenManager.java) Changing to Loading Screen");
                 game.setScreen(loadingScreen);
                 break;
             case HIGHSCORE: // ⭐️ THÊM KHỐI NÀY ⭐️
-                if(highScoreScreen == null) highScoreScreen = new HighScoreScreen(game);
+                if (highScoreScreen == null) highScoreScreen = new HighScoreScreen(game);
                 game.setScreen(highScoreScreen);
                 break;
             case ENTER_HIGHSCORE: // ⭐️ THÊM KHỐI NÀY ⭐️
                 // Luôn tạo mới để nó lấy điểm 'lastScore' mới nhất
-                enterHighScoreScreen = new EnterHighScoreScreen(game);
+                EnterHighScoreScreen enterHighScoreScreen = new EnterHighScoreScreen(game);
                 game.setScreen(enterHighScoreScreen);
                 break;
         }

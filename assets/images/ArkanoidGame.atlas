@@ -1,54 +1,47 @@
 ArkanoidGame.png
-size: 640, 986
+size: 640, 992
 format: RGBA8888
 filter: Linear, Linear
 repeat: none
 pma: false
 Background1
-  bounds: 0, 26, 640, 480
+  bounds: 0, 32, 640, 480
 Ball_small-blue
   bounds: 0, 0, 13, 12
 Brick1
-  bounds: 13, 0, 40, 15
+  bounds: 44, 0, 40, 15
   index: 4
 Brick2
-  bounds: 53, 0, 40, 15
+  bounds: 84, 0, 40, 15
   index: 4
 Brick3
-  bounds: 93, 0, 40, 15
+  bounds: 124, 0, 40, 15
   index: 4
 Brick4
-  bounds: 133, 0, 40, 15
+  bounds: 164, 0, 40, 15
   index: 4
 Brick5
-  bounds: 173, 0, 40, 15
+  bounds: 204, 0, 40, 15
   index: 4
 Brick6
-  bounds: 213, 0, 40, 15
+  bounds: 244, 0, 40, 15
   index: 4
 Brick7
-  bounds: 253, 0, 40, 15
+  bounds: 284, 0, 40, 15
   index: 4
 Brick8
-  bounds: 293, 0, 40, 15
+  bounds: 324, 0, 40, 15
   index: 4
 Brick9
-  bounds: 333, 0, 40, 15
+  bounds: 364, 0, 40, 15
   index: 4
 Brick_unbreakable2
-  bounds: 373, 0, 40, 15
+  bounds: 404, 0, 40, 15
 Frame
-  bounds: 0, 506, 640, 480
+  bounds: 0, 512, 640, 480
 Player
-  bounds: 413, 0, 74, 26
+  bounds: 444, 0, 74, 26
 Player_flash
-  bounds: 487, 0, 74, 26
-ball-sheet-removebg-preview
-bounds:401,62,41,59
-blocks-sheet-removebg-preview
-bounds:2,37,397,199
-coin-sheet-removebg-preview
-bounds:2,2,389,33
-paddle-sheet-removebg-preview(1)
-bounds:401,123,137,113
-
+  bounds: 518, 0, 74, 26
+power_up
+  bounds: 13, 0, 31, 32

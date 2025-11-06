@@ -25,7 +25,7 @@ import game.level.B2dContactListener;
 import game.level.LevelManager;
 import game.system.*;
 
-public class MainScreen implements Screen,ScoreChangeListener {
+public class MainScreen implements Screen, ScoreChangeListener {
 
     private static final Logger logger = new Logger(MainScreen.class.getName());
     private ArkanoidGame game;
@@ -42,6 +42,7 @@ public class MainScreen implements Screen,ScoreChangeListener {
     private AttachSystem attachSystem;
     private SoundSystem soundSystem;
     private RenderingSystem renderingSystem;
+    private PowerUpSystem powerUpSystem;
 
     private InputMultiplexer inputMultiplexer;
     private KeyboardController keyboardController;
@@ -49,25 +50,24 @@ public class MainScreen implements Screen,ScoreChangeListener {
     private SpriteBatch spriteBatch;
     private ParticleHandler particleHandler;
 
-    public MainScreen(ArkanoidGame game){
+    public MainScreen(ArkanoidGame game) {
         this.game = game;
         spriteBatch = new SpriteBatch();
         camera = new OrthographicCamera();
         viewport = new FitViewport(Utilities.getPPMWidth(), Utilities.getPPMHeight(),
             camera);
-        camera.setToOrtho(false,viewport.getWorldWidth(), viewport.getScreenHeight());
-        camera.position.set(viewport.getWorldWidth()/2,viewport.getWorldHeight()/2,0);
+        camera.setToOrtho(false, viewport.getWorldWidth(), viewport.getScreenHeight());
+        camera.position.set(viewport.getWorldWidth() / 2, viewport.getWorldHeight() / 2, 0);
 
 
         keyboardController = new KeyboardController();
-        world = new World(new Vector2(0,0),true);
+        world = new World(new Vector2(0, 0), true);
         world.setContactListener(new B2dContactListener());
         inputMultiplexer = new InputMultiplexer();
 
         engine = new PooledEngine();
-        levelManager = new LevelManager(game,world,engine,camera);
+        levelManager = new LevelManager(game, world, engine, camera);
         hud = new Hud(game, this, levelManager);
-
 
 
         particleHandler = new ParticleHandler("particles/test.p", "particles");
@@ -76,8 +76,9 @@ public class MainScreen implements Screen,ScoreChangeListener {
 
         spriteBatch.setProjectionMatrix(camera.combined);
     }
+
     @Override
-    public void show(){
+    public void show() {
         System.out.println("Hello from MainScreen.java");
         logger.info("show");
         levelManager.loadLevel(1);
@@ -91,9 +92,10 @@ public class MainScreen implements Screen,ScoreChangeListener {
         ballSystem = new BallSystem(hud, levelManager);
         attachSystem = new AttachSystem();
         soundSystem = new SoundSystem(game.getGameSettings());
-        playerControlSystem = new PlayerControlSystem(keyboardController, hud, levelManager,viewport);
-        collisionSystem = new CollisionSystem(this, hud, levelManager, this);
+        playerControlSystem = new PlayerControlSystem(keyboardController, hud, levelManager, viewport);
+        collisionSystem = new CollisionSystem(this, engine, world, hud, levelManager, this);
         renderingSystem = new RenderingSystem(spriteBatch, camera);
+        powerUpSystem = new PowerUpSystem(hud);
 
         engine.addSystem(renderingSystem);
         engine.addSystem(physicSystem);
@@ -102,6 +104,8 @@ public class MainScreen implements Screen,ScoreChangeListener {
         engine.addSystem(attachSystem);
 
         engine.addSystem(collisionSystem);
+        engine.addSystem(powerUpSystem);
+
         engine.addSystem(soundSystem);
         engine.addSystem(playerControlSystem);
 
@@ -109,13 +113,14 @@ public class MainScreen implements Screen,ScoreChangeListener {
         inputMultiplexer.addProcessor(keyboardController);
         Gdx.input.setInputProcessor(inputMultiplexer);
     }
-    public void update(float delta){
+
+    public void update(float delta) {
         collisionSystem.particlesManager.update(delta);
         hud.update();
     }
 
     @Override
-    public void render(float delta){
+    public void render(float delta) {
         // Clear screen
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -126,7 +131,6 @@ public class MainScreen implements Screen,ScoreChangeListener {
         camera.update();
 
         spriteBatch.setProjectionMatrix(camera.combined);
-
 
 
         levelManager.renderLevel();
@@ -167,26 +171,28 @@ public class MainScreen implements Screen,ScoreChangeListener {
     }
 
     @Override
-    public void resize(int width, int height){
+    public void resize(int width, int height) {
         viewport.update(width, height);
         // hud resize
     }
 
     @Override
-    public  void pause(){
+    public void pause() {
 
     }
 
     @Override
-    public void resume(){
+    public void resume() {
 
     }
+
     @Override
-    public void hide(){
+    public void hide() {
 
     }
+
     @Override
-    public void dispose(){
+    public void dispose() {
         // level dispose
     }
 

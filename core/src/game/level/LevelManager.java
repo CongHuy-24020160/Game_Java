@@ -13,7 +13,7 @@ import game.component.PhysicsBodyComponent;
 public class LevelManager implements Disposable {
     public static int MAX_LEVELS = 3;
 
-    public enum Level{TEST, LEVEL1, LEVEL2, LEVEL3}
+    public enum Level {TEST, LEVEL1, LEVEL2, LEVEL3}
 
     private World world;
     private OrthographicCamera cam;
@@ -24,19 +24,19 @@ public class LevelManager implements Disposable {
     public boolean loadNextLevelFlag = false;
     public int currentLevelNumber = 0;
 
-    public LevelManager(ArkanoidGame game, World world, PooledEngine en, OrthographicCamera cam){
+    public LevelManager(ArkanoidGame game, World world, PooledEngine en, OrthographicCamera cam) {
         this.world = world;
         this.game = game;
         this.cam = cam;
         this.en = en;
     }
 
-    public void loadLevel(int level){
+    public void loadLevel(int level) {
         cleanupCurrentLevel();
         this.currentLevelNumber = level;
         this.isLevelCompleted = false;
 
-        switch (level){
+        switch (level) {
             case 1:
                 currentLevel = new LevelLoader(game, world, en, getLevelMapPath(Level.LEVEL1));
                 break;
@@ -50,16 +50,16 @@ public class LevelManager implements Disposable {
 
     }
 
-    public void renderLevel(){
+    public void renderLevel() {
         currentLevel.getMapRenderer().setView(cam);
         currentLevel.getMapRenderer().render();
     }
 
     // this is where you will pass in the level's path
-    public String getLevelMapPath(Level level){
+    public String getLevelMapPath(Level level) {
         String path = "";
 
-        switch(level){
+        switch (level) {
             case TEST:
                 path = "levels/test.tmx";
                 break;
@@ -77,7 +77,7 @@ public class LevelManager implements Disposable {
         return path;
     }
 
-    private void cleanupCurrentLevel(){
+    private void cleanupCurrentLevel() {
         if (currentLevel == null) return;
 
         // Dispose the current level
@@ -93,6 +93,7 @@ public class LevelManager implements Disposable {
         // Clear the current level
         currentLevel = null;
     }
+
     public ArkanoidGame getGame() {
         return this.game;
     }

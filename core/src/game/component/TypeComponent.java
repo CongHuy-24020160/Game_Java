@@ -11,7 +11,9 @@ public class TypeComponent implements Component, Pool.Poolable {
     public static final int PLAYER_TYPE = 1 ;
     public static final int BALL_TYPE = 2;
     public static final int BLOCK_TYPE = 3;
-    public static final int OTHER_TYPE = 4;
+    public static final int POWERUP_TYPE = 4;
+    public static final int OTHER_TYPE = 5;
+
     public int type = OTHER_TYPE;
     //getters and setters
     public int getType() {
