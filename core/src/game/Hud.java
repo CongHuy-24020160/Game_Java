@@ -408,6 +408,7 @@ public class Hud implements Disposable {
      */
     private void handleDialogClosed() {
         logger.info("Dialog Closed");
+
         //Hud.this.dialog.setVisible(false);
         Hud.this.dialog.remove();
         dialogJustClosed = true;
