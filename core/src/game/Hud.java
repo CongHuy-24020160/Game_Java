@@ -273,7 +273,7 @@ public class Hud implements Disposable {
             @Override
             public boolean keyDown(InputEvent event, int keycode) {
                 // Chỉ xử lý khi dialog là NEXT_LEVEL và người chơi nhấn ENTER
-                if (dialogType == DialogType.NEXT_LEVEL && keycode == Input.Keys.SPACE {
+                if (dialogType == DialogType.NEXT_LEVEL && keycode == Input.Keys.SPACE) {
 
                     if (positiveListener != null) {
                         // Tự động "click" vào nút "Next Level"
