@@ -280,4 +280,14 @@ public class CollisionSystem extends IteratingSystem {
         engine.addEntity(powerUpEntity);
         System.out.println("ĐÃ TẠO XONG POWER-UP!");
     }
+
+    /**
+     * Dọn dẹp các tài nguyên (như hạt) mà System này đã tạo ra.
+     */
+    public void dispose() {
+        System.out.println("--- DỌN DẸP CollisionSystem (Hạt) ---");
+        if (particlesManager != null) {
+            particlesManager.destroy();
+        }
+    }
 }

@@ -1,6 +1,8 @@
 package game.Screen;
 
+import com.badlogic.gdx.Screen;
 import game.ArkanoidGame;
+import game.GameData;
 
 public class ScreenManager {
     private final ArkanoidGame game;
@@ -19,10 +21,22 @@ public class ScreenManager {
     private MenuScreen menuScreen;
     private MainScreen mainScreen;
     private EndScreen endScreen;
-    private HighScoreScreen highScoreScreen;       // ⭐️ THÊM DÒNG NÀY ⭐️
+    private HighScoreScreen highScoreScreen;
+    private Screen currentScreen;
 
     public ScreenManager(ArkanoidGame game) {
         this.game = game;
+    }
+
+    /**
+     * Hàm nội bộ để dọn dẹp màn hình cũ và đặt màn hình mới.
+     */
+    private void setScreen(Screen screen) {
+        if (currentScreen != null) {
+            currentScreen.dispose(); //  Dọn dẹp màn hình cũ
+        }
+        currentScreen = screen; //  Đặt màn hình mới
+        game.setScreen(currentScreen);
     }
 
     public void changeScreen(int screen) {
@@ -31,40 +45,49 @@ public class ScreenManager {
                 if (ArkanoidGame.DEBUG_MODE) {
                     System.out.println("ScreenManager.java) Changing to Menu Screen");
                 }
-                if (menuScreen == null) menuScreen = new MenuScreen(game);
-                game.setScreen(menuScreen);
+                //if (menuScreen == null) menuScreen = new MenuScreen(game);
+                setScreen(new MenuScreen(game));
                 break;
             case PREFERENCES:
-                if (preferencesScreen == null) preferencesScreen = new PreferenceScreen(game);
-                game.setScreen(preferencesScreen);
+                //if (preferencesScreen == null) preferencesScreen = new PreferenceScreen(game);
+                setScreen(new PreferenceScreen(game));
                 break;
             case APPLICATION:
-                if (ArkanoidGame.DEBUG_MODE) {
-                    System.out.println("ScreenManager.java) Changing to Main Screen");
+                if (ArkanoidGame.IS_LOADING_SAVE_GAME) {
+
+                    // Nếu là LOAD:
+                    GameData savedData = GameData.load(); // Tải dữ liệu
+                    setScreen(new MainScreen(game, savedData));
+
+                } else {
+
+                    // Nếu là NEW GAME:
+                    setScreen(new MainScreen(game));
                 }
-                if (mainScreen == null) mainScreen = new MainScreen(game);
-                game.setScreen(mainScreen);
+
+                // Reset cờ hiệu (dù là load hay new)
+                ArkanoidGame.IS_LOADING_SAVE_GAME = false;
                 break;
             case ENDGAME:
                 if (ArkanoidGame.DEBUG_MODE) {
                     System.out.println("ScreenManager.java) Changing to End Screen");
                 }
-                if (endScreen == null) endScreen = new EndScreen(game);
-                game.setScreen(endScreen);
+                //if (endScreen == null) endScreen = new EndScreen(game);
+                setScreen(new EndScreen(game));
                 break;
             case LOADING:
-                if (loadingScreen == null) loadingScreen = new LoadingScreen(game);
+                //if (loadingScreen == null) loadingScreen = new LoadingScreen(game);
                 if (ArkanoidGame.DEBUG_MODE) System.out.println("(ScreenManager.java) Changing to Loading Screen");
-                game.setScreen(loadingScreen);
+                setScreen(new LoadingScreen(game));
                 break;
             case HIGHSCORE: // ⭐️ THÊM KHỐI NÀY ⭐️
-                if (highScoreScreen == null) highScoreScreen = new HighScoreScreen(game);
-                game.setScreen(highScoreScreen);
+                //if (highScoreScreen == null) highScoreScreen = new HighScoreScreen(game);
+                setScreen(new HighScoreScreen(game));
                 break;
             case ENTER_HIGHSCORE: // ⭐️ THÊM KHỐI NÀY ⭐️
                 // Luôn tạo mới để nó lấy điểm 'lastScore' mới nhất
                 EnterHighScoreScreen enterHighScoreScreen = new EnterHighScoreScreen(game);
-                game.setScreen(enterHighScoreScreen);
+                setScreen(enterHighScoreScreen);
                 break;
         }
     }

@@ -8,7 +8,8 @@ public class ArkanoidGame extends Game {
     public static final boolean DEBUG_MODE = true;
     public GameAssetManager assetManager;
     private GameSettings gameSettings;
-    public int lastScore = 0; // ⭐️ THÊM DÒNG NÀY ⭐️
+    public static boolean IS_LOADING_SAVE_GAME = false;
+    public int lastScore = 0;
 
     public ScreenManager screenManager;
     public GameSettings getGameSettings(){

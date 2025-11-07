@@ -118,7 +118,7 @@ public class PlayerControlSystem extends IteratingSystem {
             // Chỉ chạy nếu game chưa bị pause
             if (!mainScreen.isPaused()) {
                 mainScreen.pauseGameSystems(); // Dừng game
-                //hud.showPauseDialog();       // Hiện hộp thoại (sẽ tạo ở Bước 5)
+                hud.showPauseDialog();       // Hiện hộp thoại (sẽ tạo ở Bước 5)
             }
             keyCon.p_pause = false; // Xử lý phím xong, reset ngay
         }

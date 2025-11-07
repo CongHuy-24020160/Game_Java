@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -370,6 +371,118 @@ public class Hud implements Disposable {
     }
 
     /**
+     * Hiển thị dialog Tạm Dừng (Pause) với 4 nút.
+     */
+    public void showPauseDialog() {
+        System.out.println("Show Pause Dialog");
+
+        // Chúng ta không dùng openDialog() vì cần nhiều hơn 2 nút
+        // Chúng ta tự tạo Dialog
+        final Dialog pauseDialog = new Dialog("Game Paused", skin);
+        // Căn giưa tiêu đề
+        pauseDialog.getTitleLabel().setAlignment(Align.center);
+        pauseDialog.getTitleLabel().setColor(Color.GREEN);
+        pauseDialog.getTitleLabel().setFontScale(1.7f);
+        pauseDialog.setModal(true);
+        pauseDialog.setMovable(false);
+
+        // Lấy table nội dung của dialog
+        Table contentTable = pauseDialog.getContentTable();
+        contentTable.center().pad(10);
+
+        final Label saveFeedbackLabel = new Label("", skin);
+        saveFeedbackLabel.setColor(Color.GREEN);
+        saveFeedbackLabel.setFontScale(1.5f);
+
+        // 1. Nút CONTINUE
+        TextButton continueButton = new TextButton("Continue", skin);
+        continueButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                pauseDialog.hide(); // Ẩn dialog
+                handleDialogClosed(); // Đặt lại cờ
+                userChoice = UserChoice.CANCEL;
+                mainScreen.resumeGameSystems(); // ⭐️ TIẾP TỤC GAME
+            }
+        });
+
+        // 2. Nút SAVE GAME
+        TextButton saveButton = new TextButton("Save Game", skin);
+        saveButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                // ⭐️ GỌI HÀM SAVE (từ Bước 1) ⭐️
+                GameData.save(getScore(), getLives(), getLevel());
+
+                saveFeedbackLabel.setText("Game Saved!");
+
+                //pauseDialog.hide();
+                //handleDialogClosed();
+                //game.screenManager.changeScreen(ScreenManager.MENU); // Về Menu
+                //mainScreen.resumeGameSystems(); // Reset pause
+            }
+        });
+
+        // 3. Nút NEW GAME
+        TextButton newGameButton = new TextButton("New Game", skin);
+        newGameButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                GameData.clear(); // ⭐️ XÓA FILE SAVE CŨ
+
+                // Reset lại game
+                level = 1;
+                lives = DEFAULT_LIVES;
+                score = 0;
+                levelManager.loadLevel(level); // Tải lại màn 1
+                updateLives();
+
+                pauseDialog.hide();
+                handleDialogClosed();
+                userChoice = UserChoice.RETRY;
+                mainScreen.resumeGameSystems(); // ⭐️ TIẾP TỤC GAME
+            }
+        });
+
+        // 4. Nút EXIT (về Menu chính)
+        TextButton exitButton = new TextButton("Exit to Menu", skin);
+        exitButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                // (Bạn có thể chọn save hoặc không save ở đây)
+                // (Ở đây tôi chọn không save, giống "Exit" của bạn)
+                level = 1;
+                lives = DEFAULT_LIVES;
+                score = 0;
+
+                pauseDialog.hide();
+                handleDialogClosed();
+                game.screenManager.changeScreen(ScreenManager.MENU);
+                userChoice = UserChoice.MENU;
+                mainScreen.resumeGameSystems(); // Reset pause
+            }
+        });
+
+        // Thêm các nút vào table (mỗi nút 1 hàng)
+        contentTable.add(continueButton).width(200).pad(5);
+        contentTable.row();
+        contentTable.add(saveButton).width(200).pad(5);
+        contentTable.row();
+        contentTable.add(newGameButton).width(200).pad(5);
+        contentTable.row();
+        contentTable.add(exitButton).width(200).pad(5);
+
+        contentTable.row();
+        contentTable.add(saveFeedbackLabel).center().pad(10);
+
+        // Gán dialog này cho biến dialog của Hud (để các cờ hoạt động)
+        this.dialog = pauseDialog;
+        pauseDialog.show(stage);
+        dialogJustOpened = true;
+        lastDialogType = DialogType.MENU;
+    }
+
+    /**
      * Hiển thị dialog xác nhận khi người chơi mở menu tạm dừng.
      */
     public void showMenuDialog() {
@@ -419,6 +532,8 @@ public class Hud implements Disposable {
      */
     @Override
     public void dispose() {
-        ballTexture.getTexture().dispose();
+        System.out.println("Disposing HUD");
+
+        stage.dispose();
     }
 }

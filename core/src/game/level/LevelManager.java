@@ -64,13 +64,13 @@ public class LevelManager implements Disposable {
                 path = "levels/test.tmx";
                 break;
             case LEVEL1:
-                path = "levels/level0_1.tmx";
+                path = "levels/level0_3.tmx";
                 break;
             case LEVEL2:
                 path = "levels/level0_2.tmx";
                 break;
             case LEVEL3:
-                path = "levels/level0_3.tmx";
+                path = "levels/level0_1.tmx";
                 break;
         }
 
@@ -101,6 +101,9 @@ public class LevelManager implements Disposable {
     @Override
     public void dispose() {
         System.out.println("Calling Level Manager dispose");
-        cleanupCurrentLevel();
+        //cleanupCurrentLevel();
+        if(currentLevel != null) {
+            currentLevel.dispose();
+        }
     }
 }

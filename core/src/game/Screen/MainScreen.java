@@ -14,11 +14,9 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Logger;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import game.ArkanoidGame;
+import game.*;
 
-import game.Hud;
-import game.ScoreChangeListener;
-import game.Utilities;
+import game.LoadAssets.BodyFactory;
 import game.Utils.ParticleHandler;
 import game.controller.KeyboardController;
 import game.level.B2dContactListener;
@@ -35,6 +33,7 @@ public class MainScreen implements Screen, ScoreChangeListener {
     private LevelManager levelManager;
     private Hud hud;
     private boolean gamePaused = false;
+    private GameData loadedData = null;
 
     private CollisionSystem collisionSystem;
     private PhysicSystem physicSystem;
@@ -78,15 +77,32 @@ public class MainScreen implements Screen, ScoreChangeListener {
         spriteBatch.setProjectionMatrix(camera.combined);
     }
 
+    public MainScreen(ArkanoidGame game, GameData dataToLoad) {
+        this(game); // Gọi constructor cũ ở trên
+        this.loadedData = dataToLoad; // Lưu lại data
+    }
+
     @Override
     public void show() {
         System.out.println("Hello from MainScreen.java");
         logger.info("show");
-        levelManager.loadLevel(1);
 
-        hud.setLives(5);
-        hud.setScore(0);
-        hud.setLevel(1);
+        // Kiểm tra xem có phải là "load game" không?
+        if (loadedData != null) {
+            // == LOAD GAME ==
+            System.out.println("Đang TẢI game từ dữ liệu đã lưu...");
+            levelManager.loadLevel(loadedData.level);
+            hud.setLives(loadedData.lives);
+            hud.setScore(loadedData.score);
+            hud.setLevel(loadedData.level);
+        } else {
+            // == NEW GAME == (Như code cũ của bạn)
+            System.out.println("Đang TẠO game mới...");
+            levelManager.loadLevel(1);
+            hud.setLives(5); // (Hoặc Hud.DEFAULT_LIVES)
+            hud.setScore(0);
+            hud.setLevel(1);
+        }
         hud.updateLives();
 
         physicSystem = new PhysicSystem(world, engine);
@@ -203,7 +219,44 @@ public class MainScreen implements Screen, ScoreChangeListener {
 
     @Override
     public void dispose() {
-        // level dispose
+        System.out.println("--- DỌN DẸP MAINSCREEN ---");
+
+        if (collisionSystem != null) {
+            collisionSystem.dispose();
+        }
+
+        if (world != null) {
+            world.dispose();
+            //world = null;
+        }
+
+        BodyFactory.destroyInstance();
+
+        if (spriteBatch != null) {
+            spriteBatch.dispose();
+            //spriteBatch = null;
+        }
+
+        if (hud != null) {
+            hud.dispose();
+            //hud = null;
+        }
+        if (levelManager != null) {
+            levelManager.dispose();
+            //levelManager = null;
+        }
+
+        if (engine != null) {
+            engine.removeAllEntities();
+            engine.clearPools();
+            //engine = null;
+        }
+
+        if (inputMultiplexer != null) {
+            inputMultiplexer.clear();
+        }
+
+        System.out.println("--- DỌN DẸP HOÀN TẤT ---");
     }
 
     public void onScoreChange(int appendScore) {
