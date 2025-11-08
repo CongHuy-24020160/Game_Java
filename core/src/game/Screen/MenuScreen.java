@@ -19,6 +19,9 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import game.ArkanoidGame;
 import game.GameData;
 import game.Utilities;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+
 
 public class MenuScreen implements Screen {
     private ArkanoidGame game;
@@ -26,10 +29,11 @@ public class MenuScreen implements Screen {
     private Stage stage;
 
     // Các biến này sẽ được khởi tạo trong show()
+    private TextureRegion backgroundTexture;
     private Table table;
     private Skin skin;
     private Label title;
-    private TextButton startGame, settings, exit, highScores, continueButton; // ⭐️ SỬA DÒNG NÀY ⭐️
+    private TextButton startGame, settings, exit, highScores, continueButton;
     private Music backgroundMusic;
 
 
@@ -48,6 +52,11 @@ public class MenuScreen implements Screen {
         // --- LẤY TÀI NGUYÊN Ở ĐÂY ---
         // Đây là thời điểm an toàn nhất để lấy tài nguyên đã được tải
         this.skin = game.assetManager.manager.get("ui/uiskin.json", Skin.class);
+        // 1. Lấy atlas
+        TextureAtlas atlas = game.assetManager.manager.get(game.assetManager.gameImagaes, TextureAtlas.class);
+        // 2. Tìm ảnh nền "background" (tên file .png) bên trong atlas
+        this.backgroundTexture = atlas.findRegion("background");
+        // --- KẾT THÚC THÊM ---
         this.backgroundMusic = game.assetManager.manager.get(game.assetManager.backgroundMusic, Music.class);
 
         backgroundMusic.setLooping(true);
@@ -149,10 +158,37 @@ public class MenuScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0, 0, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
-        stage.draw();
+       // Gdx.gl.glClearColor(0, 0, 0, 1);
+       // Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+      //  stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
+      //  stage.draw();
+
+            Gdx.gl.glClearColor(0, 0, 0, 1);
+            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+            // 1. Cập nhật viewport của stage
+            stage.getViewport().apply();
+
+            // 2. Lấy batch (cọ vẽ) của stage và thiết lập
+            stage.getBatch().setProjectionMatrix(stage.getCamera().combined);
+
+            // 3. Bắt đầu vẽ
+            stage.getBatch().begin();
+
+            // 4. VẼ ẢNH NỀN (vừa với kích thước ảo)
+            stage.getBatch().draw(backgroundTexture,
+                0, 0,
+                Utilities.VIRTUAL_WIDTH,
+                Utilities.VIRTUAL_HEIGHT);
+
+            // 5. Kết thúc vẽ batch
+            stage.getBatch().end();
+
+            // 6. Vẽ các nút bấm (UI) đè lên trên ảnh nền
+            stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
+            stage.draw();
+
+
     }
 
     @Override

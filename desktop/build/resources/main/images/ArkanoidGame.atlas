@@ -1,47 +1,46 @@
 ArkanoidGame.png
-size: 640, 992
-format: RGBA8888
-filter: Linear, Linear
-repeat: none
-pma: false
+size:2048,512
+repeat:none
 Background1
-  bounds: 0, 32, 640, 480
+bounds:1286,30,640,480
 Ball_small-blue
-  bounds: 0, 0, 13, 12
+bounds:1928,461,13,12
 Brick1
-  bounds: 44, 0, 40, 15
-  index: 4
+index:4
+bounds:322,13,40,15
 Brick2
-  bounds: 84, 0, 40, 15
-  index: 4
+index:4
+bounds:280,13,40,15
 Brick3
-  bounds: 124, 0, 40, 15
-  index: 4
+index:4
+bounds:2003,478,40,15
 Brick4
-  bounds: 164, 0, 40, 15
-  index: 4
+index:4
+bounds:238,13,40,15
 Brick5
-  bounds: 204, 0, 40, 15
-  index: 4
+index:4
+bounds:2003,495,40,15
 Brick6
-  bounds: 244, 0, 40, 15
-  index: 4
+index:4
+bounds:1961,478,40,15
 Brick7
-  bounds: 284, 0, 40, 15
-  index: 4
+index:4
+bounds:196,13,40,15
 Brick8
-  bounds: 324, 0, 40, 15
-  index: 4
+index:4
+bounds:1961,495,40,15
 Brick9
-  bounds: 364, 0, 40, 15
-  index: 4
+index:4
+bounds:154,13,40,15
 Brick_unbreakable2
-  bounds: 404, 0, 40, 15
+bounds:364,13,40,15
 Frame
-  bounds: 0, 512, 640, 480
+bounds:644,30,640,480
 Player
-  bounds: 444, 0, 74, 26
+bounds:78,2,74,26
 Player_flash
-  bounds: 518, 0, 74, 26
+bounds:2,2,74,26
+background
+bounds:2,30,640,480
 power_up
-  bounds: 13, 0, 31, 32
+bounds:1928,475,31,35
