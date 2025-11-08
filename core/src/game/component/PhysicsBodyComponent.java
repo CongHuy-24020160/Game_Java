@@ -44,6 +44,8 @@ public class PhysicsBodyComponent implements Component, Pool.Poolable {
      */
     public boolean setToDestroy = false;
 
+    public int lives = 0;
+
     /**
      * Phương thức {@code reset()} được gọi khi đối tượng này được trả lại vào Pool để tái sử dụng.
      * <p>

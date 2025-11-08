@@ -85,6 +85,7 @@ public class BallSystem extends IteratingSystem {
         final PhysicsBodyComponent ballB2body = b2bodyMapper.get(entity);
 
         // Bỏ qua nếu bóng đã bị hủy
+        // Fixme
         if (ballB2body.isDead)
             return;
 

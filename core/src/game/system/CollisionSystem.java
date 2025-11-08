@@ -153,22 +153,33 @@ public class CollisionSystem extends IteratingSystem {
      * xử lý hậu quả của việc phá gạch.
      */
     private void handleBallBlockCollision(Entity ballEntity, Entity blockEntity) {
+        // blockB2Body is a block that collides with the ball
         final PhysicsBodyComponent blockB2Body = b2BodyC.get(blockEntity);
-
+        blockB2Body.lives --;
         // Cộng điểm
         scoreChangeListener.onScoreChanged(100);
 
-        // Giảm số lượng gạch
-        levelManager.currentLevel.numOfBlocksLeft--;
+        // Change the texture
+
+        TextureComponent texture = textureC.get(blockEntity);
+        texture.currImage = levelManager.currentLevel.getTextures().findRegion(Utilities.getTexureNameForEachLive(blockB2Body.lives));
+
+        // Todo
+        // Decrease the number of block if a block is destroyed
+        if (blockB2Body.lives <= 0)
+            levelManager.currentLevel.numOfBlocksLeft--;
+
+        // Todo
 
         // Tạo hiệu ứng hạt (Giữ nguyên)
         particlesManager.trigger(blockB2Body.body.getPosition().x, blockB2Body.body.getPosition().y);
 
         System.out.println("ĐÃ PHÁ GẠCH!");
 
-
-        // Đánh dấu gạch là "cần hủy" (Giữ nguyên)
-        blockB2Body.setToDestroy = true;
+        // Todo
+        // destroy the block if its live is smaller than 0
+        if (blockB2Body.lives <= 0)
+            blockB2Body.setToDestroy = true;
 
         //  BẮT ĐẦU LOGIC THẮNG (Đã sửa lỗi chính tả)
 

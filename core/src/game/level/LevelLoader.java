@@ -59,25 +59,6 @@ public class LevelLoader implements Disposable {
     public int numOfBlocksLeft;
     public BallAndPaddle paddleAndBall;
 
-    // Don't understand with this code
-//    private static Map<Integer, Texture> brickTextures = new HashMap<>();
-//
-//    public static void loadTextures() {
-//        brickTextures.put(1, new Texture("Brick1_4.png"));
-//        brickTextures.put(2, new Texture("Brick2_4.png"));
-//        brickTextures.put(3, new Texture("Brick3_4.png"));
-//        brickTextures.put(4, new Texture("Brick4_4.png"));
-//        brickTextures.put(5, new Texture("Brick5_4.png"));
-//        brickTextures.put(6, new Texture("Brick6_4.png"));
-//        brickTextures.put(7, new Texture("Brick7_4.png"));
-//        brickTextures.put(8, new Texture("Brick8_4.png"));
-//        brickTextures.put(9, new Texture("Brick9_4.png"));
-//        brickTextures.put(10, new Texture("Brick_unbreakable2.png"));
-//    }
-
-//    public static Texture getBrickTexture(int id) {
-//        return brickTextures.getOrDefault(id, null);
-//    }
 
     public static int[][] loadMap(String path) {
         FileHandle file = Gdx.files.internal(path);
@@ -223,15 +204,21 @@ public class LevelLoader implements Disposable {
         System.out.println("Ball added to engine");
     }
 
+    /**
+     * This class to create blocks once at leverLoader
+     */
     private void renderBlocks() {
         if (ArkanoidGame.DEBUG_MODE) System.out.println("(LevelLoader) Rendering Blocks");
         for (MapObject object : map.getLayers().get(1).getObjects().getByType(RectangleMapObject.class)) {
             Entity blockEntity = en.createEntity();
+            // b2Body is the block
             PhysicsBodyComponent b2Body = en.createComponent(PhysicsBodyComponent.class);
+
             TextureComponent tc = en.createComponent(TextureComponent.class);
             ColliderComponent collision = en.createComponent(ColliderComponent.class);
             TypeComponent type = en.createComponent(TypeComponent.class);
             ScoreComponent scoreComponent = en.createComponent(ScoreComponent.class);
+
 
             // get the rectangle object from the map
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
@@ -241,30 +228,38 @@ public class LevelLoader implements Disposable {
 
             switch (blockType) {
                 case "Brick_1":
+                    // set live to block
+                    b2Body.lives = 1;
                     // load red block texture
                     tc.currImage = new TextureRegion(
-                        textures.findRegion("Brick1"),
+                        textures.findRegion(Utilities.getTexureNameForEachLive(b2Body.lives)),
                         0, 0, 40, 15
                     );
+
+
                     break;
                 case "Brick_2":
+                    b2Body.lives = 2;
                     // load purple block texture
                     tc.currImage = new TextureRegion(
-                        textures.findRegion("Brick2"),
+                        textures.findRegion(Utilities.getTexureNameForEachLive(b2Body.lives)),
                         0, 0, 40, 15
                     );
+
                     break;
                 case "Brick_3":
+                    b2Body.lives = 3;
                     // load yellow block texture
                     tc.currImage = new TextureRegion(
-                        textures.findRegion("Brick3"),
+                        textures.findRegion(Utilities.getTexureNameForEachLive(b2Body.lives)),
                         0, 0, 40, 15
                     );
+
                     break;
             }
 
 
-            // create body with bodyfactory
+            // create body with body factory
             b2Body.body = bodyFactory.makeBoxPolyBody(
                 Utilities.convertToPPM(rect.x),
                 Utilities.convertToPPM(rect.y),
@@ -289,57 +284,6 @@ public class LevelLoader implements Disposable {
             numOfBlocksLeft++;
             System.out.println("Block added to engine");
         }
-        // thêm phần đọc cho txt
-//        int[][] mapData = loadMap("maps/level1.txt"); // đường dẫn map txt của bạn
-//        float startX = 2;
-//        float startY = 150;
-//        float blockWidth = 32;
-//        float blockHeight = 16;
-//
-//        for (int row = 0; row < mapData.length; row++) {
-//            for (int col = 0; col < mapData[row].length; col++) {
-//                int id = mapData[row][col];
-//                if (id == 0) continue;
-//
-//                Texture tex = brickTextures.get(id);
-//                if (tex == null) continue;
-//
-//                Entity blockEntity = en.createEntity();
-//                PhysicsBodyComponent b2Body = en.createComponent(PhysicsBodyComponent.class);
-//                TextureComponent tc = en.createComponent(TextureComponent.class);
-//                ColliderComponent collision = en.createComponent(ColliderComponent.class);
-//                TypeComponent type = en.createComponent(TypeComponent.class);
-//                ScoreComponent scoreComponent = en.createComponent(ScoreComponent.class);
-//
-//                tc.currImage = new TextureRegion(tex);
-//
-//                float x = startX + col * blockWidth;
-//                float y = startY - row * blockHeight;
-//
-//                b2Body.body = bodyFactory.makeBoxPolyBody(
-//                    Utilities.convertToPPM(x),
-//                    Utilities.convertToPPM(y),
-//                    Utilities.convertToPPM(blockWidth),
-//                    Utilities.convertToPPM(blockHeight),
-//                    BodyFactory.Material.PLASTIC,
-//                    BodyDef.BodyType.StaticBody,
-//                    true,
-//                    false
-//                );
-//
-//                type.type = TypeComponent.BLOCK_TYPE;
-//                b2Body.body.setUserData(blockEntity);
-//
-//                blockEntity.add(b2Body);
-//                blockEntity.add(tc);
-//                blockEntity.add(collision);
-//                blockEntity.add(type);
-//                blockEntity.add(scoreComponent);
-//                en.addEntity(blockEntity);
-//
-//                numOfBlocksLeft++;
-//            }
-//        }
     }
 
     @Override

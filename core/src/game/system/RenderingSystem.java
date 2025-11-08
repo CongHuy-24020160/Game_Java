@@ -39,7 +39,11 @@ public class RenderingSystem extends IteratingSystem {
     @Override
     protected void processEntity(Entity entity, float v) {
         // Sử dụng các mapper đã được tối ưu hóa để lấy component.
+
+        // ?? how texture can work
         final TextureComponent texture = textureMapper.get(entity);
+
+
         final PhysicsBodyComponent b2body = b2BodyMapper.get(entity);
 
         // Nếu entity đã bị đánh dấu là "chết" thì không cần vẽ nó nữa.
