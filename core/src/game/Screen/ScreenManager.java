@@ -2,7 +2,7 @@ package game.Screen;
 
 import com.badlogic.gdx.Screen;
 import game.ArkanoidGame;
-import game.GameData;
+import game.data.GameData;
 
 public class ScreenManager {
     private final ArkanoidGame game;
@@ -80,11 +80,11 @@ public class ScreenManager {
                 if (ArkanoidGame.DEBUG_MODE) System.out.println("(ScreenManager.java) Changing to Loading Screen");
                 setScreen(new LoadingScreen(game));
                 break;
-            case HIGHSCORE: // ⭐️ THÊM KHỐI NÀY ⭐️
+            case HIGHSCORE:
                 //if (highScoreScreen == null) highScoreScreen = new HighScoreScreen(game);
                 setScreen(new HighScoreScreen(game));
                 break;
-            case ENTER_HIGHSCORE: // ⭐️ THÊM KHỐI NÀY ⭐️
+            case ENTER_HIGHSCORE:
                 // Luôn tạo mới để nó lấy điểm 'lastScore' mới nhất
                 EnterHighScoreScreen enterHighScoreScreen = new EnterHighScoreScreen(game);
                 setScreen(enterHighScoreScreen);

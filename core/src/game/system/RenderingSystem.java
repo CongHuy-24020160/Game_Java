@@ -17,7 +17,7 @@ public class RenderingSystem extends IteratingSystem {
     private final ComponentMapper<TextureComponent> textureMapper = ComponentMapper.getFor(TextureComponent.class);
     private final ComponentMapper<PhysicsBodyComponent> b2BodyMapper = ComponentMapper.getFor(PhysicsBodyComponent.class);
 
-    public RenderingSystem(SpriteBatch batch, OrthographicCamera cam){
+    public RenderingSystem(SpriteBatch batch, OrthographicCamera cam) {
         // System này chỉ xử lý các Entity có cả B2BodyComponent và TextureComponent.
         super(Family.all(PhysicsBodyComponent.class, TextureComponent.class).get());
         this.batch = batch;

@@ -12,11 +12,13 @@ public class ArkanoidGame extends Game {
     public int lastScore = 0;
 
     public ScreenManager screenManager;
-    public GameSettings getGameSettings(){
+
+    public GameSettings getGameSettings() {
         return gameSettings;
     }
+
     @Override
-    public void create(){
+    public void create() {
         gameSettings = GameSettings.getInstance();
         screenManager = new ScreenManager(this);
         assetManager = GameAssetManager.getInstance();
@@ -28,13 +30,13 @@ public class ArkanoidGame extends Game {
     }
 
     @Override
-    public void render(){
+    public void render() {
         super.render();
     }
 
     @Override
-    public void dispose(){
-        if (DEBUG_MODE){
+    public void dispose() {
+        if (DEBUG_MODE) {
             System.out.println("Disposing game");
         }
         assetManager.dispose();

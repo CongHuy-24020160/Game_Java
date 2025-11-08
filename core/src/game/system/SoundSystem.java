@@ -12,7 +12,7 @@ import game.component.TypeComponent;
 import game.Utils.UtilSound;
 
 /**
- *   System chịu trách nhiệm phát ra âm thanh dựa trên các sự kiện va chạm.
+ * System chịu trách nhiệm phát ra âm thanh dựa trên các sự kiện va chạm.
  */
 public class SoundSystem extends IteratingSystem {
     private final GameSettings appPreferences;
@@ -36,7 +36,7 @@ public class SoundSystem extends IteratingSystem {
         }
 
         final ColliderComponent collisionComponent = collisionC.get(entity);
-        final Entity otherEntity = collisionComponent.tagertEntity;
+        final Entity otherEntity = collisionComponent.targetEntity;
 
         // Không làm gì nếu không có va chạm nào được ghi nhận.
         if (otherEntity == null) {

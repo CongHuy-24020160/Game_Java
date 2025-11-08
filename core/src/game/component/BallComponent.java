@@ -1,6 +1,7 @@
 package game.component; // Khai báo package chứa class BallComponent
 
 // Import các thư viện cần thiết từ libGDX và Ashley
+
 import com.badlogic.ashley.core.Component; // Mọi Component trong ECS (Entity Component System) đều phải implement interface này
 import com.badlogic.gdx.math.MathUtils;    // Dùng cho các hàm toán học ngẫu nhiên và lượng giác
 import com.badlogic.gdx.math.Vector2;      // Vector 2D (dùng biểu diễn vận tốc, hướng, vị trí)
@@ -27,23 +28,33 @@ public class BallComponent implements Component, Pool.Poolable {
      *     <li>MID - Bật gần như thẳng đứng</li>
      * </ul>
      */
-    public enum Direction { LEFT, RIGHT, MID }
+    public enum Direction {LEFT, RIGHT, MID}
 
     // ========================== THUỘC TÍNH ==========================
 
-    /** Tốc độ hiện tại của bóng (đơn vị tùy theo thế giới vật lý Box2D) */
+    /**
+     * Tốc độ hiện tại của bóng (đơn vị tùy theo thế giới vật lý Box2D)
+     */
     public float BallSpeed = 0;
 
-    /** Xác định xem bóng đã "chết" (rơi khỏi màn hình hoặc ra ngoài bản đồ) hay chưa */
+    /**
+     * Xác định xem bóng đã "chết" (rơi khỏi màn hình hoặc ra ngoài bản đồ) hay chưa
+     */
     public boolean isDead = false;
 
-    /** Biến cờ cho phép bóng bật lại sau khi va chạm */
+    /**
+     * Biến cờ cho phép bóng bật lại sau khi va chạm
+     */
     public boolean canBounce = false;
 
-    /** Biến cờ cho biết bóng có thể liên kết với vật khác (ví dụ paddle, brick, ...) hay không */
+    /**
+     * Biến cờ cho biết bóng có thể liên kết với vật khác (ví dụ paddle, brick, ...) hay không
+     */
     public boolean canLinked = true;
 
-    /** Vận tốc trước khi bóng bị dừng hoặc va chạm */
+    /**
+     * Vận tốc trước khi bóng bị dừng hoặc va chạm
+     */
     public Vector2 preSpeed;
 
     // ========================== PHƯƠNG THỨC XỬ LÝ CHÍNH ==========================
@@ -55,7 +66,7 @@ public class BallComponent implements Component, Pool.Poolable {
      * (LEFT, RIGHT hoặc MID), sau đó tính toán vector vận tốc mới cho bóng.</p>
      *
      * @param direction hướng bật của bóng (LEFT, RIGHT, MID)
-     * @param ballBody đối tượng vật lý (Body) đại diện cho bóng trong thế giới Box2D
+     * @param ballBody  đối tượng vật lý (Body) đại diện cho bóng trong thế giới Box2D
      */
     public void bounceDirection(Direction direction, Body ballBody) {
         // Nếu cờ canBounce = false thì không xử lý bật
@@ -141,52 +152,72 @@ public class BallComponent implements Component, Pool.Poolable {
 
     // ========================== GETTER & SETTER ==========================
 
-    /** @return tốc độ hiện tại của bóng */
+    /**
+     * @return tốc độ hiện tại của bóng
+     */
     public float getBallSpeed() {
         return BallSpeed;
     }
 
-    /** @param ballSpeed đặt tốc độ mới cho bóng */
+    /**
+     * @param ballSpeed đặt tốc độ mới cho bóng
+     */
     public void setBallSpeed(float ballSpeed) {
         BallSpeed = ballSpeed;
     }
 
-    /** @return true nếu bóng đã "chết" */
+    /**
+     * @return true nếu bóng đã "chết"
+     */
     public boolean isDead() {
         return isDead;
     }
 
-    /** @param dead đặt trạng thái chết cho bóng */
+    /**
+     * @param dead đặt trạng thái chết cho bóng
+     */
     public void setDead(boolean dead) {
         isDead = dead;
     }
 
-    /** @return true nếu bóng được phép bật */
+    /**
+     * @return true nếu bóng được phép bật
+     */
     public boolean isCanBounce() {
         return canBounce;
     }
 
-    /** @param canBounce bật/tắt khả năng bật */
+    /**
+     * @param canBounce bật/tắt khả năng bật
+     */
     public void setCanBounce(boolean canBounce) {
         this.canBounce = canBounce;
     }
 
-    /** @return true nếu bóng có thể liên kết với vật khác */
+    /**
+     * @return true nếu bóng có thể liên kết với vật khác
+     */
     public boolean isCanLinked() {
         return canLinked;
     }
 
-    /** @param canLinked bật/tắt khả năng liên kết */
+    /**
+     * @param canLinked bật/tắt khả năng liên kết
+     */
     public void setCanLinked(boolean canLinked) {
         this.canLinked = canLinked;
     }
 
-    /** @return vận tốc trước khi bóng bị dừng */
+    /**
+     * @return vận tốc trước khi bóng bị dừng
+     */
     public Vector2 getPreSpeed() {
         return preSpeed;
     }
 
-    /** @param preSpeed thiết lập vận tốc trước khi dừng */
+    /**
+     * @param preSpeed thiết lập vận tốc trước khi dừng
+     */
     public void setPreSpeed(Vector2 preSpeed) {
         this.preSpeed = preSpeed;
     }

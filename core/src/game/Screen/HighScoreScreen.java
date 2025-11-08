@@ -17,6 +17,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import game.ArkanoidGame;
 import game.Utilities;
 import game.Utils.ScoreManager;
+
 import java.util.List;
 
 public class HighScoreScreen implements Screen {
@@ -57,7 +58,7 @@ public class HighScoreScreen implements Screen {
             Table scoreTable = new Table();
             for (int i = 0; i < scores.size(); i++) {
                 ScoreManager.ScoreEntry entry = scores.get(i);
-                
+
                 Label rankLabel = new Label((i + 1) + ".", new Label.LabelStyle(font, Color.WHITE));
                 Label nameLabel = new Label(entry.playerName, new Label.LabelStyle(font, Color.YELLOW));
                 Label scoreLabel = new Label(String.valueOf(entry.score), new Label.LabelStyle(font, Color.CYAN));
@@ -69,7 +70,7 @@ public class HighScoreScreen implements Screen {
             }
             table.add(scoreTable);
         }
-        
+
         table.row().padTop(40);
 
         TextButton backButton = new TextButton("Back", skin);
@@ -92,9 +93,25 @@ public class HighScoreScreen implements Screen {
         stage.draw();
     }
 
-    @Override public void resize(int width, int height) { stage.getViewport().update(width, height, true); }
-    @Override public void pause() {}
-    @Override public void resume() {}
-    @Override public void hide() {}
-    @Override public void dispose() { stage.dispose(); }
+    @Override
+    public void resize(int width, int height) {
+        stage.getViewport().update(width, height, true);
+    }
+
+    @Override
+    public void pause() {
+    }
+
+    @Override
+    public void resume() {
+    }
+
+    @Override
+    public void hide() {
+    }
+
+    @Override
+    public void dispose() {
+        stage.dispose();
+    }
 }

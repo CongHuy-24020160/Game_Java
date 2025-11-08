@@ -26,7 +26,7 @@ public class LoadingScreen implements Screen {
 
     // loading state fake timer (comment for prod)
     private float loadingtimer = 0f;
-    private float loadingDuration= 1.5f;
+    private float loadingDuration = 1.5f;
 
     // loading assets
     private final int IMAGE = 0;
@@ -34,7 +34,7 @@ public class LoadingScreen implements Screen {
     private final int SOUND = 2;
     private int currentLoadingStage = 0;
 
-    public LoadingScreen(ArkanoidGame game){
+    public LoadingScreen(ArkanoidGame game) {
         this.game = game;
     }
 
@@ -67,7 +67,7 @@ public class LoadingScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0,0,0,1);
+        Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         // 2. Vòng lặp render chỉ cần làm một việc: update trình quản lý
@@ -86,22 +86,22 @@ public class LoadingScreen implements Screen {
     }
 
     // Sửa lại hàm này để hiển thị %
-    private void handleLoadingTitle(float delta, float progress){
-        loadingTitle.setText("Loading... " + (int)(progress * 100) + "%");
+    private void handleLoadingTitle(float delta, float progress) {
+        loadingTitle.setText("Loading... " + (int) (progress * 100) + "%");
     }
 
 
-    private void handleLoadingTitle(float delta){
+    private void handleLoadingTitle(float delta) {
         loadingStateTimer += delta;
-        if(loadingStateTimer > loadingStateDuration){
+        if (loadingStateTimer > loadingStateDuration) {
 
             // update loading
             // Loading. (8 chars) -> Loading.. (9 chars) -> Loading... (10 chars)
-            if(loadingTitle.getText().length == 8){
+            if (loadingTitle.getText().length == 8) {
                 loadingTitle.setText("Loading..");
-            }else if(loadingTitle.getText().length == 9){
+            } else if (loadingTitle.getText().length == 9) {
                 loadingTitle.setText("Loading...");
-            }else{
+            } else {
                 loadingTitle.setText("Loading.");
             }
 
@@ -110,18 +110,18 @@ public class LoadingScreen implements Screen {
         }
     }
 
-    private void handleLoadingAssets(){
-        switch(currentLoadingStage){
+    private void handleLoadingAssets() {
+        switch (currentLoadingStage) {
             case IMAGE:
-                if(ArkanoidGame.DEBUG_MODE) System.out.println("(LoadingScreen) Loading Textures...");
+                if (ArkanoidGame.DEBUG_MODE) System.out.println("(LoadingScreen) Loading Textures...");
                 game.assetManager.queueAddImages();
                 break;
             case SKIN:
-                if(ArkanoidGame.DEBUG_MODE) System.out.println("(LoadingScreen) Loading Skin...");
+                if (ArkanoidGame.DEBUG_MODE) System.out.println("(LoadingScreen) Loading Skin...");
                 game.assetManager.queueLoadSkin();
                 break;
             case SOUND:
-                if(ArkanoidGame.DEBUG_MODE) System.out.println("(LoadingScreen) Loading SoundFX...");
+                if (ArkanoidGame.DEBUG_MODE) System.out.println("(LoadingScreen) Loading SoundFX...");
                 game.assetManager.queueLoadSound();
                 break;
             default:

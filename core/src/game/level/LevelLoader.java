@@ -219,7 +219,6 @@ public class LevelLoader implements Disposable {
             TypeComponent type = en.createComponent(TypeComponent.class);
             ScoreComponent scoreComponent = en.createComponent(ScoreComponent.class);
 
-
             // get the rectangle object from the map
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
 

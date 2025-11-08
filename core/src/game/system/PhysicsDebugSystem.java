@@ -17,7 +17,7 @@ public class PhysicsDebugSystem extends IteratingSystem {
     private final World world;
     private final OrthographicCamera cam;
 
-    public PhysicsDebugSystem(World world, OrthographicCamera cam){
+    public PhysicsDebugSystem(World world, OrthographicCamera cam) {
         super(Family.all().get());
         this.world = world;
         this.cam = cam;

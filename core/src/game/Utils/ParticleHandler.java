@@ -51,10 +51,10 @@ public class ParticleHandler {
      *
      *                      <p>
      *                      Ví dụ:
-     * 
+     *
      *                      <pre>
-     *                      new ParticleHandler("effects/explosion.p", "effects");
-     *                      </pre>
+     *                                           new ParticleHandler("effects/explosion.p", "effects");
+     *                                           </pre>
      */
     public ParticleHandler(String effectPath, String textureFolder) {
         // Nạp hiệu ứng mẫu từ file cấu hình

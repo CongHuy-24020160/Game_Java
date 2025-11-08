@@ -7,8 +7,6 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g3d.particles.ParticleSystem;
-import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Logger;
@@ -19,6 +17,7 @@ import game.*;
 import game.LoadAssets.BodyFactory;
 import game.Utils.ParticleHandler;
 import game.controller.KeyboardController;
+import game.data.GameData;
 import game.level.B2dContactListener;
 import game.level.LevelManager;
 import game.system.*;
@@ -126,7 +125,7 @@ public class MainScreen implements Screen, ScoreChangeListener {
         engine.addSystem(soundSystem);
         engine.addSystem(playerControlSystem);
 
-        inputMultiplexer.addProcessor(hud.getStage());
+        inputMultiplexer.addProcessor(0, hud.getStage());
         inputMultiplexer.addProcessor(keyboardController);
         Gdx.input.setInputProcessor(inputMultiplexer);
     }
@@ -199,6 +198,7 @@ public class MainScreen implements Screen, ScoreChangeListener {
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height);
+        hud.resize(width, height);
         // hud resize
     }
 

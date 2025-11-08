@@ -15,19 +15,29 @@ import game.ArkanoidGame;
  */
 public class KeyboardController implements InputProcessor {
 
-    /** Trạng thái di chuyển sang trái của paddle. */
+    /**
+     * Trạng thái di chuyển sang trái của paddle.
+     */
     public boolean left;
 
-    /** Trạng thái di chuyển sang phải của paddle. */
+    /**
+     * Trạng thái di chuyển sang phải của paddle.
+     */
     public boolean right;
 
-    /** Trạng thái nhấn phím Space (thả bóng hoặc bắt đầu). */
+    /**
+     * Trạng thái nhấn phím Space (thả bóng hoặc bắt đầu).
+     */
     public boolean space;
 
-    /** Trạng thái nhấn phím Escape (tạm dừng hoặc mở menu). */
+    /**
+     * Trạng thái nhấn phím Escape (tạm dừng hoặc mở menu).
+     */
     public boolean escape;
 
-    /** Vị trí chuột (dành cho trường hợp điều khiển bằng chuột). */
+    /**
+     * Vị trí chuột (dành cho trường hợp điều khiển bằng chuột).
+     */
     public Vector2 mouseLocation;
 
     public boolean p_pause;
@@ -123,7 +133,7 @@ public class KeyboardController implements InputProcessor {
                 left = false;
                 keyProcessed = true;
                 break;
- // D or righr sang phai
+            // D or righr sang phai
             case Input.Keys.D:
             case Input.Keys.RIGHT:
                 if (ArkanoidGame.DEBUG_MODE)
@@ -131,14 +141,14 @@ public class KeyboardController implements InputProcessor {
                 right = false;
                 keyProcessed = true;
                 break;
- // space tung bong
+            // space tung bong
             case Input.Keys.SPACE:
                 if (ArkanoidGame.DEBUG_MODE)
                     System.out.println("(KeyboardController) Released Space");
                 space = false;
                 keyProcessed = true;
                 break;
- // esc = out game
+            // esc = out game
             case Input.Keys.ESCAPE:
                 System.out.println("Releasing Escape key");
                 escape = false;
@@ -172,7 +182,6 @@ public class KeyboardController implements InputProcessor {
     }
 
 
-
     /**
      * Gọi khi người chơi chạm xuống (dành cho màn hình cảm ứng hoặc chuột).
      * Không dùng trong lớp này.
@@ -186,6 +195,7 @@ public class KeyboardController implements InputProcessor {
         }
         return false; // Bỏ qua các nút chuột khác
     }
+
     /**
      * Gọi khi người chơi nhả chuột hoặc ngón tay.
      */

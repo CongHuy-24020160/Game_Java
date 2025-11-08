@@ -17,7 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import game.ArkanoidGame;
-import game.GameData;
+import game.data.GameData;
 import game.Utilities;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -158,35 +158,35 @@ public class MenuScreen implements Screen {
 
     @Override
     public void render(float delta) {
-       // Gdx.gl.glClearColor(0, 0, 0, 1);
-       // Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-      //  stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
-      //  stage.draw();
+        // Gdx.gl.glClearColor(0, 0, 0, 1);
+        // Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        //  stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
+        //  stage.draw();
 
-            Gdx.gl.glClearColor(0, 0, 0, 1);
-            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-            // 1. Cập nhật viewport của stage
-            stage.getViewport().apply();
+        // 1. Cập nhật viewport của stage
+        stage.getViewport().apply();
 
-            // 2. Lấy batch (cọ vẽ) của stage và thiết lập
-            stage.getBatch().setProjectionMatrix(stage.getCamera().combined);
+        // 2. Lấy batch (cọ vẽ) của stage và thiết lập
+        stage.getBatch().setProjectionMatrix(stage.getCamera().combined);
 
-            // 3. Bắt đầu vẽ
-            stage.getBatch().begin();
+        // 3. Bắt đầu vẽ
+        stage.getBatch().begin();
 
-            // 4. VẼ ẢNH NỀN (vừa với kích thước ảo)
-            stage.getBatch().draw(backgroundTexture,
-                0, 0,
-                Utilities.VIRTUAL_WIDTH,
-                Utilities.VIRTUAL_HEIGHT);
+        // 4. VẼ ẢNH NỀN (vừa với kích thước ảo)
+        stage.getBatch().draw(backgroundTexture,
+            0, 0,
+            Utilities.VIRTUAL_WIDTH,
+            Utilities.VIRTUAL_HEIGHT);
 
-            // 5. Kết thúc vẽ batch
-            stage.getBatch().end();
+        // 5. Kết thúc vẽ batch
+        stage.getBatch().end();
 
-            // 6. Vẽ các nút bấm (UI) đè lên trên ảnh nền
-            stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
-            stage.draw();
+        // 6. Vẽ các nút bấm (UI) đè lên trên ảnh nền
+        stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
+        stage.draw();
 
 
     }

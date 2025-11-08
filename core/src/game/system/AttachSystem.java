@@ -19,7 +19,7 @@ public class AttachSystem extends IteratingSystem {
     private final ComponentMapper<PhysicsBodyComponent> b2BodyComponentComponentMapper
         = ComponentMapper.getFor(PhysicsBodyComponent.class);
 
-    public AttachSystem(){
+    public AttachSystem() {
         super(Family.all(LinkedEntityComponent.class).get());
     }
 
@@ -59,7 +59,7 @@ public class AttachSystem extends IteratingSystem {
 //         */
 //        childB2Body.body.setTransform(parentPosition.x, childPositionY, childAngle);
         LinkedEntityComponent attachComponent = attachComponentComponentMapper.get(entity);
-        if(attachComponent.LinkedEntity == null) return;
+        if (attachComponent.LinkedEntity == null) return;
 
         // update the attached entity to match that of the entity
         PhysicsBodyComponent entityB2Body = b2BodyComponentComponentMapper.get(entity);

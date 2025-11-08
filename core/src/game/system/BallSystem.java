@@ -122,8 +122,7 @@ public class BallSystem extends IteratingSystem {
                 // NẾU BỊ KẸT: Áp dụng vận tốc đã "hích".
                 // Nó sẽ thoát khỏi vòng lặp vô hạn.
                 ballB2body.body.setLinearVelocity(currentVelocity);
-            }
-            else {
+            } else {
                 // NẾU KHÔNG BỊ KẸT: Chạy code "chống văng" (chuẩn hóa)
                 if (currentVelocity.len() > 0 && currentVelocity.len() != desiredSpeed) {
                     ballB2body.body.setLinearVelocity(currentVelocity.nor().scl(desiredSpeed));
@@ -161,7 +160,7 @@ public class BallSystem extends IteratingSystem {
         final float ballRadius = ballB2body.body.getFixtureList().get(0).getShape().getRadius();
 
         // Chỉ thực hiện khi bóng rơi qua cạnh dưới và chưa bị xử lý trước đó.
-        if(ballPosition.y - ballRadius <= 0 && !ballC.isDead){
+        if (ballPosition.y - ballRadius <= 0 && !ballC.isDead) {
             UtilSound.getInstance().playMissBallSound();
 
             // Giảm mạng sống và cập nhật hiển thị.
@@ -169,7 +168,7 @@ public class BallSystem extends IteratingSystem {
             hud.updateLives();
 
             // Kiểm tra điều kiện thua cuộc.
-            if(hud.getLives() <= 0){
+            if (hud.getLives() <= 0) {
 
                 // ⭐️ BẮT ĐẦU LOGIC BXH MỚI ⭐️
 
@@ -200,5 +199,5 @@ public class BallSystem extends IteratingSystem {
             }
         }
     }
-    }
+}
 

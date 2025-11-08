@@ -1,4 +1,4 @@
-package game;
+package game.data;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
@@ -20,6 +20,7 @@ public class GameData {
 
     /**
      * LƯU game
+     *
      * @param score Điểm hiện tại
      * @param lives Mạng hiện tại
      * @param level Màn chơi hiện tại
@@ -48,6 +49,7 @@ public class GameData {
 
     /**
      * TẢI game (Hàm này sẽ đọc file save)
+     *
      * @return một đối tượng GameData nếu có file, hoặc null nếu không
      */
     public static GameData load() {

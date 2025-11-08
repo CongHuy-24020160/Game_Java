@@ -2,6 +2,7 @@ package game.Utils;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -14,7 +15,7 @@ import java.util.List;
 public class ScoreManager {
 
     private static volatile ScoreManager instance;
-    
+
     // Tên file lưu điểm
     private static final String HIGH_SCORE_FILE = "highscores.txt";
     // Số lượng điểm cao tối đa muốn lưu (Top 10)
@@ -56,6 +57,7 @@ public class ScoreManager {
 
     /**
      * Tải danh sách điểm cao từ file.
+     *
      * @return Một List<ScoreEntry> đã sắp xếp.
      */
     public List<ScoreEntry> loadScores() {
@@ -73,7 +75,7 @@ public class ScoreManager {
 
             for (String line : lines) {
                 if (line.trim().isEmpty()) continue; // Bỏ qua dòng trống
-                
+
                 String[] parts = line.split(","); // Tách bằng dấu phẩy
                 if (parts.length == 2) {
                     String name = parts[0].trim();
@@ -92,11 +94,12 @@ public class ScoreManager {
 
     /**
      * Ghi đè danh sách điểm cao hiện tại vào file.
+     *
      * @param scores Danh sách điểm cần lưu.
      */
     private void saveScores(List<ScoreEntry> scores) {
         FileHandle file = Gdx.files.local(HIGH_SCORE_FILE);
-        
+
         // Sắp xếp lại trước khi lưu
         sortScores(scores);
 
@@ -110,27 +113,28 @@ public class ScoreManager {
             StringBuilder sb = new StringBuilder();
             for (ScoreEntry entry : scoresToSave) {
                 sb.append(entry.playerName)
-                  .append(",")
-                  .append(entry.score)
-                  .append("\n"); // Thêm ký tự xuống dòng
+                    .append(",")
+                    .append(entry.score)
+                    .append("\n"); // Thêm ký tự xuống dòng
             }
-            
+
             // Ghi đè file (tham số false = overwrite)
             file.writeString(sb.toString(), false);
-            
+
         } catch (Exception e) {
             Gdx.app.error("ScoreManager", "Lỗi khi ghi file điểm cao!", e);
         }
     }
-    
+
     /**
      * Phương thức chính: Thêm một điểm mới và lưu lại.
+     *
      * @param playerName Tên người chơi
-     * @param newScore Điểm số mới
+     * @param newScore   Điểm số mới
      */
     public void addScore(String playerName, int newScore) {
         if (newScore <= 0) return; // Không lưu điểm 0
-        
+
         List<ScoreEntry> currentScores = loadScores();
         currentScores.add(new ScoreEntry(playerName, newScore));
         saveScores(currentScores); // Hàm saveScores sẽ tự động sắp xếp và cắt top 10
@@ -138,19 +142,20 @@ public class ScoreManager {
 
     /**
      * Kiểm tra xem điểm mới có đủ cao để vào Top 10 không.
+     *
      * @param newScore Điểm số cần kiểm tra.
      * @return true nếu đủ cao, false nếu không.
      */
     public boolean isHighScore(int newScore) {
         if (newScore <= 0) return false;
-        
+
         List<ScoreEntry> currentScores = loadScores();
-        
+
         // Nếu danh sách chưa đủ 10 người, luôn là điểm cao
         if (currentScores.size() < MAX_SCORES) {
             return true;
         }
-        
+
         // Nếu danh sách đã đủ 10 người, kiểm tra xem có cao hơn người cuối cùng không
         return newScore > currentScores.get(currentScores.size() - 1).score;
     }

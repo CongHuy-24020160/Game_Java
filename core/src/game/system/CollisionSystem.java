@@ -56,7 +56,6 @@ public class CollisionSystem extends IteratingSystem {
     }
 
 
-
     // (Các ComponentMapper giữ nguyên)
     private final ComponentMapper<ColliderComponent> collisionC
         = ComponentMapper.getFor(ColliderComponent.class);
@@ -75,7 +74,7 @@ public class CollisionSystem extends IteratingSystem {
     protected void processEntity(Entity entity, float v) {
         // Lấy các component cần thiết bằng mapper đã khai báo.
         final ColliderComponent collision = collisionC.get(entity);
-        final Entity otherEntity = collision.tagertEntity;
+        final Entity otherEntity = collision.targetEntity;
 
         if (otherEntity == null) return;
 
@@ -87,11 +86,11 @@ public class CollisionSystem extends IteratingSystem {
         }
 
         // Đặt lại va chạm để chuẩn bị cho khung hình tiếp theo.
-        collision.tagertEntity = null;
+        collision.targetEntity = null;
     }
 
     /**
-     * @param ballEntity Entity của quả bóng.
+     * @param ballEntity  Entity của quả bóng.
      * @param otherEntity Entity mà quả bóng đã va chạm.
      */
     private void handleBallCollision(Entity ballEntity, Entity otherEntity) {
@@ -137,7 +136,7 @@ public class CollisionSystem extends IteratingSystem {
         float maxBounceAngle = 60f;
         float bounceAngle = 90f - normalizedIntersectX * maxBounceAngle;
 
-        if (ArkanoidGame.DEBUG_MODE){
+        if (ArkanoidGame.DEBUG_MODE) {
             System.out.println("relativeIntersectX: " + relativeIntersectX);
             System.out.println("normalizedIntersectX: " + normalizedIntersectX);
             System.out.println("bounceAngle: " + bounceAngle);
@@ -149,37 +148,34 @@ public class CollisionSystem extends IteratingSystem {
     }
 
     /**
-     * ⭐️ ĐÂY LÀ HÀM ĐÃ SỬA LỖI (CHỈ CÓ 1 HÀM NÀY) ⭐️
      * xử lý hậu quả của việc phá gạch.
      */
     private void handleBallBlockCollision(Entity ballEntity, Entity blockEntity) {
         // blockB2Body is a block that collides with the ball
         final PhysicsBodyComponent blockB2Body = b2BodyC.get(blockEntity);
-        blockB2Body.lives --;
-        // Cộng điểm
-        scoreChangeListener.onScoreChanged(100);
+
 
         // Change the texture
 
         TextureComponent texture = textureC.get(blockEntity);
         texture.currImage = levelManager.currentLevel.getTextures().findRegion(Utilities.getTexureNameForEachLive(blockB2Body.lives));
 
-        // Todo
+        blockB2Body.lives--;
         // Decrease the number of block if a block is destroyed
-        if (blockB2Body.lives <= 0)
-            levelManager.currentLevel.numOfBlocksLeft--;
+        if (blockB2Body.lives > 0) {
+            return;
+        }
 
-        // Todo
+        System.out.println("ĐÃ PHÁ GẠCH!");
+        levelManager.currentLevel.numOfBlocksLeft--;
+        // Cộng điểm
+        scoreChangeListener.onScoreChanged(100);
+
+        blockB2Body.setToDestroy = true;
+
 
         // Tạo hiệu ứng hạt (Giữ nguyên)
         particlesManager.trigger(blockB2Body.body.getPosition().x, blockB2Body.body.getPosition().y);
-
-        System.out.println("ĐÃ PHÁ GẠCH!");
-
-        // Todo
-        // destroy the block if its live is smaller than 0
-        if (blockB2Body.lives <= 0)
-            blockB2Body.setToDestroy = true;
 
         //  BẮT ĐẦU LOGIC THẮNG (Đã sửa lỗi chính tả)
 
@@ -202,9 +198,11 @@ public class CollisionSystem extends IteratingSystem {
 
             } else {
 
-                // *** CHƯA PHẢI MÀN CUỐI -> HIỆN BẢNG "NEXT LEVEL" ***
-                hud.showLevelCompleteDialog();
-                mainScreen.pauseGameSystems(); // Tạm dừng hệ thống game khi thang 1 level
+                if (levelManager.currentLevel.numOfBlocksLeft <= 0) {
+                    // *** CHƯA PHẢI MÀN CUỐI -> HIỆN BẢNG "NEXT LEVEL" ***
+                    hud.showLevelCompleteDialog();
+                    mainScreen.pauseGameSystems(); // Tạm dừng hệ thống game khi thang 1 level
+                }
             }
 
             return; // Đã xử lý xong, thoát hàm
@@ -213,7 +211,6 @@ public class CollisionSystem extends IteratingSystem {
         // Tỉ lệ 20% rơi ra power-up (bạn có thể thay đổi số 5)
         //if (MathUtils.random(1, 5) == 1)
         spawnPowerUp(blockB2Body.body.getPosition());
-
     }
 
     private void spawnPowerUp(Vector2 position) {
