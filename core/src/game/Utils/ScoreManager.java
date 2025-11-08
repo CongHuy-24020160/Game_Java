@@ -173,4 +173,12 @@ public class ScoreManager {
             }
         });
     }
+
+    public int getHighestScore() {
+        List<ScoreEntry> scores = loadScores();
+        if (scores.isEmpty()) {
+            return 0;
+        }
+        return scores.get(0).score; // Đã được sort giảm dần
+    }
 }

@@ -7,6 +7,7 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.math.Vector2;
 import game.ArkanoidGame;
 import game.Hud;
+import game.Screen.MainScreen;
 import game.Utilities;
 import game.component.PhysicsBodyComponent;
 import game.component.BallComponent;
@@ -28,12 +29,14 @@ public class BallSystem extends IteratingSystem {
 
     private final Hud hud;
     private final LevelManager levelManager;
+    private MainScreen mainScreen;
 
 
-    public BallSystem(Hud hud, LevelManager levelManager) {
+    public BallSystem(Hud hud, LevelManager levelManager,MainScreen mainScreen) {
         super(Family.all(BallComponent.class, PhysicsBodyComponent.class).get());
         this.hud = hud;
         this.levelManager = levelManager;
+        this.mainScreen = mainScreen;
     }
 
 
@@ -175,17 +178,10 @@ public class BallSystem extends IteratingSystem {
                 int finalScore = hud.getScore();
                 ballC.isDead = true; // Đánh dấu bóng chết
 
-                // KIỂM TRA ĐIỂM CAO
-                if (ScoreManager.getInstance().isHighScore(finalScore)) {
-                    // LÀ ĐIỂM CAO -> ĐI TỚI MÀN NHẬP TÊN
-                    levelManager.getGame().lastScore = finalScore; // Dùng "cầu nối"
-                    levelManager.getGame().screenManager.changeScreen(ScreenManager.ENTER_HIGHSCORE);
-                } else {
-                    // KHÔNG PHẢI ĐIỂM CAO -> VỀ MÀN ENDGAME
-                    // (Bạn có thể dùng EndScreen hoặc GameOverDialog tùy ý)
-                    levelManager.getGame().screenManager.changeScreen(ScreenManager.ENDGAME);
-                }
-                // ⭐️ KẾT THÚC LOGIC BXH MỚI ⭐️
+                //mainScreen.pauseGameSystems();
+
+                mainScreen.gameOverPending = true;
+                mainScreen.finalScoreForGameOver = finalScore;
 
             } else {
 
@@ -196,6 +192,7 @@ public class BallSystem extends IteratingSystem {
                 ballC.canLinked = true; // báo rằng bóng đã dc gắn lại
                 ballC.setBallSpeed(DEFAULT_BALL_SPEED);
                 ballB2body.body.setLinearVelocity(0, 0);
+
             }
         }
     }

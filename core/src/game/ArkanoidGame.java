@@ -23,7 +23,7 @@ public class ArkanoidGame extends Game {
         screenManager = new ScreenManager(this);
         assetManager = GameAssetManager.getInstance();
 
-        screenManager.changeScreen(ScreenManager.LOADING);
+        ScreenManager.changeScreen(ScreenManager.LOADING);
 
         assetManager.queueLoadMusic();
         assetManager.manager.finishLoading();

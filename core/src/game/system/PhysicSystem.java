@@ -43,6 +43,9 @@ public class PhysicSystem extends IteratingSystem {
 
     @Override
     public void update(float deltaTime) {
+        if (world == null) {
+            return;
+        }
         super.update(deltaTime);
         world.step(TIME_STEP, VELOCITY_ITERATIONS, POSITION_ITERATIONS); //Tính toán vật lý
         performCleanup();
@@ -68,6 +71,12 @@ public class PhysicSystem extends IteratingSystem {
      * Xóa các Body ra khỏi World và các Entity ra khỏi Engine.
      */
     private void performCleanup() {
+        if (world == null) {
+            bodiesToRemove.clear();
+            entitiesToBeRemoved.clear();
+            return;
+        }
+
         // Xóa các Body vật lý
         for (Body body : bodiesToRemove) {
             world.destroyBody(body);

@@ -28,6 +28,7 @@ import game.Screen.ScreenManager;
  */
 public class CollisionSystem extends IteratingSystem {
 
+    private ArkanoidGame game;
     private PooledEngine engine;
     private World world;
     private BodyFactory bodyFactory;
@@ -40,7 +41,8 @@ public class CollisionSystem extends IteratingSystem {
     private MainScreen mainScreen;
 
     // ⭐️ SỬA LỖI: Hàm khởi tạo (Constructor) phải NHẬN và GÁN 3 biến này ⭐️
-    public CollisionSystem(MainScreen mainScreen, PooledEngine engine, World world, Hud hud, LevelManager levelManager, ScoreChangeListener scoreChangeListener) {
+    public CollisionSystem(MainScreen mainScreen, PooledEngine engine, World world, Hud hud,
+                           LevelManager levelManager, ScoreChangeListener scoreChangeListener,ArkanoidGame game) {
         super(Family.all(ColliderComponent.class, PhysicsBodyComponent.class, BallComponent.class).get());
 
         this.mainScreen = mainScreen;
@@ -49,6 +51,7 @@ public class CollisionSystem extends IteratingSystem {
         this.hud = hud;
         this.engine = engine;
         this.world = world;
+        this.game = game;
         this.bodyFactory = BodyFactory.getInstance(world);
 
         particlesManager = new ParticleHandler("particles/block-particle.p", "particles");
@@ -156,11 +159,11 @@ public class CollisionSystem extends IteratingSystem {
 
 
         // Change the texture
-
+        blockB2Body.lives--;
         TextureComponent texture = textureC.get(blockEntity);
         texture.currImage = levelManager.currentLevel.getTextures().findRegion(Utilities.getTexureNameForEachLive(blockB2Body.lives));
 
-        blockB2Body.lives--;
+
         // Decrease the number of block if a block is destroyed
         if (blockB2Body.lives > 0) {
             return;
@@ -189,11 +192,16 @@ public class CollisionSystem extends IteratingSystem {
 
                 // *** ĐÂY LÀ MÀN CUỐI CÙNG -> LƯU KỈ LỤC ***
                 int finalScore = hud.getScore();
+
+                mainScreen.gameOverPending = true;
+                mainScreen.finalScoreForGameOver = finalScore;
                 if (ScoreManager.getInstance().isHighScore(finalScore)) {
-                    levelManager.getGame().lastScore = finalScore;
-                    levelManager.getGame().screenManager.changeScreen(ScreenManager.ENTER_HIGHSCORE);
+                    game.lastScore = finalScore;
+                    //levelManager.getGame().screenManager.changeScreen(ScreenManager.ENTER_HIGHSCORE);
+                    game.screenManager.changeScreen(ScreenManager.ENTER_HIGHSCORE);
                 } else {
-                    levelManager.getGame().screenManager.changeScreen(ScreenManager.ENDGAME);
+                    //levelManager.getGame().screenManager.changeScreen(ScreenManager.ENDGAME);
+                    game.screenManager.changeScreen(ScreenManager.ENDGAME);
                 }
 
             } else {
