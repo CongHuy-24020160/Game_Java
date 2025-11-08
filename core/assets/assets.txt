@@ -16,9 +16,7 @@ images/Brick_unbreakable2.png
 images/Frame.png
 images/Player.png
 images/Player_flash.png
-images/assets.txt
 images/powerUpX3.png
-images/power_up.png
 levels/ArkanoidGame.tsx
 levels/Background1.tsx
 levels/MapProject.tiled-project

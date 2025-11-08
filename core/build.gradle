@@ -1,21 +1,122 @@
-[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
-eclipse.project.name = appName + '-core'
+apply plugin: 'java-library'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+  mavenCentral()
+}
 
 dependencies {
-  api "com.badlogicgames.ashley:ashley:$ashleyVersion"
-  api "com.badlogicgames.box2dlights:box2dlights:$box2dlightsVersion"
-  api "com.badlogicgames.gdx-controllers:gdx-controllers-core:$gdxControllersVersion"
-  api "com.badlogicgames.gdx:gdx-ai:$aiVersion"
-  api "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
-  api "com.badlogicgames.gdx:gdx-bullet:$gdxVersion"
-  api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
   api "com.badlogicgames.gdx:gdx:$gdxVersion"
-  implementation "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
+  api "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
+  api "com.badlogicgames.ashley:ashley:$ashleyVersion"
+  api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
 
+  testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.2'
+  testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.2'
 
-  if(enableGraalNative == 'true') {
-    implementation "io.github.berstanio:gdx-svmhelper-annotations:$graalHelperVersion"
-  }
+  // mock
+  testImplementation 'org.junit.jupiter:junit-jupiter:5.9.3'
+  testImplementation 'org.mockito:mockito-core:5.5.0'
+  testImplementation 'org.mockito:mockito-inline:4.11.0'
+
+  // Test dependencies cho LibGDX
+  testImplementation "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
+  testImplementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+  testImplementation "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
+
+  // Đảm bảo có các dependencies chính
+  implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
+  implementation "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
+
+  testImplementation 'org.powermock:powermock-api-mockito2:2.0.9'
+  testImplementation 'org.powermock:powermock-module-junit4:2.0.9'
+
+  testImplementation 'org.mockito:mockito-core:5.5.0'
+  testImplementation 'org.mockito:mockito-inline:4.11.0'  // Quan trọng cho mockConstruction
+  testImplementation 'org.mockito:mockito-junit-jupiter:5.5.0'
+
+  // Dependencies cho kiểm thử
+  testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.1' // Hoặc phiên bản mới nhất
+  testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.1' // Hoặc phiên bản mới nhất
+  testImplementation 'org.mockito:mockito-core:5.8.0' // Hoặc phiên bản mới nhất
+  testImplementation 'org.mockito:mockito-junit-jupiter:5.8.0' // Mockito cho JUnit 5
+
+// Dependencies cần thiết cho các class của LibGDX/Ashley/Box2D
+// Cần đảm bảo rằng các dependencies này cũng có mặt, đặc biệt là Box2D và Ashley
+  implementation 'com.badlogicgames.gdx:gdx:1.12.0' // Hoặc phiên bản LibGDX của bạn
+  implementation 'com.badlogicgames.gdx:gdx-box2d:1.12.0'
+  implementation 'com.badlogicgames.ashley:ashley:1.7.4'
+
+  testImplementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+  testImplementation "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
+
+  testImplementation 'org.powermock:powermock-api-mockito2:2.0.9'
+  testImplementation 'org.powermock:powermock-module-junit4:2.0.9'
+
+  testImplementation "junit:junit:4.13.2"
+  testImplementation "org.mockito:mockito-core:4.11.0"
+  testImplementation "org.mockito:mockito-inline:4.11.0" // Cho mock final classes
+
+  testImplementation "org.junit.jupiter:junit-jupiter:5.10.0"
+  testImplementation "org.mockito:mockito-core:5.10.0"
+  testImplementation "org.mockito:mockito-inline:5.2.0"
+
 
 }
-sourceSets.main.java.srcDirs = [ "src/" ]
+
+test {
+  jvmArgs '-Xshare:off'
+
+  // useJUnitPlatform()
+  useJUnit()
+  testLogging {
+    events "passed", "skipped", "failed"
+  }
+
+
+}
+
+sourceSets {
+  main {
+    java {
+      srcDirs = ['src/main/java']
+    }
+  }
+  test {
+    java {
+      srcDirs = ['src/test/java']
+    }
+  }
+  test {
+    resources.srcDirs = ['src/test/resources']
+  }
+}
+// Thêm đoạn này vào build.gradle (module core)
+tasks.withType(Test) {
+  // Thư mục tạm thời để giải nén native files
+  def nativesDir = "$buildDir/tmp/natives"
+
+  // Bước này chạy TRƯỚC khi kiểm thử bắt đầu
+  doFirst {
+    file(nativesDir).mkdirs()
+
+    // Cần đảm bảo rằng dependency 'desktop' hoặc 'box2d-platform' đã được khai báo
+    // và Gradle biết nơi tìm các JAR chứa native code.
+
+    // Giả sử bạn đang sử dụng configurations.runtimeClasspath
+    configurations.runtimeClasspath.files.each {
+      if (it.name.contains("box2d-platform")) { // Chỉ tìm JAR của Box2D platform
+        copy {
+          from zipTree(it)
+          // Chỉ giải nén các file native cần thiết
+          include "**/gdx-box2d*.dll", "**/libgdx-box2d*.so", "**/libgdx-box2d*.dylib"
+          into nativesDir
+        }
+      }
+    }
+  }
+  // Đặt đường dẫn thư viện native cho JVM
+  systemProperty "java.library.path", nativesDir
+}
