@@ -4,14 +4,21 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -394,21 +401,44 @@ public class Hud implements Disposable {
 
         // Chúng ta không dùng openDialog() vì cần nhiều hơn 2 nút
         // Chúng ta tự tạo Dialog
-        final Dialog pauseDialog = new Dialog("Game Paused", skin);
-        // Căn giưa tiêu đề
-        pauseDialog.getTitleLabel().setAlignment(Align.center);
-        pauseDialog.getTitleLabel().setColor(Color.GREEN);
-        pauseDialog.getTitleLabel().setFontScale(1.7f);
-        pauseDialog.setModal(true);
-        pauseDialog.setMovable(false);
+        final Dialog pauseDialog = new Dialog("", skin);
 
         // Lấy table nội dung của dialog
         Table contentTable = pauseDialog.getContentTable();
-        contentTable.center().pad(10);
+
+        contentTable.center().padTop(6).padBottom(6);
 
         final Label saveFeedbackLabel = new Label("", skin);
         saveFeedbackLabel.setColor(Color.GREEN);
         saveFeedbackLabel.setFontScale(1.5f);
+
+        // Sử dụng holder (mảng 1 phần tử) để tránh lỗi "might already have been assigned"
+        final Image[] dimOverlay = new Image[1];
+        try {
+            Texture white = new Texture(Gdx.files.internal("white.png"));
+            dimOverlay[0] = new Image(new TextureRegionDrawable(new TextureRegion(white)));
+        } catch (Exception e) {
+            Drawable d = null;
+            try {
+                d = skin.getDrawable("white");
+            } catch (Exception ignored) {
+            }
+            if (d != null) dimOverlay[0] = new Image(d);
+            else {
+                Pixmap pm = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+                pm.setColor(Color.WHITE);
+                pm.fill();
+                Texture t = new Texture(pm);
+                pm.dispose();
+                dimOverlay[0] = new Image(new TextureRegionDrawable(new TextureRegion(t)));
+            }
+        }
+        dimOverlay[0].setColor(0f, 0f, 0f, 0f);
+        dimOverlay[0].setSize(stage.getViewport().getWorldWidth(), stage.getViewport().getWorldHeight());
+        dimOverlay[0].setTouchable(Touchable.disabled);
+
+
+
 
         // 1. Nút CONTINUE
         TextButton continueButton = new TextButton("Continue", skin);
@@ -419,6 +449,17 @@ public class Hud implements Disposable {
                 handleDialogClosed(); // Đặt lại cờ
                 userChoice = UserChoice.CANCEL;
                 mainScreen.resumeGameSystems(); // ⭐️ TIẾP TỤC GAME
+                if (dimOverlay[0] != null && dimOverlay[0].hasParent()) {
+                    dimOverlay[0].addAction(Actions.sequence(
+                        Actions.alpha(0f, 0.12f, Interpolation.fade),
+                        Actions.run(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (dimOverlay[0] != null && dimOverlay[0].hasParent()) dimOverlay[0].remove();
+                            }
+                        })
+                    ));
+                }
             }
         });
 
@@ -456,6 +497,18 @@ public class Hud implements Disposable {
                 handleDialogClosed();
                 userChoice = UserChoice.RETRY;
                 mainScreen.resumeGameSystems(); // ⭐️ TIẾP TỤC GAME
+
+                if (dimOverlay[0] != null && dimOverlay[0].hasParent()) {
+                    dimOverlay[0].addAction(Actions.sequence(
+                        Actions.alpha(0f, 0.12f, Interpolation.fade),
+                        Actions.run(new Runnable() {
+                            @Override public void run() {
+                                if (dimOverlay[0] != null && dimOverlay[0].hasParent()) dimOverlay[0].remove();
+                            }
+                        })
+                    ));
+                }
+
             }
         });
 
@@ -493,6 +546,23 @@ public class Hud implements Disposable {
         // Gán dialog này cho biến dialog của Hud (để các cờ hoạt động)
         this.dialog = pauseDialog;
         pauseDialog.show(stage);
+        pauseDialog.invalidateHierarchy();
+        pauseDialog.pack();
+        // Overlay dim (dùng texture 1x1 trắng "white.png" trong assets; nếu không có, fallback tạo 1 bitmap font texture)
+        //Image dimOverlay;
+
+        // Thêm overlay trước khi show để nằm dưới dialog
+        stage.addActor(dimOverlay[0]);
+        dimOverlay[0].toBack();
+
+        pauseDialog.show(stage);
+        pauseDialog.invalidateHierarchy();
+        pauseDialog.pack();
+
+        // Fade in overlay
+        dimOverlay[0].getColor().a = 0f;
+        dimOverlay[0].addAction(Actions.alpha(0.5f, 0.18f, Interpolation.fade));
+
         dialogJustOpened = true;
         lastDialogType = DialogType.MENU;
         centerDialog();
