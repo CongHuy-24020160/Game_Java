@@ -18,6 +18,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import game.ArkanoidGame;
 import game.Utilities;
 import game.Utils.ScoreManager;
+import game.Utils.UtilSound;
 
 public class EnterHighScoreScreen implements Screen {
     private ArkanoidGame game;
@@ -29,6 +30,7 @@ public class EnterHighScoreScreen implements Screen {
 
     private Label titleLabel;
     private Label scoreLabel;
+    private Label maxScoreLabel;
     private TextField nameField;
     private TextButton submitButton;
 
@@ -55,7 +57,19 @@ public class EnterHighScoreScreen implements Screen {
         table = new Table();
         table.setFillParent(true);
 
-        titleLabel = new Label("New High Score!", new Label.LabelStyle(font, Color.YELLOW));
+        int bestScore = ScoreManager.getInstance().getHighestScore();
+
+        // KIỂM TRA CÓ PHẢI NEW RECORD KHÔNG
+        boolean isNewRecord = currentScore > bestScore;
+        // HIỂN THỊ TIÊU ĐỀ ĐÚNG
+        String titleText = isNewRecord ? "NEW RECORD!" : "SCORE!";
+        Color titleColor = isNewRecord ? Color.RED : Color.YELLOW;
+
+        titleLabel = new Label(titleText, new Label.LabelStyle(font, titleColor));
+
+        // HIỂN THỊ ĐIỂM CAO NHẤT
+        maxScoreLabel = new Label("Best: " + ScoreManager.getInstance().getHighestScore(),
+            new Label.LabelStyle(font, Color.GOLD));
         scoreLabel = new Label("Your Score: " + currentScore, new Label.LabelStyle(font, Color.WHITE));
 
         nameField = new TextField("", skin);
@@ -69,7 +83,11 @@ public class EnterHighScoreScreen implements Screen {
             }
         });
 
+        // HIỆU ỨNG NHẤP NHÁY CHỈ KHI NEW RECORD
+
         table.add(titleLabel).padBottom(20);
+        table.row();
+        table.add(maxScoreLabel).padBottom(20);
         table.row();
         table.add(scoreLabel).padBottom(40);
         table.row();

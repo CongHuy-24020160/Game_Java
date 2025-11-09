@@ -7,6 +7,7 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.math.Vector2;
 import game.ArkanoidGame;
 import game.Hud;
+import game.Screen.MainScreen;
 import game.Utilities;
 import game.component.PhysicsBodyComponent;
 import game.component.BallComponent;
@@ -28,12 +29,14 @@ public class BallSystem extends IteratingSystem {
 
     private final Hud hud;
     private final LevelManager levelManager;
+    private MainScreen mainScreen;
 
 
-    public BallSystem(Hud hud, LevelManager levelManager) {
+    public BallSystem(Hud hud, LevelManager levelManager,MainScreen mainScreen) {
         super(Family.all(BallComponent.class, PhysicsBodyComponent.class).get());
         this.hud = hud;
         this.levelManager = levelManager;
+        this.mainScreen = mainScreen;
     }
 
 
@@ -122,8 +125,7 @@ public class BallSystem extends IteratingSystem {
                 // NẾU BỊ KẸT: Áp dụng vận tốc đã "hích".
                 // Nó sẽ thoát khỏi vòng lặp vô hạn.
                 ballB2body.body.setLinearVelocity(currentVelocity);
-            }
-            else {
+            } else {
                 // NẾU KHÔNG BỊ KẸT: Chạy code "chống văng" (chuẩn hóa)
                 if (currentVelocity.len() > 0 && currentVelocity.len() != desiredSpeed) {
                     ballB2body.body.setLinearVelocity(currentVelocity.nor().scl(desiredSpeed));
@@ -161,7 +163,7 @@ public class BallSystem extends IteratingSystem {
         final float ballRadius = ballB2body.body.getFixtureList().get(0).getShape().getRadius();
 
         // Chỉ thực hiện khi bóng rơi qua cạnh dưới và chưa bị xử lý trước đó.
-        if(ballPosition.y - ballRadius <= 0 && !ballC.isDead){
+        if (ballPosition.y - ballRadius <= 0 && !ballC.isDead) {
             UtilSound.getInstance().playMissBallSound();
 
             // Giảm mạng sống và cập nhật hiển thị.
@@ -169,24 +171,17 @@ public class BallSystem extends IteratingSystem {
             hud.updateLives();
 
             // Kiểm tra điều kiện thua cuộc.
-            if(hud.getLives() <= 0){
+            if (hud.getLives() <= 0) {
 
                 // ⭐️ BẮT ĐẦU LOGIC BXH MỚI ⭐️
 
                 int finalScore = hud.getScore();
                 ballC.isDead = true; // Đánh dấu bóng chết
 
-                // KIỂM TRA ĐIỂM CAO
-                if (ScoreManager.getInstance().isHighScore(finalScore)) {
-                    // LÀ ĐIỂM CAO -> ĐI TỚI MÀN NHẬP TÊN
-                    levelManager.getGame().lastScore = finalScore; // Dùng "cầu nối"
-                    levelManager.getGame().screenManager.changeScreen(ScreenManager.ENTER_HIGHSCORE);
-                } else {
-                    // KHÔNG PHẢI ĐIỂM CAO -> VỀ MÀN ENDGAME
-                    // (Bạn có thể dùng EndScreen hoặc GameOverDialog tùy ý)
-                    levelManager.getGame().screenManager.changeScreen(ScreenManager.ENDGAME);
-                }
-                // ⭐️ KẾT THÚC LOGIC BXH MỚI ⭐️
+                //mainScreen.pauseGameSystems();
+
+                mainScreen.gameOverPending = true;
+                mainScreen.finalScoreForGameOver = finalScore;
 
             } else {
 
@@ -197,8 +192,9 @@ public class BallSystem extends IteratingSystem {
                 ballC.canLinked = true; // báo rằng bóng đã dc gắn lại
                 ballC.setBallSpeed(DEFAULT_BALL_SPEED);
                 ballB2body.body.setLinearVelocity(0, 0);
+
             }
         }
     }
-    }
+}
 

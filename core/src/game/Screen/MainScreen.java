@@ -7,8 +7,6 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g3d.particles.ParticleSystem;
-import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Logger;
@@ -18,7 +16,9 @@ import game.*;
 
 import game.LoadAssets.BodyFactory;
 import game.Utils.ParticleHandler;
+import game.Utils.ScoreManager;
 import game.controller.KeyboardController;
+import game.data.GameData;
 import game.level.B2dContactListener;
 import game.level.LevelManager;
 import game.system.*;
@@ -32,8 +32,14 @@ public class MainScreen implements Screen, ScoreChangeListener {
     private PooledEngine engine;
     private LevelManager levelManager;
     private Hud hud;
+
     private boolean gamePaused = false;
+
     private GameData loadedData = null;
+
+    public boolean gameOverPending = false;
+    public int finalScoreForGameOver = 0;
+    public int livesToSubtract = 0;
 
     private CollisionSystem collisionSystem;
     private PhysicSystem physicSystem;
@@ -106,11 +112,11 @@ public class MainScreen implements Screen, ScoreChangeListener {
         hud.updateLives();
 
         physicSystem = new PhysicSystem(world, engine);
-        ballSystem = new BallSystem(hud, levelManager);
+        ballSystem = new BallSystem(hud, levelManager, this);
         attachSystem = new AttachSystem();
         soundSystem = new SoundSystem(game.getGameSettings());
         playerControlSystem = new PlayerControlSystem(keyboardController, hud, levelManager, viewport, this);
-        collisionSystem = new CollisionSystem(this, engine, world, hud, levelManager, this);
+        collisionSystem = new CollisionSystem(this, engine, world, hud, levelManager, this, game);
         renderingSystem = new RenderingSystem(spriteBatch, camera);
         powerUpSystem = new PowerUpSystem(hud);
 
@@ -126,7 +132,7 @@ public class MainScreen implements Screen, ScoreChangeListener {
         engine.addSystem(soundSystem);
         engine.addSystem(playerControlSystem);
 
-        inputMultiplexer.addProcessor(hud.getStage());
+        inputMultiplexer.addProcessor(0, hud.getStage());
         inputMultiplexer.addProcessor(keyboardController);
         Gdx.input.setInputProcessor(inputMultiplexer);
     }
@@ -141,6 +147,23 @@ public class MainScreen implements Screen, ScoreChangeListener {
         // Clear screen
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        if (gameOverPending) {
+            gameOverPending = false;
+            int score = finalScoreForGameOver;
+            Gdx.app.postRunnable(() -> {
+                pauseGameSystems();
+
+                //if (ScoreManager.getInstance().isHighScore(score)) {
+                //    game.lastScore = score;
+                //    game.screenManager.changeScreen(ScreenManager.ENTER_HIGHSCORE);
+                //} else {
+                game.lastScore = score;
+                game.screenManager.changeScreen(ScreenManager.ENTER_HIGHSCORE);
+                // }
+            });
+            return; // THOÁT RENDER ĐỂ TRÁNH UPDATE SAU ĐÓ
+        }
 
         // Update logic game
         update(delta);
@@ -196,19 +219,16 @@ public class MainScreen implements Screen, ScoreChangeListener {
         return gamePaused;
     }
 
-   // @Override
-    //public void resize(int width, int height) {
-   //     viewport.update(width, height);
-        // hud resize
-   // }
-    @Override
-   public void resize(int width, int height) {
-       // 1. Cập nhật viewport cho Game (bóng, gạch...)
-       viewport.update(width, height);
+    // ĐÃ XÓA PHẦN BỊ XUNG ĐỘT (CONFLICT)
 
-       // 2. Cập nhật viewport cho HUD (nút, điểm số, "Game Paused")
-       hud.getStage().getViewport().update(width, height, true);
-   }
+    @Override
+    public void resize(int width, int height) {
+        // 1. Cập nhật viewport cho Game (bóng, gạch...)
+        viewport.update(width, height);
+
+        // 2. Cập nhật viewport cho HUD (nút, điểm số, "Game Paused")
+        hud.getStage().getViewport().update(width, height, true);
+    }
 
     @Override
     public void pause() {
@@ -229,42 +249,42 @@ public class MainScreen implements Screen, ScoreChangeListener {
     public void dispose() {
         System.out.println("--- DỌN DẸP MAINSCREEN ---");
 
-        if (collisionSystem != null) {
-            collisionSystem.dispose();
-        }
+        pauseGameSystems();
 
-        if (world != null) {
-            world.dispose();
-            //world = null;
-        }
-
-        BodyFactory.destroyInstance();
-
-        if (spriteBatch != null) {
-            spriteBatch.dispose();
-            //spriteBatch = null;
-        }
-
-        if (hud != null) {
-            hud.dispose();
-            //hud = null;
-        }
-        if (levelManager != null) {
-            levelManager.dispose();
-            //levelManager = null;
-        }
-
-        if (engine != null) {
-            engine.removeAllEntities();
-            engine.clearPools();
-            //engine = null;
-        }
-
-        if (inputMultiplexer != null) {
-            inputMultiplexer.clear();
-        }
-
-        System.out.println("--- DỌN DẸP HOÀN TẤT ---");
+        // ⭐️ ĐỢI 1 FRAME ĐỂ SYSTEMS HOÀN THÀNH
+        Gdx.app.postRunnable(new Runnable() {
+            @Override
+            public void run() {
+                // BÂY GIỜ MỚI XÓA
+                if (collisionSystem != null) {
+                    collisionSystem.dispose();
+                    collisionSystem = null;
+                }
+                if (world != null) {
+                    world.dispose();
+                    world = null;
+                }
+                if (engine != null) {
+                    engine.removeAllEntities();
+                    engine.clearPools();
+                    engine = null;
+                }
+                if (spriteBatch != null) {
+                    spriteBatch.dispose();
+                    spriteBatch = null;
+                }
+                if (hud != null) {
+                    hud.dispose();
+                    hud = null;
+                }
+                if (levelManager != null) {
+                    levelManager.dispose();
+                    levelManager = null;
+                }
+                BodyFactory.destroyInstance();
+                System.out.println("--- DỌN DẸP HOÀN TẤT ---");
+            }
+        });
     }
 
     public void onScoreChange(int appendScore) {

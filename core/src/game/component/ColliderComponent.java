@@ -24,7 +24,7 @@ public class ColliderComponent implements Pool.Poolable, Component {
      * để xác định xem thực thể này đang tiếp xúc hoặc tương tác với đối tượng nào.
      * Nếu không có va chạm nào đang xảy ra, giá trị này sẽ là {@code null}.
      */
-    public Entity tagertEntity;
+    public Entity targetEntity;
 
     /**
      * Biến cờ (flag) xác định xem thực thể này có đang kích hoạt khả năng va chạm hay không.
@@ -42,17 +42,17 @@ public class ColliderComponent implements Pool.Poolable, Component {
      *
      * @return thực thể mà đối tượng hiện tại đang va chạm gần nhất, hoặc {@code null} nếu không có va chạm.
      */
-    public Entity getTagertEntity() {
-        return tagertEntity;
+    public Entity getTargetEntity() {
+        return targetEntity;
     }
 
     /**
      * Phương thức thiết lập (setter) thực thể mà đối tượng hiện tại đang va chạm gần nhất.
      *
-     * @param tagertEntity thực thể được gán là đối tượng va chạm hiện tại.
+     * @param targetEntity thực thể được gán là đối tượng va chạm hiện tại.
      */
-    public void setTagertEntity(Entity tagertEntity) {
-        this.tagertEntity = tagertEntity;
+    public void setTargetEntity(Entity targetEntity) {
+        this.targetEntity = targetEntity;
     }
 
     /**
@@ -85,7 +85,7 @@ public class ColliderComponent implements Pool.Poolable, Component {
      */
     @Override
     public void reset() {
-        tagertEntity = null;
+        targetEntity = null;
         isActive = true;
     }
 }

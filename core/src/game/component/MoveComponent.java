@@ -19,21 +19,29 @@ import com.badlogic.gdx.utils.Pool;
  */
 public class MoveComponent implements Component, Pool.Poolable {
 
-    /** Vị trí của entity trong không gian ba chiều (trục Oxyz). */
+    /**
+     * Vị trí của entity trong không gian ba chiều (trục Oxyz).
+     */
     public final Vector3 pos = new Vector3();
 
-    /** Tỉ lệ phóng to hoặc thu nhỏ theo hai trục X, Y. */
+    /**
+     * Tỉ lệ phóng to hoặc thu nhỏ theo hai trục X, Y.
+     */
     public final Vector2 acceleration = new Vector2(1, 1);
 
-    /** Góc quay của entity (đơn vị: độ). */
+    /**
+     * Góc quay của entity (đơn vị: độ).
+     */
     public float angle = 0f;
 
-    /** Biến đánh dấu xem thực thể có đang bị ẩn khỏi hiển thị hay không. */
+    /**
+     * Biến đánh dấu xem thực thể có đang bị ẩn khỏi hiển thị hay không.
+     */
     public boolean hidden = false;
 
     /**
      * Lấy vị trí hiện tại của entity.
-     * 
+     *
      * @return đối tượng {@link Vector3} thể hiện tọa độ hiện tại.
      */
     public Vector3 getPos() {
@@ -42,7 +50,7 @@ public class MoveComponent implements Component, Pool.Poolable {
 
     /**
      * Thiết lập vị trí mới cho entity.
-     * 
+     *
      * @param x tọa độ theo trục X
      * @param y tọa độ theo trục Y
      * @param z tọa độ theo trục Z
@@ -53,7 +61,7 @@ public class MoveComponent implements Component, Pool.Poolable {
 
     /**
      * Lấy giá trị tỉ lệ phóng to theo hai trục.
-     * 
+     *
      * @return {@link Vector2} thể hiện giá trị tỉ lệ.
      */
     public Vector2 getAcceleration() {
@@ -62,7 +70,7 @@ public class MoveComponent implements Component, Pool.Poolable {
 
     /**
      * Thiết lập tỉ lệ phóng to theo trục X và Y.
-     * 
+     *
      * @param x tỉ lệ theo trục X
      * @param y tỉ lệ theo trục Y
      */
@@ -72,7 +80,7 @@ public class MoveComponent implements Component, Pool.Poolable {
 
     /**
      * Lấy góc quay hiện tại của entity.
-     * 
+     *
      * @return góc quay (đơn vị: độ)
      */
     public float getAngle() {
@@ -81,7 +89,7 @@ public class MoveComponent implements Component, Pool.Poolable {
 
     /**
      * Thiết lập góc quay mới cho entity.
-     * 
+     *
      * @param angle giá trị góc quay (đơn vị: độ)
      */
     public void setAngle(float angle) {
@@ -90,7 +98,7 @@ public class MoveComponent implements Component, Pool.Poolable {
 
     /**
      * Kiểm tra xem entity có đang bị ẩn hay không.
-     * 
+     *
      * @return true nếu entity bị ẩn, false nếu hiển thị.
      */
     public boolean isHidden() {
@@ -99,7 +107,7 @@ public class MoveComponent implements Component, Pool.Poolable {
 
     /**
      * Thiết lập trạng thái hiển thị cho entity.
-     * 
+     *
      * @param hidden giá trị true để ẩn, false để hiển thị.
      */
     public void setHidden(boolean hidden) {

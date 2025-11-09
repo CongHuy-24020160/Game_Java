@@ -1,8 +1,11 @@
 package game.level;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import com.badlogic.gdx.graphics.Texture;
 
 public class MapLoader {
@@ -21,19 +24,31 @@ public class MapLoader {
         }
         return map;
     }
+
     private Texture getBrickTexture(int id) {
         switch (id) {
-            case 1: return new Texture("Brick1_4.png");
-            case 2: return new Texture("Brick2_4.png");
-            case 3: return new Texture("Brick3_4.png");
-            case 4: return new Texture("Brick4_4.png");
-            case 5: return new Texture("Brick5_4.png");
-            case 6: return new Texture("Brick6_4.png");
-            case 7: return new Texture("Brick7_4.png");
-            case 8: return new Texture("Brick8_4.png");
-            case 9: return new Texture("Brick9_4.png");
-            case 10: return new Texture("Brick_unbreakable2.png");
-            default: return null;
+            case 1:
+                return new Texture("Brick1_4.png");
+            case 2:
+                return new Texture("Brick2_4.png");
+            case 3:
+                return new Texture("Brick3_4.png");
+            case 4:
+                return new Texture("Brick4_4.png");
+            case 5:
+                return new Texture("Brick5_4.png");
+            case 6:
+                return new Texture("Brick6_4.png");
+            case 7:
+                return new Texture("Brick7_4.png");
+            case 8:
+                return new Texture("Brick8_4.png");
+            case 9:
+                return new Texture("Brick9_4.png");
+            case 10:
+                return new Texture("Brick_unbreakable2.png");
+            default:
+                return null;
         }
     }
 

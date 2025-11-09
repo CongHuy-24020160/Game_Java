@@ -45,7 +45,7 @@ public class LinkedEntityComponent implements Component {
      *
      * @param carry thực thể được gán làm đối tượng liên kết (thực thể mà thực thể hiện tại gắn với).
      */
-    public void setLinkedEntity(Entity carry)  {
+    public void setLinkedEntity(Entity carry) {
         System.out.println(carry);
         this.LinkedEntity = carry;
     }

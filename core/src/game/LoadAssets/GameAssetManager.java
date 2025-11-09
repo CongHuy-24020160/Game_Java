@@ -38,36 +38,56 @@ public class GameAssetManager {
 
     // ========================== BIẾN TOÀN CỤC ==========================
 
-    /** Thể hiện duy nhất (Singleton instance) của GameAssetManager */
+    /**
+     * Thể hiện duy nhất (Singleton instance) của GameAssetManager
+     */
     private static volatile GameAssetManager instance;
 
-    /** Đối tượng AssetManager chính của libGDX */
+    /**
+     * Đối tượng AssetManager chính của libGDX
+     */
     public final AssetManager manager;
 
     // ========================== ĐƯỜNG DẪN TÀI NGUYÊN ==========================
 
-    /** File chứa tất cả hình ảnh của trò chơi (TextureAtlas) */
+    /**
+     * File chứa tất cả hình ảnh của trò chơi (TextureAtlas)
+     */
     public final String gameImagaes = "images/ArkanoidGame.atlas";
 
-    /** Âm thanh khi bóng đập gạch */
+    /**
+     * Âm thanh khi bóng đập gạch
+     */
     public final String hitBrickSound = "sounds/ball_hit_brick.wav";
 
-    /** Âm thanh khi bóng đập tường */
+    /**
+     * Âm thanh khi bóng đập tường
+     */
     public final String hitWallSound = "sounds/ball_hit_wall.wav";
 
-    /** Âm thanh khi trò chơi kết thúc */
+    /**
+     * Âm thanh khi trò chơi kết thúc
+     */
     public final String gameOverSound = "sounds/game_over.wav";
 
-    /** Âm thanh khi người chơi đánh trượt bóng */
+    /**
+     * Âm thanh khi người chơi đánh trượt bóng
+     */
     public final String missBallSound = "sounds/miss_the_ball.wav";
 
-    /** Nhạc nền chính của trò chơi */
+    /**
+     * Nhạc nền chính của trò chơi
+     */
     public final String backgroundMusic = "sounds/backgroundMusic1.mp3";
 
-    /** Font chữ chính được sử dụng trong trò chơi */
+    /**
+     * Font chữ chính được sử dụng trong trò chơi
+     */
     public final String gameFont = "fonts/GUNDAM.ttf";
 
-    /** File định nghĩa giao diện (UI Skin) */
+    /**
+     * File định nghĩa giao diện (UI Skin)
+     */
     public final String skin = "ui/uiskin.json";
 
     // ========================== CONSTRUCTOR ==========================

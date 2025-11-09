@@ -1,6 +1,7 @@
 package game.Utils;
 
 // import các package cần thiết
+
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import game.Utilities;
@@ -34,7 +35,7 @@ public class BallAndPaddle {
 
     /**
      * ComponentMapper dùng để truy xuất PhysicsBodyComponent từ một Entity.
-     *
+     * <p>
      * ComponentMapper cung cấp cách truy xuất component nhanh và an toàn hơn so với
      * tìm trực tiếp
      * trên entity mỗi lần cần dùng — nó tối ưu hóa cho ECS (Entity Component
@@ -48,7 +49,7 @@ public class BallAndPaddle {
      * paddle liên kết đến ball khi "giữ" bóng).
      */
     private final ComponentMapper<LinkedEntityComponent> linkMapper = ComponentMapper
-            .getFor(LinkedEntityComponent.class);
+        .getFor(LinkedEntityComponent.class);
 
     /**
      * Tham chiếu đến Entity đại diện cho paddle (thanh gạt).
@@ -72,7 +73,7 @@ public class BallAndPaddle {
      *               và LinkedEntityComponent (nếu cần) trước khi truyền vào.
      * @param ball   Entity đại diện cho ball. Giả định rằng Entity này đã có sẵn
      *               PhysicsBodyComponent.
-     *
+     *               <p>
      *               Lưu ý: constructor không thực hiện kiểm tra null để tránh
      *               overhead trong runtime; nếu muốn
      *               thêm lớp kiểm tra, có thể bổ sung trước khi gọi constructor.
@@ -84,7 +85,7 @@ public class BallAndPaddle {
 
     /**
      * Gắn quả bóng vào paddle.
-     *
+     * <p>
      * Mô tả hành động:
      * 1. Lấy PhysicsBodyComponent của ball và paddle thông qua bodyMapper.
      * 2. Dừng chuyển động của quả bóng bằng cách đặt vận tốc tuyến tính = (0,0).
@@ -97,7 +98,7 @@ public class BallAndPaddle {
      * 4. Dịch chuyển (transform) body của quả bóng tới vị trí mới và xoay góc = 0f.
      * 5. Lấy LinkedEntityComponent của paddle và set linked entity thành ball, tức
      * paddle "giữ" quả bóng.
-     *
+     * <p>
      * Ghi chú quan trọng về an toàn và giả định:
      * - Giả định các component cần thiết tồn tại. Nếu component không có, gọi
      * mapper.get(...) có thể trả về null

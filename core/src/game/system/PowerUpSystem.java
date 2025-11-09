@@ -9,7 +9,6 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import game.Hud;
 import game.component.*;
-import game.level.LevelManager;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -46,11 +45,11 @@ public class PowerUpSystem extends IteratingSystem {
         }
 
         // 2. Xử lý va chạm (Collection)
-        if (collider.tagertEntity == null) {
+        if (collider.targetEntity == null) {
             return;
         }
 
-        Entity targetEntity = collider.tagertEntity;
+        Entity targetEntity = collider.targetEntity;
         TypeComponent targetType = typeMapper.get(targetEntity);
 
         // Kiểm tra xem có va chạm với PLAYER không
@@ -73,7 +72,7 @@ public class PowerUpSystem extends IteratingSystem {
             }
         }
 
-        collider.tagertEntity = null; // Xử lý xong va chạm
+        collider.targetEntity = null; // Xử lý xong va chạm
     }
 
     private void activateEffect(Entity playerEntity, PowerUpComponent.PowerUpType type) {
@@ -103,12 +102,12 @@ public class PowerUpSystem extends IteratingSystem {
                     Entity ball = balls.first(); // Lấy quả bóng đầu tiên
 
                     PhysicsBodyComponent ballBody = bodyMapper.get(ball);
-                    BallComponent ballComp = ballMapper.get(ball); // Lấy BallComponent
+                    BallComponent ballComp = ballMapper.get(ball);
 
                     if (ballBody != null && ballComp != null) {
                         // Lấy tốc độ hiện tại từ BallComponent (để đảm bảo nhất quán)
                         float currentSpeed = ballComp.getBallSpeed();
-                        float newSpeed = currentSpeed * 0.7f; // Giảm 30% tốc độ
+                        float newSpeed = currentSpeed * 0.8f; // Giảm 30% tốc độ
 
                         // Cập nhật tốc độ trong Component
                         ballComp.setBallSpeed(newSpeed);

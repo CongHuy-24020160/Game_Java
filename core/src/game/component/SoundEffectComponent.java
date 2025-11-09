@@ -5,6 +5,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.utils.Pool;
 
 import java.util.HashMap;
+
 /**
  * Component quản lý hiệu ứng âm thanh trong game.
  */
@@ -23,9 +24,8 @@ public class SoundEffectComponent implements Component, Pool.Poolable {
     }
 
 
-
     @Override
     public void reset() {
-         dispose();
+        dispose();
     }
 }

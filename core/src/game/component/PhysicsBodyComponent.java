@@ -43,6 +43,7 @@ public class PhysicsBodyComponent implements Component, Pool.Poolable {
      * Điều này giúp tránh việc xóa đối tượng ngay lập tức trong khi hệ thống vật lý đang xử lý va chạm.
      */
     public boolean setToDestroy = false;
+    public boolean destructed = true;
 
     public int lives = 0;
 
@@ -64,5 +65,6 @@ public class PhysicsBodyComponent implements Component, Pool.Poolable {
         body = null;
         isDead = false;
         setToDestroy = false;
+        destructed = true;
     }
 }

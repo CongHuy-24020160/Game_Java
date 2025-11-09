@@ -1,7 +1,10 @@
 PLAYER,6400
+khckck,3100
 heheh ưhet bug r,2900
+huynguvailon,2900
+PLAYER,2900
+PLAYER,2900
+W_D,2700
 kaka,700
 haha,300
 PLAYER,300
-dôd,100
-hehe,100

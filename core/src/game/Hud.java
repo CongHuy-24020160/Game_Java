@@ -1,6 +1,5 @@
 package game;
 
-import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
@@ -8,19 +7,17 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import game.Screen.MainScreen;
-import game.component.BallComponent;
+import game.data.GameData;
 import game.level.LevelManager;
 import game.Screen.ScreenManager;
 
@@ -125,6 +122,10 @@ public class Hud implements Disposable {
 
     public void setLives(int lives) {
         this.lives = lives;
+    }
+
+    public void setLevelManager(LevelManager levelManager) {
+        this.levelManager = levelManager;
     }
 
     /**
@@ -232,6 +233,14 @@ public class Hud implements Disposable {
         }
     }
 
+    private void centerDialog() {
+        if (dialog == null || !dialog.hasParent()) return;
+
+        float dialogX = (viewport.getWorldWidth() - dialog.getWidth()) / 2f;
+        float dialogY = (viewport.getWorldHeight() - dialog.getHeight()) / 2f;
+        dialog.setPosition(dialogX, dialogY);
+    }
+
     /**
      * Gọi khi kích thước màn hình thay đổi để cập nhật viewport.
      *
@@ -239,7 +248,9 @@ public class Hud implements Disposable {
      * @param height chiều cao mới
      */
     public void resize(int width, int height) {
+
         viewport.update(width, height, true);
+        centerDialog();
     }
 
     /**
@@ -290,6 +301,7 @@ public class Hud implements Disposable {
         dialog.setVisible(true);
         lastDialogType = dialogType;
         dialogJustOpened = true;
+        centerDialog();
     }
 
     /**
@@ -297,6 +309,9 @@ public class Hud implements Disposable {
      */
     public void showLevelCompleteDialog() {
         logger.info("Showing Level Complete Dialog");
+        if (dialog != null && dialog.hasParent()) {
+            dialog.remove();
+        }
         openDialog(
             level < LevelManager.MAX_LEVELS ? "Congratulations! You've completed Level " + level + "." : "Your final score is: " + score,
             level < LevelManager.MAX_LEVELS ? "Next Level" : "Menu",
@@ -326,6 +341,7 @@ public class Hud implements Disposable {
             null,
             DialogType.NEXT_LEVEL
         );
+        centerDialog();
     }
 
     /**
@@ -411,7 +427,6 @@ public class Hud implements Disposable {
         saveButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                // ⭐️ GỌI HÀM SAVE (từ Bước 1) ⭐️
                 GameData.save(getScore(), getLives(), getLevel());
 
                 saveFeedbackLabel.setText("Game Saved!");
@@ -480,6 +495,7 @@ public class Hud implements Disposable {
         pauseDialog.show(stage);
         dialogJustOpened = true;
         lastDialogType = DialogType.MENU;
+        centerDialog();
     }
 
     /**
