@@ -6,6 +6,7 @@ import com.badlogic.ashley.core.*;
 import com.badlogic.ashley.core.PooledEngine; // Engine được tối ưu hóa, sử dụng lại các đối tượng
 import com.badlogic.ashley.systems.IteratingSystem; // System tự động lặp qua các entity
 // Import thư viện đồ họa 2D của LibGDX
+import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 // Import thư viện toán học (cho việc random và vector)
 import com.badlogic.gdx.math.MathUtils;
@@ -118,6 +119,8 @@ public class CollisionSystem extends IteratingSystem {
     // Lấy TextureComponent (để thay đổi hình ảnh gạch khi bị va chạm)
     private final ComponentMapper<TextureComponent> textureC
         = ComponentMapper.getFor(TextureComponent.class);
+    private final ComponentMapper<GameStateComponent> gameStateMapper
+        = ComponentMapper.getFor(GameStateComponent.class);
 
 
     /**
@@ -278,8 +281,26 @@ public class CollisionSystem extends IteratingSystem {
 
         // Giảm số gạch còn lại của màn chơi
         levelManager.currentLevel.numOfBlocksLeft--;
-        // Cộng 100 điểm
-        scoreChangeListener.onScoreChanged(100);
+        float multiplier = 1.0f; // Mặc định x1
+        ImmutableArray<Entity> gameStates = getEngine().getEntitiesFor(
+            Family.all(GameStateComponent.class).get()
+        );
+
+        if (gameStates.size() > 0) {
+            GameStateComponent gameState = gameStateMapper.get(gameStates.first());
+            if (gameState != null) {
+                multiplier = gameState.globalScoreMultiplier;
+            }
+        }
+
+        int baseScore = 100;
+        int finalScoree = (int)(baseScore * multiplier);
+
+        scoreChangeListener.onScoreChanged(finalScoree);
+
+        if (multiplier > 1.0f) {
+            System.out.println("🎯 Cộng " + finalScoree + " điểm (x" + multiplier + ")");
+        }
 
         // Đánh dấu body vật lý này là "sẽ bị phá hủy" (sẽ được PhysicSystem dọn dẹp)
         blockB2Body.setToDestroy = true;

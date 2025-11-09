@@ -1,6 +1,7 @@
 package game.component; // import package vô đây
 
 import com.badlogic.ashley.core.Component;
+import com.badlogic.gdx.utils.Pool;
 
 /**
  * Lớp {@code ScoreComponent} biểu diễn thành phần (component) lưu trữ điểm số (score)
@@ -13,7 +14,7 @@ import com.badlogic.ashley.core.Component;
  * để cập nhật điểm khi người chơi thực hiện hành động như tiêu diệt kẻ địch,
  * nhặt vật phẩm, hoặc hoàn thành nhiệm vụ.
  */
-public class ScoreComponent implements Component {
+public class ScoreComponent implements Component, Pool.Poolable {
 
     /**
      * Biến lưu trữ giá trị điểm số hiện tại của thực thể.
@@ -27,24 +28,30 @@ public class ScoreComponent implements Component {
      *   <li>Khi người chơi bị tấn công hoặc thua mạng: giảm điểm.</li>
      * </ul>
      */
-    public int Score = 100;
+    public int baseScore = 100;
+
+    // Hệ số nhân điểm (mặc định x1)
+    public float scoreMultiplier = 1.0f;
+
+    // Thời gian còn lại của hiệu ứng nhân điểm (giây)
+    public float multiplierTimeLeft = 0f;
 
     /**
      * Phương thức lấy (getter) trả về điểm số hiện tại của thực thể.
      *
      * @return giá trị điểm số hiện tại.
      */
-    public int getScore() {
-        return Score;
+    public int getBaseScore() {
+        return baseScore;
     }
 
     /**
      * Phương thức thiết lập (setter) để thay đổi điểm số của thực thể.
      *
-     * @param score giá trị điểm số mới cần gán.
+     * @param baseScore giá trị điểm số mới cần gán.
      */
-    public void setScore(int score) {
-        this.Score = score;
+    public void setBaseScore(int baseScore) {
+        this.baseScore = baseScore;
     }
 
     /**
@@ -55,7 +62,7 @@ public class ScoreComponent implements Component {
      * @param amount số điểm cần cộng thêm.
      */
     public void addScore(int amount) {
-        this.Score += amount;
+        this.baseScore += amount;
     }
 
     /**
@@ -66,6 +73,20 @@ public class ScoreComponent implements Component {
      * @param amount số điểm cần trừ đi.
      */
     public void subtractScore(int amount) {
-        this.Score -= amount;
+        this.baseScore -= amount;
+    }
+
+    @Override
+    public void reset() {
+        baseScore = 100;
+        scoreMultiplier = 1.0f;
+        multiplierTimeLeft = 0f;
+    }
+
+    /**
+     * Tính điểm cuối cùng dựa trên base score và multiplier
+     */
+    public int getFinalScore() {
+        return (int)(baseScore * scoreMultiplier);
     }
 }

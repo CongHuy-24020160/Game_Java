@@ -26,11 +26,21 @@ public class PowerUpSystem extends IteratingSystem {
     // Mapper để tác động
     private final ComponentMapper<PlayerIn4Component> playerInfoMapper = ComponentMapper.getFor(PlayerIn4Component.class);
     private final ComponentMapper<BallComponent> ballMapper = ComponentMapper.getFor(BallComponent.class);
+    private final ComponentMapper<GameStateComponent> gameStateMapper = ComponentMapper.getFor(GameStateComponent.class);
 
+    // Entity quản lý game state
+    private Entity gameStateEntity;
 
     public PowerUpSystem(Hud hud) {
         super(Family.all(PowerUpComponent.class, PhysicsBodyComponent.class, ColliderComponent.class).get());
         this.hud = hud;
+    }
+
+    /**
+     * Set game state entity từ bên ngoài
+     */
+    public void setGameStateEntity(Entity entity) {
+        this.gameStateEntity = entity;
     }
 
     @Override
@@ -59,8 +69,8 @@ public class PowerUpSystem extends IteratingSystem {
             if (!powerUp.isActivated) {
                 // 1. Chọn một loại power-up ngẫu nhiên
                 ArrayList<PowerUpComponent.PowerUpType> types = new ArrayList<>(EnumSet.allOf(PowerUpComponent.PowerUpType.class));
-                PowerUpComponent.PowerUpType randomType = //PowerUpComponent.PowerUpType.SHRINK_PADDLE;
-                types.get(MathUtils.random(0, types.size() - 1));
+                PowerUpComponent.PowerUpType randomType = PowerUpComponent.PowerUpType.DOUBLE_SCORE;
+                    //types.get(MathUtils.random(0, types.size() - 1));
 
                 System.out.println("ĐÃ ĂN! HIỆU ỨNG LÀ: " + randomType);
 
@@ -78,8 +88,13 @@ public class PowerUpSystem extends IteratingSystem {
 
     private void activateEffect(Entity playerEntity, PowerUpComponent.PowerUpType type) {
         switch (type) {
-            case ADD_LIFE: {
+            case EXTRA_LIFE: {
                 hud.setLives(hud.getLives() + 1);
+                hud.updateLives();
+                break;
+            }
+            case LOSE_LIFE: {
+                hud.setLives(hud.getLives() - 1);
                 hud.updateLives();
                 break;
             }
@@ -101,7 +116,7 @@ public class PowerUpSystem extends IteratingSystem {
                 }
                 break;
             }
-            case SLOW_BALL: {
+            case SLOWDOWN_BALL: {
                 // Dùng 'getEngine()' để truy vấn tất cả thực thể có BallComponent
                 ImmutableArray<Entity> balls = getEngine().getEntitiesFor(
                     Family.all(BallComponent.class, PhysicsBodyComponent.class).get()
@@ -129,6 +144,50 @@ public class PowerUpSystem extends IteratingSystem {
 
                         System.out.println("BÓNG CHẬM LẠI!");
                     }
+                }
+                break;
+            }
+            case SPEEDUP_BALL: {
+                // Dùng 'getEngine()' để truy vấn tất cả thực thể có BallComponent
+                ImmutableArray<Entity> balls = getEngine().getEntitiesFor(
+                    Family.all(BallComponent.class, PhysicsBodyComponent.class).get()
+                );
+
+                // Nếu tìm thấy (thường là 1 quả)
+                if (balls.size() > 0) {
+                    Entity ball = balls.first(); // Lấy quả bóng đầu tiên
+
+                    PhysicsBodyComponent ballBody = bodyMapper.get(ball);
+                    BallComponent ballComp = ballMapper.get(ball);
+
+                    if (ballBody != null && ballComp != null) {
+                        // Lấy tốc độ hiện tại từ BallComponent (để đảm bảo nhất quán)
+                        float currentSpeed = ballComp.getBallSpeed();
+                        float newSpeed = currentSpeed * 1.3f; // Tăng 30% tốc độ
+                        newSpeed = Math.min(newSpeed, 2.5f * BallSystem.DEFAULT_BALL_SPEED);
+                        // Giới hạn tốc độ tối thiểu
+                        ballComp.setBallSpeed(newSpeed);
+
+                        // Cập nhật tốc độ vật lý (lấy hướng cũ, áp dụng tốc độ mới)
+                        Vector2 currentVel = ballBody.body.getLinearVelocity();
+                        currentVel.setLength(newSpeed); // Đặt lại độ lớn
+                        ballBody.body.setLinearVelocity(currentVel);
+
+                        System.out.println("BÓNG NHANH LẠI!");
+                    }
+                }
+                break;
+            }
+            case DOUBLE_SCORE: {
+                // Kích hoạt double score
+                if (gameStateEntity != null) {
+                    GameStateComponent gameState = gameStateMapper.get(gameStateEntity);
+                    if (gameState != null) {
+                        gameState.activateDoubleScore();
+                        System.out.println("ĐIỂM NHÂN ĐÔI! (10 giây)");
+                    }
+                } else {
+                    System.err.println("WARNING: gameStateEntity chưa được set!");
                 }
                 break;
             }

@@ -1,5 +1,6 @@
 package game.Screen;
 
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
@@ -17,6 +18,7 @@ import game.*;
 import game.LoadAssets.BodyFactory;
 import game.Utils.ParticleHandler;
 import game.Utils.ScoreManager;
+import game.component.GameStateComponent;
 import game.controller.KeyboardController;
 import game.data.GameData;
 import game.level.B2dContactListener;
@@ -111,6 +113,11 @@ public class MainScreen implements Screen, ScoreChangeListener {
         }
         hud.updateLives();
 
+        Entity gameStateEntity = engine.createEntity();
+        GameStateComponent gameState = engine.createComponent(GameStateComponent.class);
+        gameStateEntity.add(gameState);
+        engine.addEntity(gameStateEntity);
+
         physicSystem = new PhysicSystem(world, engine);
         ballSystem = new BallSystem(hud, levelManager, this);
         attachSystem = new AttachSystem();
@@ -119,7 +126,9 @@ public class MainScreen implements Screen, ScoreChangeListener {
         collisionSystem = new CollisionSystem(this, engine, world, hud, levelManager, this, game);
         renderingSystem = new RenderingSystem(spriteBatch, camera);
         powerUpSystem = new PowerUpSystem(hud);
+        powerUpSystem.setGameStateEntity(gameStateEntity);
 
+        engine.addSystem(new GameStateSystem());
         engine.addSystem(renderingSystem);
         engine.addSystem(physicSystem);
 
