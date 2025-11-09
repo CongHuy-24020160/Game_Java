@@ -196,11 +196,19 @@ public class MainScreen implements Screen, ScoreChangeListener {
         return gamePaused;
     }
 
-    @Override
-    public void resize(int width, int height) {
-        viewport.update(width, height);
+   // @Override
+    //public void resize(int width, int height) {
+   //     viewport.update(width, height);
         // hud resize
-    }
+   // }
+    @Override
+   public void resize(int width, int height) {
+       // 1. Cập nhật viewport cho Game (bóng, gạch...)
+       viewport.update(width, height);
+
+       // 2. Cập nhật viewport cho HUD (nút, điểm số, "Game Paused")
+       hud.getStage().getViewport().update(width, height, true);
+   }
 
     @Override
     public void pause() {

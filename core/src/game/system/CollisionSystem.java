@@ -178,8 +178,12 @@ public class CollisionSystem extends IteratingSystem {
 
         // Todo
         // destroy the block if its live is smaller than 0
-        if (blockB2Body.lives <= 0)
+        if (blockB2Body.lives <= 0) {
             blockB2Body.setToDestroy = true;
+            // Tỉ lệ 20% rơi ra power-up (bạn có thể thay đổi số 5)
+             if (MathUtils.random(1, 5) == 1)
+              spawnPowerUp(blockB2Body.body.getPosition());
+        }
 
         //  BẮT ĐẦU LOGIC THẮNG (Đã sửa lỗi chính tả)
 
@@ -211,8 +215,8 @@ public class CollisionSystem extends IteratingSystem {
         }
         // KẾT THÚC LOGIC THẮNG
         // Tỉ lệ 20% rơi ra power-up (bạn có thể thay đổi số 5)
-        //if (MathUtils.random(1, 5) == 1)
-        spawnPowerUp(blockB2Body.body.getPosition());
+      //  if (MathUtils.random(1, 5) == 1)
+        //   spawnPowerUp(blockB2Body.body.getPosition());
 
     }
 
