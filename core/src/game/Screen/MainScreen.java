@@ -168,8 +168,8 @@ public class MainScreen implements Screen, ScoreChangeListener {
                     game.lastScore = score;
                     game.screenManager.changeScreen(ScreenManager.ENTER_HIGHSCORE);
                 } else {
-                game.lastScore = score;
-                game.screenManager.changeScreen(ScreenManager.ENDGAME);
+                    game.lastScore = score;
+                    game.screenManager.changeScreen(ScreenManager.ENDGAME);
                 }
             });
             return; // THOÁT RENDER ĐỂ TRÁNH UPDATE SAU ĐÓ

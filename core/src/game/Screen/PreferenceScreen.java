@@ -7,6 +7,8 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -23,7 +25,7 @@ public class PreferenceScreen implements Screen {
     private ArkanoidGame game;
     private Viewport viewport;
     private Stage stage;
-
+    private TextureRegion backgroundTexture;
     // Các biến này sẽ được khởi tạo trong show()
     private Skin skin;
     private Music backgroundMusic;
@@ -47,6 +49,10 @@ public class PreferenceScreen implements Screen {
         this.ding1Sound = game.assetManager.manager.get(game.assetManager.hitBrickSound, Sound.class);
         this.ding2Sound = game.assetManager.manager.get(game.assetManager.hitWallSound, Sound.class);
 
+        // 1. Lấy atlas
+        TextureAtlas atlas = game.assetManager.manager.get(game.assetManager.gameImagaes, TextureAtlas.class);
+        // 2. Tìm ảnh nền "background" (tên file .png) bên trong atlas
+        this.backgroundTexture = atlas.findRegion("background");
         // --- Bắt đầu xây dựng UI ---
         stage.clear();
         Gdx.input.setInputProcessor(stage);
@@ -59,6 +65,7 @@ public class PreferenceScreen implements Screen {
 
         // Tiêu đề
         Label titleLabel = new Label("Settings", new Label.LabelStyle(font, Color.WHITE));
+        titleLabel.setFontScale(2f);
 
         // Âm lượng nhạc
         Label volumeMusicLabel = new Label("Music Volume", new Label.LabelStyle(font, Color.WHITE));
@@ -113,6 +120,24 @@ public class PreferenceScreen implements Screen {
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        // 1. Cập nhật viewport của stage
+        stage.getViewport().apply();
+
+        // 2. Lấy batch (cọ vẽ) của stage và thiết lập
+        stage.getBatch().setProjectionMatrix(stage.getCamera().combined);
+
+        // 3. Bắt đầu vẽ
+        stage.getBatch().begin();
+
+        // 4. VẼ ẢNH NỀN (vừa với kích thước ảo)
+        stage.getBatch().draw(backgroundTexture,
+            0, 0,
+            Utilities.VIRTUAL_WIDTH,
+            Utilities.VIRTUAL_HEIGHT);
+
+        // 5. Kết thúc vẽ batch
+        stage.getBatch().end();
+
         stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
         stage.draw();
     }

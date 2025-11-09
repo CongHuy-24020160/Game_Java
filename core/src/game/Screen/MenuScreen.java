@@ -55,7 +55,7 @@ public class MenuScreen implements Screen {
         // 1. Lấy atlas
         TextureAtlas atlas = game.assetManager.manager.get(game.assetManager.gameImagaes, TextureAtlas.class);
         // 2. Tìm ảnh nền "background" (tên file .png) bên trong atlas
-        this.backgroundTexture = atlas.findRegion("background");
+        this.backgroundTexture = atlas.findRegion("background_menu");
         // --- KẾT THÚC THÊM ---
         this.backgroundMusic = game.assetManager.manager.get(game.assetManager.backgroundMusic, Music.class);
 
@@ -75,7 +75,7 @@ public class MenuScreen implements Screen {
         table.setFillParent(true);
         table.setDebug(false);
 
-        title = new Label("ARKANOID", skin);
+        //title = new Label("ARKANOID", skin);
 
         final GameData savedGame = GameData.load(); // Gọi hàm load ở Bước 1
         boolean hasSave = (savedGame != null);
@@ -141,17 +141,30 @@ public class MenuScreen implements Screen {
         });
 
         // Thêm các thành phần vào table
-        table.add(title).expandX().padBottom(50);
+        //table.add(title).colspan(2).expandX().padBottom(60);
         table.row();
-        table.add(continueButton).width(300).height(60).pad(10);
+
+        // Thêm một spacer để đẩy khối nút xuống (tăng giá trị để đẩy xuống nhiều hơn)
+        table.add().colspan(2).height(120).row(); // sửa 20 thành 30/40 nếu muốn đẩy xuống nhiều hơn
+
+        // Hàng 2 nút (cột trái & phải)
+        table.add(continueButton).width(300).height(60).pad(8).uniform().expandX().fillX();
+        table.add(startGame).width(300).height(60).pad(8).uniform().expandX().fillX();
         table.row();
-        table.add(startGame).width(300).height(60).pad(10);
+
+        // Hàng 2 nút tiếp theo
+        table.add(settings).width(300).height(60).pad(8).uniform().expandX().fillX();
+        table.add(highScores).width(300).height(60).pad(8).uniform().expandX().fillX();
         table.row();
-        table.add(settings).width(300).height(60).pad(10);
+
+        // Spacer nhỏ giữa các nút và nút exit để nhìn thoáng
+        table.add().colspan(2).height(8).row();
+
+        // Nút Exit nằm giữa, chiếm cả hai cột
+        table.add(exit).colspan(2).width(300).height(60).padTop(12).padBottom(10).center();
         table.row();
-        table.add(highScores).width(300).height(60).pad(10);
-        table.row();
-        table.add(exit).width(300).height(60).pad(10);
+
+
 
         stage.addActor(table);
     }

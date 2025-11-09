@@ -168,8 +168,7 @@ public class Hud implements Disposable {
         lives = DEFAULT_LIVES; // tăng mạng để game đỡ khó
 
         // Khởi tạo viewport và stage cho HUD
-        viewport = new FitViewport(Utilities.VIRTUAL_WIDTH, Utilities.VIRTUAL_HEIGHT,
-            new OrthographicCamera());
+        viewport = new FitViewport(Utilities.VIRTUAL_WIDTH, Utilities.VIRTUAL_HEIGHT, new OrthographicCamera());
         stage = new Stage(viewport);
 
         // Tạo table chính chứa các thành phần HUD
@@ -206,7 +205,7 @@ public class Hud implements Disposable {
         table.add(livesTable).left().padLeft(5);
 
         stage.addActor(table);
-        Gdx.input.setInputProcessor(stage);
+        //Gdx.input.setInputProcessor(stage);
     }
 
     /**
@@ -438,8 +437,6 @@ public class Hud implements Disposable {
         dimOverlay[0].setTouchable(Touchable.disabled);
 
 
-
-
         // 1. Nút CONTINUE
         TextButton continueButton = new TextButton("Continue", skin);
         continueButton.addListener(new ClickListener() {
@@ -502,7 +499,8 @@ public class Hud implements Disposable {
                     dimOverlay[0].addAction(Actions.sequence(
                         Actions.alpha(0f, 0.12f, Interpolation.fade),
                         Actions.run(new Runnable() {
-                            @Override public void run() {
+                            @Override
+                            public void run() {
                                 if (dimOverlay[0] != null && dimOverlay[0].hasParent()) dimOverlay[0].remove();
                             }
                         })

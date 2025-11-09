@@ -5,6 +5,8 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -27,6 +29,7 @@ public class HighScoreScreen implements Screen {
 
     private Skin skin;
     private BitmapFont font;
+    private TextureRegion backgroundTexture;
 
     public HighScoreScreen(ArkanoidGame game) {
         this.game = game;
@@ -39,6 +42,11 @@ public class HighScoreScreen implements Screen {
         this.skin = game.assetManager.manager.get(game.assetManager.skin, Skin.class);
         this.font = game.assetManager.manager.get(game.assetManager.gameFont, BitmapFont.class);
 
+        // 1. Lấy atlas
+        TextureAtlas atlas = game.assetManager.manager.get(game.assetManager.gameImagaes, TextureAtlas.class);
+        // 2. Tìm ảnh nền "background" (tên file .png) bên trong atlas
+        this.backgroundTexture = atlas.findRegion("background");
+
         Gdx.input.setInputProcessor(stage);
         stage.clear();
 
@@ -46,7 +54,7 @@ public class HighScoreScreen implements Screen {
         table.setFillParent(true);
 
         Label titleLabel = new Label("High Scores", new Label.LabelStyle(font, Color.WHITE));
-        table.add(titleLabel).padBottom(40);
+        table.add(titleLabel).padBottom(25);
         table.row();
 
         List<ScoreManager.ScoreEntry> scores = ScoreManager.getInstance().loadScores();
@@ -71,7 +79,7 @@ public class HighScoreScreen implements Screen {
             table.add(scoreTable);
         }
 
-        table.row().padTop(40);
+        table.row().padBottom(20);
 
         TextButton backButton = new TextButton("Back", skin);
         backButton.addListener(new ClickListener() {
@@ -89,6 +97,25 @@ public class HighScoreScreen implements Screen {
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        // 1. Cập nhật viewport của stage
+        stage.getViewport().apply();
+
+        // 2. Lấy batch (cọ vẽ) của stage và thiết lập
+        stage.getBatch().setProjectionMatrix(stage.getCamera().combined);
+
+        // 3. Bắt đầu vẽ
+        stage.getBatch().begin();
+
+        // 4. VẼ ẢNH NỀN (vừa với kích thước ảo)
+        stage.getBatch().draw(backgroundTexture,
+            0, 0,
+            Utilities.VIRTUAL_WIDTH,
+            Utilities.VIRTUAL_HEIGHT);
+
+        // 5. Kết thúc vẽ batch
+        stage.getBatch().end();
+
         stage.act(delta);
         stage.draw();
     }

@@ -5,6 +5,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -23,6 +25,7 @@ public class EndScreen implements Screen {
     private int score;
     private World world;
     private Engine engine;
+    private TextureRegion backgroundTexture;
 
     public EndScreen(ArkanoidGame game) {
         this.game = game;
@@ -39,6 +42,11 @@ public class EndScreen implements Screen {
     }
 
     private void createUI() {
+        TextureAtlas atlas = game.assetManager.manager.get(game.assetManager.gameImagaes, TextureAtlas.class);
+        // 2. Tìm ảnh nền "background" (tên file .png) bên trong atlas
+        this.backgroundTexture = atlas.findRegion("background");
+        stage.clear();
+        Gdx.input.setInputProcessor(stage);
         Table table = new Table();
         table.setFillParent(true);
         stage.addActor(table);
@@ -92,13 +100,30 @@ public class EndScreen implements Screen {
     }
 
     @Override
-    public void show() {}
+    public void show() {
+    }
 
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0.05f, 0.05f, 0.15f, 1); // Nền tím đậm
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        stage.getViewport().apply();
+
+        // 2. Lấy batch (cọ vẽ) của stage và thiết lập
+        stage.getBatch().setProjectionMatrix(stage.getCamera().combined);
+
+        // 3. Bắt đầu vẽ
+        stage.getBatch().begin();
+
+        // 4. VẼ ẢNH NỀN (vừa với kích thước ảo)
+        stage.getBatch().draw(backgroundTexture,
+            0, 0,
+            Utilities.VIRTUAL_WIDTH,
+            Utilities.VIRTUAL_HEIGHT);
+
+        // 5. Kết thúc vẽ batch
+        stage.getBatch().end();
         stage.act(delta);
         stage.draw();
     }
@@ -109,13 +134,16 @@ public class EndScreen implements Screen {
     }
 
     @Override
-    public void pause() {}
+    public void pause() {
+    }
 
     @Override
-    public void resume() {}
+    public void resume() {
+    }
 
     @Override
-    public void hide() {}
+    public void hide() {
+    }
 
     @Override
     public void dispose() {
