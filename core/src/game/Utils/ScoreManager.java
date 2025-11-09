@@ -179,6 +179,6 @@ public class ScoreManager {
         if (scores.isEmpty()) {
             return 0;
         }
-        return scores.get(0).score; // Đã được sort giảm dần
+        return scores.get(0).score;
     }
 }

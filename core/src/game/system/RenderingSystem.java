@@ -38,22 +38,30 @@ public class RenderingSystem extends IteratingSystem {
 
     @Override
     protected void processEntity(Entity entity, float v) {
+
         // Sử dụng các mapper đã được tối ưu hóa để lấy component.
 
-        // ?? how texture can work
         final TextureComponent texture = textureMapper.get(entity);
-
-
         final PhysicsBodyComponent b2body = b2BodyMapper.get(entity);
 
         // Nếu entity đã bị đánh dấu là "chết" thì không cần vẽ nó nữa.
-        if (b2body.isDead) return;
+        if (b2body.isDead || texture.currImage == null) return;
 
-        // Tính toán kích thước và vị trí để vẽ hình ảnh khớp với vật thể vật lý.
-        final float width = Utilities.convertToPPM(texture.currImage.getRegionWidth());
-        final float height = Utilities.convertToPPM(texture.currImage.getRegionHeight());
-        final float originX = width * 0.5f; // Tọa độ tâm X
-        final float originY = height * 0.5f; // Tọa độ tâm Y
+        float width, height;
+
+        if (texture.width > 0 && texture.height > 0) {
+            // Nếu đã set width/height thì dùng (đây là world unit)
+            width = Utilities.convertToPPM(texture.width);
+            height = Utilities.convertToPPM(texture.height);
+        } else {
+            // Nếu chưa set thì dùng kích thước gốc của hình ảnh
+            width = Utilities.convertToPPM(texture.currImage.getRegionWidth());
+            height = Utilities.convertToPPM(texture.currImage.getRegionHeight());
+        }
+
+        final float originX = width * 0.5f;
+        final float originY = height * 0.5f;
+
         batch.begin();
         batch.draw(texture.currImage,
             b2body.body.getPosition().x - originX, // Vị trí X

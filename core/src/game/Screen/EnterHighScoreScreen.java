@@ -60,7 +60,7 @@ public class EnterHighScoreScreen implements Screen {
         int bestScore = ScoreManager.getInstance().getHighestScore();
 
         // KIỂM TRA CÓ PHẢI NEW RECORD KHÔNG
-        boolean isNewRecord = currentScore > bestScore;
+        boolean isNewRecord = currentScore >= bestScore;
         // HIỂN THỊ TIÊU ĐỀ ĐÚNG
         String titleText = isNewRecord ? "NEW RECORD!" : "SCORE!";
         Color titleColor = isNewRecord ? Color.RED : Color.YELLOW;

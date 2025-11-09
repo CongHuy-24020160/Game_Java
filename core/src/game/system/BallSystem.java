@@ -22,7 +22,7 @@ import game.Screen.ScreenManager;
  */
 public class BallSystem extends IteratingSystem {
     // tốc độ mặc định của bóng.
-    private static final float DEFAULT_BALL_SPEED = 5f;
+    public static final float DEFAULT_BALL_SPEED = 5f;
 
     private ComponentMapper<BallComponent> ballMapper = ComponentMapper.getFor(BallComponent.class);
     private ComponentMapper<PhysicsBodyComponent> b2bodyMapper = ComponentMapper.getFor(PhysicsBodyComponent.class);
@@ -32,7 +32,7 @@ public class BallSystem extends IteratingSystem {
     private MainScreen mainScreen;
 
 
-    public BallSystem(Hud hud, LevelManager levelManager,MainScreen mainScreen) {
+    public BallSystem(Hud hud, LevelManager levelManager, MainScreen mainScreen) {
         super(Family.all(BallComponent.class, PhysicsBodyComponent.class).get());
         this.hud = hud;
         this.levelManager = levelManager;

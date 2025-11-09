@@ -106,6 +106,7 @@ public class LevelLoader implements Disposable {
 
     private void renderPlayer(Entity playerEntity, Entity ballEntity) {
         if (ArkanoidGame.DEBUG_MODE) System.out.println("(LevelLoader) Rendering Player");
+
         PlayerIn4Component pc = en.createComponent(PlayerIn4Component.class);
         TextureComponent tc = en.createComponent(TextureComponent.class);
         MoveComponent tranC = en.createComponent(MoveComponent.class);
@@ -114,12 +115,15 @@ public class LevelLoader implements Disposable {
         PhysicsBodyComponent b2bodyC = en.createComponent(PhysicsBodyComponent.class);
         LinkedEntityComponent attachC = en.createComponent(LinkedEntityComponent.class);
 
-        // create box2d body
+        // === TẠO BODY VỚI KÍCH THƯỚC GỐC ===
+        float baseWidth = Utilities.PADDLE_WIDTH;   // ví dụ: 100
+        float baseHeight = Utilities.PADDLE_HEIGHT; // ví dụ: 20
+
         b2bodyC.body = bodyFactory.makeBoxPolyBody(
-            Utilities.getPPMWidth() / 2 - (Utilities.convertToPPM(Utilities.PADDLE_WIDTH) / 2),
+            Utilities.getPPMWidth() / 2 - (Utilities.convertToPPM(baseWidth) / 2),
             Utilities.convertToPPM(10),
-            Utilities.convertToPPM(Utilities.PADDLE_WIDTH),
-            Utilities.convertToPPM(Utilities.PADDLE_HEIGHT),
+            Utilities.convertToPPM(baseWidth),
+            Utilities.convertToPPM(baseHeight),
             null,
             BodyDef.BodyType.KinematicBody,
             true,
@@ -129,15 +133,21 @@ public class LevelLoader implements Disposable {
         b2bodyC.body.setUserData(playerEntity);
         typeC.type = TypeComponent.PLAYER_TYPE;
         attachC.setLinkedEntity(ballEntity);
-        // load texture
-        tc.currImage = new TextureRegion(
-            textures.findRegion("Player"),
-            0, 0, 74, 26
-        );
 
-        // load transform
+        // === TẢI HÌNH ẢNH + ĐẶT KÍCH THƯỚC ===
+        tc.currImage = new TextureRegion(textures.findRegion("Player"), 0, 0, 74, 26);
+
+        // ĐẶT KÍCH THƯỚC PIXEL (ĐỂ VẼ)
+        tc.width = baseWidth;
+        tc.height = baseHeight;
+
+        // ĐẶT TRANSFORM
         tranC.pos.set(b2bodyC.body.getPosition().x, b2bodyC.body.getPosition().y, 0);
 
+        // === THÊM lengthMultiplier VÀO PlayerIn4Component ===
+        pc.lengthMultiplier = 1.0f; // Bắt đầu: 100%
+
+        // === THÊM COMPONENT ===
         playerEntity.add(pc);
         playerEntity.add(tc);
         playerEntity.add(tranC);

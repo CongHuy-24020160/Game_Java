@@ -59,7 +59,8 @@ public class PowerUpSystem extends IteratingSystem {
             if (!powerUp.isActivated) {
                 // 1. Chọn một loại power-up ngẫu nhiên
                 ArrayList<PowerUpComponent.PowerUpType> types = new ArrayList<>(EnumSet.allOf(PowerUpComponent.PowerUpType.class));
-                PowerUpComponent.PowerUpType randomType = types.get(MathUtils.random(0, types.size() - 1));
+                PowerUpComponent.PowerUpType randomType = //PowerUpComponent.PowerUpType.SHRINK_PADDLE;
+                types.get(MathUtils.random(0, types.size() - 1));
 
                 System.out.println("ĐÃ ĂN! HIỆU ỨNG LÀ: " + randomType);
 
@@ -77,21 +78,30 @@ public class PowerUpSystem extends IteratingSystem {
 
     private void activateEffect(Entity playerEntity, PowerUpComponent.PowerUpType type) {
         switch (type) {
-            case ADD_LIFE:
+            case ADD_LIFE: {
                 hud.setLives(hud.getLives() + 1);
                 hud.updateLives();
                 break;
-
-            case GROW_PADDLE:
+            }
+            case EXPAND_PADDLE: {
                 PlayerIn4Component playerInfo = playerInfoMapper.get(playerEntity);
                 if (playerInfo != null) {
-                    playerInfo.setSizeLevel(PlayerIn4Component.PaddleSize.LARGE);
+                    playerInfo.expand(0.25f); // Tăng chiều rộng paddle
                     System.out.println("PADDLE LỚN RA!");
                     // (Bạn sẽ cần 1 system khác để ĐỌC trạng thái này và thay đổi vật lý/hình ảnh)
                 }
                 break;
-
-            case SLOW_BALL:
+            }
+            case SHRINK_PADDLE: {
+                PlayerIn4Component playerInfo = playerInfoMapper.get(playerEntity);
+                if (playerInfo != null) {
+                    playerInfo.shrink(0.25f); // Giam chiều rộng paddle
+                    System.out.println("PADDLE NHO LAI!");
+                    // (Bạn sẽ cần 1 system khác để ĐỌC trạng thái này và thay đổi vật lý/hình ảnh)
+                }
+                break;
+            }
+            case SLOW_BALL: {
                 // Dùng 'getEngine()' để truy vấn tất cả thực thể có BallComponent
                 ImmutableArray<Entity> balls = getEngine().getEntitiesFor(
                     Family.all(BallComponent.class, PhysicsBodyComponent.class).get()
@@ -107,9 +117,9 @@ public class PowerUpSystem extends IteratingSystem {
                     if (ballBody != null && ballComp != null) {
                         // Lấy tốc độ hiện tại từ BallComponent (để đảm bảo nhất quán)
                         float currentSpeed = ballComp.getBallSpeed();
-                        float newSpeed = currentSpeed * 0.8f; // Giảm 30% tốc độ
-
-                        // Cập nhật tốc độ trong Component
+                        float newSpeed = currentSpeed * 0.7f; // Giảm 30% tốc độ
+                        newSpeed = Math.max(newSpeed, 0.5f * BallSystem.DEFAULT_BALL_SPEED);
+                        // Giới hạn tốc độ tối thiểu
                         ballComp.setBallSpeed(newSpeed);
 
                         // Cập nhật tốc độ vật lý (lấy hướng cũ, áp dụng tốc độ mới)
@@ -121,6 +131,7 @@ public class PowerUpSystem extends IteratingSystem {
                     }
                 }
                 break;
+            }
         }
     }
 }

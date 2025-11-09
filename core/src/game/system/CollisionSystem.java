@@ -1,6 +1,7 @@
 package game.system;
 
 // Import các thư viện lõi của Ashley (framework Entity-Component-System)
+
 import com.badlogic.ashley.core.*;
 import com.badlogic.ashley.core.PooledEngine; // Engine được tối ưu hóa, sử dụng lại các đối tượng
 import com.badlogic.ashley.systems.IteratingSystem; // System tự động lặp qua các entity
@@ -69,7 +70,7 @@ public class CollisionSystem extends IteratingSystem {
      * @param game                Đối tượng ArkanoidGame chính
      */
     public CollisionSystem(MainScreen mainScreen, PooledEngine engine, World world, Hud hud,
-                           LevelManager levelManager, ScoreChangeListener scoreChangeListener,ArkanoidGame game) {
+                           LevelManager levelManager, ScoreChangeListener scoreChangeListener, ArkanoidGame game) {
 
         // --- BỘ LỌC (FAMILY) ---
         // Yêu cầu IteratingSystem này chỉ lặp qua các entity
@@ -286,12 +287,6 @@ public class CollisionSystem extends IteratingSystem {
         // Kích hoạt hiệu ứng hạt (vụ nổ) tại vị trí của viên gạch
         particlesManager.trigger(blockB2Body.body.getPosition().x, blockB2Body.body.getPosition().y);
 
-        // --- LOGIC RANDOM POWER-UP ---
-        // Tỉ lệ 20% rơi ra power-up (random số từ 1 đến 5, nếu bằng 1 thì rơi)
-        if (MathUtils.random(1, 5) == 1) {
-            // Gọi hàm tạo power-up tại vị trí của gạch
-            spawnPowerUp(blockB2Body.body.getPosition());
-        }
 
         // --- LOGIC THẮNG CUỘC / QUA MÀN ---
 
@@ -334,6 +329,12 @@ public class CollisionSystem extends IteratingSystem {
             return; // Thoát hàm vì đã xử lý xong
         }
         // KẾT THÚC LOGIC THẮNG
+        // --- LOGIC RANDOM POWER-UP ---
+        // Tỉ lệ 20% rơi ra power-up (random số từ 1 đến 5, nếu bằng 1 thì rơi)
+        if (MathUtils.random(1, 2) == 1) {
+            // Gọi hàm tạo power-up tại vị trí của gạch
+            spawnPowerUp(blockB2Body.body.getPosition());
+        }
     }
 
     /**

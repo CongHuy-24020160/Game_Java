@@ -2,6 +2,7 @@ package game.component;
 
 import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Pool;
 
 /**
@@ -36,18 +37,52 @@ public class PlayerIn4Component implements Component, Pool.Poolable {
      *   <li>{@code LARGE}: Paddle lớn – dễ điều khiển hơn nhưng có thể giảm điểm hoặc tốc độ.</li>
      * </ul>
      */
+    /*
     public enum PaddleSize {
         SMALL,
         MEDIUM,
         LARGE
     }
 
+     */
+
     /**
      * Kích thước hiện tại của paddle, mặc định là {@code SMALL}.
      * <p>
      * Thuộc tính này có thể thay đổi khi người chơi nhận được vật phẩm tăng cấp hoặc giảm cấp.
      */
+    /*
+
     public PaddleSize sizeLevel = PaddleSize.SMALL;
+
+    public PaddleSize currentSizeLevel = PaddleSize.SMALL;
+    public PaddleSize targetSizeLevel = PaddleSize.SMALL;
+
+    public void setSizeLevel(PaddleSize sizeLevel) {
+        this.targetSizeLevel = sizeLevel;
+    }
+
+    public boolean needsResize() {
+        return currentSizeLevel != targetSizeLevel;
+    }
+
+     */
+
+    public float lengthMultiplier = 1.0f;
+
+    public void expand(float amount) {
+        this.lengthMultiplier += amount;
+        this.lengthMultiplier = MathUtils.clamp(this.lengthMultiplier, 0.3f, 3.0f);
+    }
+
+    public void shrink(float amount) {
+        this.lengthMultiplier -= amount;
+        this.lengthMultiplier = MathUtils.clamp(this.lengthMultiplier, 0.3f, 3.0f);
+    }
+
+    public void resetLength() {
+        this.lengthMultiplier = 1.0f;
+    }
 
     /**
      * Phương thức lấy (getter) trả về camera đang được gắn cho người chơi.
@@ -68,24 +103,6 @@ public class PlayerIn4Component implements Component, Pool.Poolable {
     }
 
     /**
-     * Phương thức lấy (getter) trả về cấp độ kích thước hiện tại của paddle.
-     *
-     * @return giá trị {@link PaddleSize} biểu diễn kích thước hiện tại.
-     */
-    public PaddleSize getSizeLevel() {
-        return sizeLevel;
-    }
-
-    /**
-     * Phương thức thiết lập (setter) thay đổi cấp độ kích thước của paddle.
-     *
-     * @param sizeLevel cấp độ mới của paddle (SMALL, MEDIUM hoặc LARGE).
-     */
-    public void setSizeLevel(PaddleSize sizeLevel) {
-        this.sizeLevel = sizeLevel;
-    }
-
-    /**
      * Phương thức {@code reset()} được gọi khi đối tượng này được trả về Pool để tái sử dụng.
      * <p>
      * Nó giúp đặt lại trạng thái mặc định của component nhằm tránh rò rỉ dữ liệu từ lần sử dụng trước.
@@ -99,6 +116,8 @@ public class PlayerIn4Component implements Component, Pool.Poolable {
     @Override
     public void reset() {
         camera = null;
-        sizeLevel = PaddleSize.SMALL;
+       // currentSizeLevel = PaddleSize.SMALL;
+       // targetSizeLevel = PaddleSize.SMALL;
+        lengthMultiplier = 1.0f;
     }
 }

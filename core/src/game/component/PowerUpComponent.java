@@ -9,11 +9,12 @@ public class PowerUpComponent implements Component, Pool.Poolable {
     // Enum định nghĩa tất cả các loại power-up
     public enum PowerUpType {
         ADD_LIFE,
-        GROW_PADDLE,
+        EXPAND_PADDLE,
         SLOW_BALL,
         //MULTI_BALL,
         //MAGNET_PADDLE,
         //DOUBLE_SCORE,
+        SHRINK_PADDLE,
         // (Thêm các loại khác sau...
     }
 

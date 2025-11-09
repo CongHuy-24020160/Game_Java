@@ -131,6 +131,7 @@ public class MainScreen implements Screen, ScoreChangeListener {
 
         engine.addSystem(soundSystem);
         engine.addSystem(playerControlSystem);
+        engine.addSystem(new PaddleResizeSystem());
 
         inputMultiplexer.addProcessor(0, hud.getStage());
         inputMultiplexer.addProcessor(keyboardController);
