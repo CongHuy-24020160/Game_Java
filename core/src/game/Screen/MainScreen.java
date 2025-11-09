@@ -164,13 +164,13 @@ public class MainScreen implements Screen, ScoreChangeListener {
             Gdx.app.postRunnable(() -> {
                 pauseGameSystems();
 
-                //if (ScoreManager.getInstance().isHighScore(score)) {
-                //    game.lastScore = score;
-                //    game.screenManager.changeScreen(ScreenManager.ENTER_HIGHSCORE);
-                //} else {
+                if (ScoreManager.getInstance().isHighScore(score)) {
+                    game.lastScore = score;
+                    game.screenManager.changeScreen(ScreenManager.ENTER_HIGHSCORE);
+                } else {
                 game.lastScore = score;
-                game.screenManager.changeScreen(ScreenManager.ENTER_HIGHSCORE);
-                // }
+                game.screenManager.changeScreen(ScreenManager.ENDGAME);
+                }
             });
             return; // THOÁT RENDER ĐỂ TRÁNH UPDATE SAU ĐÓ
         }

@@ -3,11 +3,14 @@ package game.Screen;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import game.ArkanoidGame;
@@ -42,36 +45,50 @@ public class EndScreen implements Screen {
 
         // === TIÊU ĐỀ ===
         Label title = new Label("GAME OVER", skin, "title");
-        title.setFontScale(2.2f);
-        title.setColor(1, 0.3f, 0.3f, 1); // Đỏ
-        table.add(title).padBottom(50).row();
+        title.setFontScale(1.75f);
+        title.setColor(Color.RED); // Đỏ
+        table.add(title).padBottom(20).row();
 
         // === ĐIỂM SỐ ===
-        Label scoreLabel = new Label("Score: " + score, skin);
-        scoreLabel.setFontScale(1.6f);
-        table.add(scoreLabel).padBottom(80).row();
+        Label.LabelStyle ls = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
+        ls.fontColor = Color.GOLD;
+        Label scoreLabel = new Label("Score: " + score, ls);
+        scoreLabel.setFontScale(2.5f);
+        table.add(scoreLabel).padBottom(25).row();
+
 
         // === NÚT RETRY ===
         TextButton retryButton = new TextButton("RETRY", skin);
-        retryButton.getLabel().setFontScale(1.4f);
+        retryButton.getLabel().setFontScale(1.1f);
         retryButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 ScreenManager.changeScreen(ScreenManager.APPLICATION);
             }
         });
-        table.add(retryButton).width(320).height(90).padBottom(25).row();
+        table.add(retryButton).width(300).height(70).padBottom(25).row();
 
         // === NÚT MENU ===
         TextButton menuButton = new TextButton("MENU", skin);
-        menuButton.getLabel().setFontScale(1.4f);
+        menuButton.getLabel().setFontScale(1.1f);
         menuButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 ScreenManager.changeScreen(ScreenManager.MENU);
             }
         });
-        table.add(menuButton).width(320).height(90);
+        table.add(menuButton).width(300).height(70).padBottom(25).row();
+
+        // === NÚT EXIT ===
+        TextButton exitButton = new TextButton("EXIT GAME", skin);
+        exitButton.getLabel().setFontScale(1.1f);
+        exitButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                Gdx.app.exit();
+            }
+        });
+        table.add(exitButton).width(300).height(70);
     }
 
     @Override
