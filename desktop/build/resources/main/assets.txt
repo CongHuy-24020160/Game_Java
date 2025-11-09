@@ -50,8 +50,11 @@ sounds/game_over.wav
 sounds/level_complete.wav
 sounds/miss_the_ball.wav
 sounds/padde_hit_ball.wav
+ui/font-button-export.fnt
+ui/font-export.fnt
 ui/font-list.fnt
 ui/font-subtitle.fnt
+ui/font-title-export.fnt
 ui/font-window.fnt
 ui/font.fnt
 ui/uiskin.atlas
