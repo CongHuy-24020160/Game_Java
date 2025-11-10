@@ -261,6 +261,10 @@ public class CollisionSystem extends IteratingSystem {
         // Lấy body vật lý của gạch
         final PhysicsBodyComponent blockB2Body = b2BodyC.get(blockEntity);
 
+        // if the block is unbreakable, do nothing
+        if (blockB2Body.lives == 5) {
+            return;
+        }
         // Trừ 1 "mạng" (lives) của viên gạch
         blockB2Body.lives--;
 
@@ -312,7 +316,7 @@ public class CollisionSystem extends IteratingSystem {
         // --- LOGIC THẮNG CUỘC / QUA MÀN ---
 
         // Kiểm tra xem đã phá hết gạch VÀ màn chơi này chưa được đánh dấu là "hoàn thành"
-        if (levelManager.currentLevel.numOfBlocksLeft <= 0 && !levelManager.isLevelCompleted) {
+        if (levelManager.currentLevel.numOfBlocksLeft - levelManager.currentLevel.numOfUnbreakableBlocksLeft <= 0 && !levelManager.isLevelCompleted) {
 
             // Đánh dấu là đã hoàn thành (để tránh lặp lại logic này)
             levelManager.isLevelCompleted = true;
@@ -339,7 +343,7 @@ public class CollisionSystem extends IteratingSystem {
             } else {
 
                 // --- CHƯA PHẢI MÀN CUỐI (QUA MÀN) ---
-                if (levelManager.currentLevel.numOfBlocksLeft <= 0) {
+                if (levelManager.currentLevel.numOfBlocksLeft - levelManager.currentLevel.numOfUnbreakableBlocksLeft <= 0) {
                     // Hiển thị dialog "Level Complete!"
                     hud.showLevelCompleteDialog();
                     // Tạm dừng game (dừng bóng, dừng di chuyển)

@@ -30,17 +30,17 @@
 </data>
  </layer>
  <objectgroup id="2" name="Block Objects">
-  <object id="2" x="169.949" y="95.9786" width="40" height="15">
+  <object id="2" x="159.556" y="92.922" width="40" height="15">
    <properties>
     <property name="BlockType" value="Brick_1"/>
    </properties>
   </object>
-  <object id="4" x="335.008" y="191.346" width="40" height="15">
+  <object id="4" x="309.332" y="94.7561" width="40" height="15">
    <properties>
     <property name="BlockType" value="Brick_1"/>
    </properties>
   </object>
-  <object id="3" x="506.791" y="91.088" width="40" height="15">
+  <object id="3" x="469.5" y="92.3107" width="40" height="15">
    <properties>
     <property name="BlockType" value="Brick_1"/>
    </properties>

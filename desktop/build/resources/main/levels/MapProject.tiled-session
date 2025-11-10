@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "level0_3.tmx",
+    "activeFile": "ArkanoidGame.tsx",
     "expandedProjectPaths": [
         "."
     ],
@@ -22,7 +22,22 @@
         "Backgroundz.tsx": {
             "scaleInDock": 1
         },
+        "background.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "blockbreaker-blocks.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "blockbreaker-spritesheet.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
         "level0_1.tmx": {
+            "expandedObjectLayers": [
+                2
+            ],
             "scale": 1.63578125,
             "selectedLayer": 1,
             "viewCenter": {
@@ -37,11 +52,14 @@
             "scale": 1.63578125,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 259.50902665010983,
-                "y": 120.12608654121692
+                "x": 283.9621740376349,
+                "y": 86.50300888337
             }
         },
         "level0_3.tmx": {
+            "expandedObjectLayers": [
+                2
+            ],
             "scale": 1.63578125,
             "selectedLayer": 1,
             "viewCenter": {
@@ -57,19 +75,21 @@
     "map.tileWidth": 20,
     "map.width": 32,
     "openFiles": [
-        "Background1.tsx",
-        "ArkanoidGame.tsx",
         "level0_1.tmx",
         "level0_2.tmx",
-        "level0_3.tmx"
+        "level0_3.tmx",
+        "ArkanoidGame.tsx"
     ],
     "project": "MapProject.tiled-project",
     "recentFiles": [
-        "Background1.tsx",
-        "ArkanoidGame.tsx",
         "level0_1.tmx",
         "level0_2.tmx",
-        "level0_3.tmx"
+        "level0_3.tmx",
+        "ArkanoidGame.tsx",
+        "background.tsx",
+        "Background1.tsx",
+        "blockbreaker-spritesheet.tsx",
+        "blockbreaker-blocks.tsx"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.tileSize": {

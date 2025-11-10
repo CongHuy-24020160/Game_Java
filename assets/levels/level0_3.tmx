@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="32" height="24" tilewidth="20" tileheight="20" infinite="0" nextlayerid="3" nextobjectid="10">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="32" height="24" tilewidth="20" tileheight="20" infinite="0" nextlayerid="3" nextobjectid="18">
  <tileset firstgid="1" source="Background1.tsx"/>
  <layer id="1" name="Tile Layer 1" width="32" height="24">
   <data encoding="csv">
@@ -29,50 +29,90 @@
 737,738,739,740,741,742,743,744,745,746,747,748,749,750,751,752,753,754,755,756,757,758,759,760,761,762,763,764,765,766,767,768
 </data>
  </layer>
- <objectgroup id="2" name="Object Layer 1">
-  <object id="1" x="264.094" y="78.8614" width="40" height="15">
+ <objectgroup id="2">
+  <object id="1" x="268.985" y="81.918" width="40" height="15">
    <properties>
-    <property name="BlockType" value="Brick_3"/>
+    <property name="BlockType" value="Brick_2"/>
    </properties>
   </object>
-  <object id="9" x="372.299" y="132.658" width="40" height="15">
+  <object id="4" x="440.157" y="80.6954" width="40" height="15">
    <properties>
-    <property name="BlockType" value="Brick_3"/>
+    <property name="BlockType" value="Brick_2"/>
    </properties>
   </object>
-  <object id="2" x="317.891" y="133.881" width="40" height="15">
+  <object id="3" x="380.858" y="82.5294" width="40" height="15">
    <properties>
-    <property name="BlockType" value="Brick_3"/>
+    <property name="BlockType" value="Brick_2"/>
    </properties>
   </object>
-  <object id="3" x="264.094" y="132.047" width="40" height="15">
+  <object id="2" x="324.005" y="81.3067" width="40" height="15">
    <properties>
-    <property name="BlockType" value="Brick_3"/>
+    <property name="BlockType" value="Brick_2"/>
    </properties>
   </object>
-  <object id="4" x="370.465" y="108.205" width="40" height="15">
+  <object id="5" x="211.694" y="82.3653" width="40" height="15">
    <properties>
-    <property name="BlockType" value="Brick_3"/>
+    <property name="BlockType" value="Brick_2"/>
    </properties>
   </object>
-  <object id="5" x="316.668" y="105.76" width="40" height="15">
+  <object id="6" x="156.674" y="82.3653" width="40" height="15">
    <properties>
-    <property name="BlockType" value="Brick_3"/>
+    <property name="BlockType" value="Brick_2"/>
    </properties>
   </object>
-  <object id="6" x="263.483" y="104.537" width="40" height="15">
+  <object id="7" x="498.407" y="81.754" width="40" height="15">
    <properties>
-    <property name="BlockType" value="Brick_3"/>
+    <property name="BlockType" value="Brick_2"/>
    </properties>
   </object>
-  <object id="7" x="369.854" y="78.2501" width="40" height="15">
+  <object id="8" x="239.203" y="112.932" width="40" height="15">
    <properties>
-    <property name="BlockType" value="Brick_3"/>
+    <property name="BlockType" value="Brick_unbreakable2"/>
    </properties>
   </object>
-  <object id="8" x="317.891" y="78.8614" width="40" height="15">
+  <object id="9" x="294.834" y="111.098" width="40" height="15">
    <properties>
-    <property name="BlockType" value="Brick_3"/>
+    <property name="BlockType" value="Brick_2"/>
+   </properties>
+  </object>
+  <object id="10" x="348.02" y="109.875" width="40" height="15">
+   <properties>
+    <property name="BlockType" value="Brick_2"/>
+   </properties>
+  </object>
+  <object id="11" x="407.93" y="106.207" width="40" height="15">
+   <properties>
+    <property name="BlockType" value="Brick_unbreakable2"/>
+   </properties>
+  </object>
+  <object id="12" x="269.77" y="142.276" width="40" height="15">
+   <properties>
+    <property name="BlockType" value="Brick_unbreakable2"/>
+   </properties>
+  </object>
+  <object id="13" x="324.789" y="139.83" width="40" height="15">
+   <properties>
+    <property name="BlockType" value="Brick_2"/>
+   </properties>
+  </object>
+  <object id="14" x="381.032" y="139.83" width="40" height="15">
+   <properties>
+    <property name="BlockType" value="Brick_unbreakable2"/>
+   </properties>
+  </object>
+  <object id="15" x="293.612" y="166.729" width="40" height="15">
+   <properties>
+    <property name="BlockType" value="Brick_unbreakable2"/>
+   </properties>
+  </object>
+  <object id="16" x="345.575" y="166.729" width="40" height="15">
+   <properties>
+    <property name="BlockType" value="Brick_unbreakable2"/>
+   </properties>
+  </object>
+  <object id="17" x="319.287" y="194.85" width="40" height="15">
+   <properties>
+    <property name="BlockType" value="Brick_unbreakable2"/>
    </properties>
   </object>
  </objectgroup>

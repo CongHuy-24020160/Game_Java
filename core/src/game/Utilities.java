@@ -28,8 +28,10 @@ public class Utilities {
                 return "Brick1";
             case 3:
                 return "Brick3";
+            case 5:
+                return "Brick_unbreakable2";
             default:
-                return "Brick1";
+                return "Brick_unbreakable2";
         }
     }
 }

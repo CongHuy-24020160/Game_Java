@@ -57,6 +57,8 @@ public class LevelLoader implements Disposable {
     }
 
     public int numOfBlocksLeft;
+
+    public int numOfUnbreakableBlocksLeft;
     public BallAndPaddle paddleAndBall;
 
 
@@ -256,14 +258,21 @@ public class LevelLoader implements Disposable {
                     );
 
                     break;
-                case "Brick_3":
+                case "Brick3":
                     b2Body.lives = 3;
                     // load yellow block texture
                     tc.currImage = new TextureRegion(
                         textures.findRegion(Utilities.getTexureNameForEachLive(b2Body.lives)),
                         0, 0, 40, 15
                     );
-
+                    break;
+                case "Brick_unbreakable2":
+                    b2Body.lives = 5;
+                    numOfUnbreakableBlocksLeft ++;
+                    tc.currImage = new TextureRegion(
+                        textures.findRegion(Utilities.getTexureNameForEachLive(b2Body.lives)),
+                        0,0,40,15
+                    );
                     break;
             }
 
@@ -304,10 +313,6 @@ public class LevelLoader implements Disposable {
         if (mapRenderer != null) {
             mapRenderer.dispose();
         }
-//        for (Texture t : brickTextures.values()) {
-//            t.dispose();
-//        }
-//        brickTextures.clear();
 
     }
 
