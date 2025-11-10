@@ -147,7 +147,7 @@ public class LevelLoader implements Disposable {
         tranC.pos.set(b2bodyC.body.getPosition().x, b2bodyC.body.getPosition().y, 0);
 
         // === THÊM lengthMultiplier VÀO PlayerIn4Component ===
-        pc.lengthMultiplier = 1.0f; // Bắt đầu: 100%
+        pc.lengthMultiplier = 0.8f; // Bắt đầu: 100%
 
         // === THÊM COMPONENT ===
         playerEntity.add(pc);

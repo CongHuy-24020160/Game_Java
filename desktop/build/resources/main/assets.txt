@@ -1,5 +1,4 @@
 fonts/GUNDAM.ttf
-highscores.txt
 images/ArkanoidGame.atlas
 images/ArkanoidGame.png
 images/Background1.png
@@ -18,6 +17,8 @@ images/Frame.png
 images/Player.png
 images/Player_flash.png
 images/background.png
+images/background_menu.png
+images/power_down.png
 images/power_up.png
 levels/ArkanoidGame.tsx
 levels/Background1.tsx

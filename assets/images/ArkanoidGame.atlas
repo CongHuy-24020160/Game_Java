@@ -1,5 +1,5 @@
 ArkanoidGame.png
-size: 4061, 899
+size: 4061, 894
 format: RGBA8888
 filter: Linear, Linear
 repeat: none
@@ -47,5 +47,7 @@ Player
   bounds: 0, 864, 74, 26
 Player_flash
   bounds: 74, 864, 74, 26
+power_down
+  bounds: 148, 864, 30, 30
 power_up
-  bounds: 148, 864, 31, 35
+  bounds: 178, 864, 30, 30

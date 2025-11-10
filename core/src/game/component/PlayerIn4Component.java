@@ -68,7 +68,7 @@ public class PlayerIn4Component implements Component, Pool.Poolable {
 
      */
 
-    public float lengthMultiplier = 1.0f;
+    public float lengthMultiplier = 0.8f;
 
     public void expand(float amount) {
         this.lengthMultiplier += amount;
@@ -81,7 +81,7 @@ public class PlayerIn4Component implements Component, Pool.Poolable {
     }
 
     public void resetLength() {
-        this.lengthMultiplier = 1.0f;
+        this.lengthMultiplier = 0.8f;
     }
 
     /**
@@ -118,6 +118,6 @@ public class PlayerIn4Component implements Component, Pool.Poolable {
         camera = null;
        // currentSizeLevel = PaddleSize.SMALL;
        // targetSizeLevel = PaddleSize.SMALL;
-        lengthMultiplier = 1.0f;
+        lengthMultiplier = 0.8f;
     }
 }

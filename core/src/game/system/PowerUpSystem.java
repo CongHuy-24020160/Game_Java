@@ -68,15 +68,22 @@ public class PowerUpSystem extends IteratingSystem {
 
             if (!powerUp.isActivated) {
                 // 1. Chọn một loại power-up ngẫu nhiên
-                ArrayList<PowerUpComponent.PowerUpType> types = new ArrayList<>(EnumSet.allOf(PowerUpComponent.PowerUpType.class));
-                PowerUpComponent.PowerUpType randomType = PowerUpComponent.PowerUpType.DOUBLE_SCORE;
+                //ArrayList<PowerUpComponent.PowerUpType> types = new ArrayList<>(EnumSet.allOf(PowerUpComponent.PowerUpType.class));
+                //PowerUpComponent.PowerUpType randomType = //PowerUpComponent.PowerUpType.DOUBLE_SCORE;
                     //types.get(MathUtils.random(0, types.size() - 1));
 
-                System.out.println("ĐÃ ĂN! HIỆU ỨNG LÀ: " + randomType);
+                //System.out.println("ĐÃ ĂN! HIỆU ỨNG LÀ: " + randomType);
 
                 // 2. Kích hoạt hiệu ứng ngẫu nhiên đó
-                activateEffect(targetEntity, randomType);
+                //activateEffect(targetEntity, randomType);
 
+                if (powerUp.isPowerUp()) {
+                    System.out.println(" ĐÃ ĂN POWER-UP: " + powerUp.powerUpType);
+                    activatePowerUp(targetEntity, powerUp.powerUpType);
+                } else if (powerUp.isPowerDown()) {
+                    System.out.println(" ĐÃ ĂN POWER-DOWN: " + powerUp.powerDownType);
+                    activatePowerDown(targetEntity, powerUp.powerDownType);
+                }
 
                 powerUp.isActivated = true;
                 b2body.setToDestroy = true;
@@ -86,108 +93,111 @@ public class PowerUpSystem extends IteratingSystem {
         collider.targetEntity = null; // Xử lý xong va chạm
     }
 
-    private void activateEffect(Entity playerEntity, PowerUpComponent.PowerUpType type) {
+    /**
+     * Kích hoạt hiệu ứng TÍCH CỰC (Power-Up)
+     */
+    private void activatePowerUp(Entity playerEntity, PowerUpComponent.PowerUpType type) {
         switch (type) {
             case EXTRA_LIFE: {
                 hud.setLives(hud.getLives() + 1);
                 hud.updateLives();
+                System.out.println("  ➜ +1 Mạng!");
                 break;
             }
-            case LOSE_LIFE: {
-                hud.setLives(hud.getLives() - 1);
-                hud.updateLives();
-                break;
-            }
+
             case EXPAND_PADDLE: {
                 PlayerIn4Component playerInfo = playerInfoMapper.get(playerEntity);
                 if (playerInfo != null) {
-                    playerInfo.expand(0.25f); // Tăng chiều rộng paddle
-                    System.out.println("PADDLE LỚN RA!");
-                    // (Bạn sẽ cần 1 system khác để ĐỌC trạng thái này và thay đổi vật lý/hình ảnh)
+                    playerInfo.expand(0.25f);
+                    System.out.println("  ➜ PADDLE LỚN RA!");
                 }
                 break;
             }
-            case SHRINK_PADDLE: {
-                PlayerIn4Component playerInfo = playerInfoMapper.get(playerEntity);
-                if (playerInfo != null) {
-                    playerInfo.shrink(0.25f); // Giam chiều rộng paddle
-                    System.out.println("PADDLE NHO LAI!");
-                    // (Bạn sẽ cần 1 system khác để ĐỌC trạng thái này và thay đổi vật lý/hình ảnh)
-                }
-                break;
-            }
+
             case SLOWDOWN_BALL: {
-                // Dùng 'getEngine()' để truy vấn tất cả thực thể có BallComponent
                 ImmutableArray<Entity> balls = getEngine().getEntitiesFor(
                     Family.all(BallComponent.class, PhysicsBodyComponent.class).get()
                 );
 
-                // Nếu tìm thấy (thường là 1 quả)
                 if (balls.size() > 0) {
-                    Entity ball = balls.first(); // Lấy quả bóng đầu tiên
-
+                    Entity ball = balls.first();
                     PhysicsBodyComponent ballBody = bodyMapper.get(ball);
                     BallComponent ballComp = ballMapper.get(ball);
 
                     if (ballBody != null && ballComp != null) {
-                        // Lấy tốc độ hiện tại từ BallComponent (để đảm bảo nhất quán)
                         float currentSpeed = ballComp.getBallSpeed();
-                        float newSpeed = currentSpeed * 0.7f; // Giảm 30% tốc độ
+                        float newSpeed = currentSpeed * 0.7f;
                         newSpeed = Math.max(newSpeed, 0.5f * BallSystem.DEFAULT_BALL_SPEED);
-                        // Giới hạn tốc độ tối thiểu
                         ballComp.setBallSpeed(newSpeed);
 
-                        // Cập nhật tốc độ vật lý (lấy hướng cũ, áp dụng tốc độ mới)
                         Vector2 currentVel = ballBody.body.getLinearVelocity();
-                        currentVel.setLength(newSpeed); // Đặt lại độ lớn
+                        currentVel.setLength(newSpeed);
                         ballBody.body.setLinearVelocity(currentVel);
 
-                        System.out.println("BÓNG CHẬM LẠI!");
+                        System.out.println("  ➜ BÓNG CHẬM LẠI!");
                     }
                 }
                 break;
             }
-            case SPEEDUP_BALL: {
-                // Dùng 'getEngine()' để truy vấn tất cả thực thể có BallComponent
-                ImmutableArray<Entity> balls = getEngine().getEntitiesFor(
-                    Family.all(BallComponent.class, PhysicsBodyComponent.class).get()
-                );
 
-                // Nếu tìm thấy (thường là 1 quả)
-                if (balls.size() > 0) {
-                    Entity ball = balls.first(); // Lấy quả bóng đầu tiên
-
-                    PhysicsBodyComponent ballBody = bodyMapper.get(ball);
-                    BallComponent ballComp = ballMapper.get(ball);
-
-                    if (ballBody != null && ballComp != null) {
-                        // Lấy tốc độ hiện tại từ BallComponent (để đảm bảo nhất quán)
-                        float currentSpeed = ballComp.getBallSpeed();
-                        float newSpeed = currentSpeed * 1.3f; // Tăng 30% tốc độ
-                        newSpeed = Math.min(newSpeed, 2.5f * BallSystem.DEFAULT_BALL_SPEED);
-                        // Giới hạn tốc độ tối thiểu
-                        ballComp.setBallSpeed(newSpeed);
-
-                        // Cập nhật tốc độ vật lý (lấy hướng cũ, áp dụng tốc độ mới)
-                        Vector2 currentVel = ballBody.body.getLinearVelocity();
-                        currentVel.setLength(newSpeed); // Đặt lại độ lớn
-                        ballBody.body.setLinearVelocity(currentVel);
-
-                        System.out.println("BÓNG NHANH LẠI!");
-                    }
-                }
-                break;
-            }
             case DOUBLE_SCORE: {
-                // Kích hoạt double score
                 if (gameStateEntity != null) {
                     GameStateComponent gameState = gameStateMapper.get(gameStateEntity);
                     if (gameState != null) {
                         gameState.activateDoubleScore();
-                        System.out.println("ĐIỂM NHÂN ĐÔI! (10 giây)");
+                        System.out.println("  ➜ ĐIỂM NHÂN ĐÔI! (10 giây)");
                     }
                 } else {
                     System.err.println("WARNING: gameStateEntity chưa được set!");
+                }
+                break;
+            }
+        }
+    }
+
+    /**
+     * Kích hoạt hiệu ứng TIÊU CỰC (Power-Down)
+     */
+    private void activatePowerDown(Entity playerEntity, PowerUpComponent.PowerDownType type) {
+        switch (type) {
+            case LOSE_LIFE: {
+                hud.setLives(hud.getLives() - 1);
+                hud.updateLives();
+                System.out.println("  ➜ -1 Mạng!");
+                break;
+            }
+
+            case SHRINK_PADDLE: {
+                PlayerIn4Component playerInfo = playerInfoMapper.get(playerEntity);
+                if (playerInfo != null) {
+                    playerInfo.shrink(0.25f);
+                    System.out.println("  ➜ PADDLE NHỎ LẠI!");
+                }
+                break;
+            }
+
+            case SPEEDUP_BALL: {
+                ImmutableArray<Entity> balls = getEngine().getEntitiesFor(
+                    Family.all(BallComponent.class, PhysicsBodyComponent.class).get()
+                );
+
+                if (balls.size() > 0) {
+                    Entity ball = balls.first();
+                    PhysicsBodyComponent ballBody = bodyMapper.get(ball);
+                    BallComponent ballComp = ballMapper.get(ball);
+
+                    if (ballBody != null && ballComp != null) {
+                        float currentSpeed = ballComp.getBallSpeed();
+                        float newSpeed = currentSpeed * 1.3f;
+                        newSpeed = Math.min(newSpeed, 2.5f * BallSystem.DEFAULT_BALL_SPEED);
+                        ballComp.setBallSpeed(newSpeed);
+
+                        Vector2 currentVel = ballBody.body.getLinearVelocity();
+                        currentVel.setLength(newSpeed);
+                        ballBody.body.setLinearVelocity(currentVel);
+
+                        System.out.println("  ➜ BÓNG NHANH LẠI!");
+                    }
                 }
                 break;
             }

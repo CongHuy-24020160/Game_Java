@@ -6,28 +6,45 @@ import com.badlogic.gdx.utils.Pool;
 
 public class PowerUpComponent implements Component, Pool.Poolable {
 
-    // Enum định nghĩa tất cả các loại power-up
+    // Enum định nghĩa các loại power-up (hiệu ứng TÍCH CỰC)
     public enum PowerUpType {
         EXTRA_LIFE,
         EXPAND_PADDLE,
         SLOWDOWN_BALL,
-        SPEEDUP_BALL,
+        DOUBLE_SCORE
+        // Có thể thêm: MULTI_BALL, MAGNET_PADDLE, SHIELD, etc.
+    }
+
+    // Enum định nghĩa các loại power-down (hiệu ứng TIÊU CỰC)
+    public enum PowerDownType {
         LOSE_LIFE,
-        //MULTI_BALL,
-        //MAGNET_PADDLE,
-        DOUBLE_SCORE,
         SHRINK_PADDLE,
-        // (Thêm các loại khác sau...
+        SPEEDUP_BALL
+        // Có thể thêm: REVERSE_CONTROLS, INVISIBLE_BALL, etc.
     }
 
     // Loại của power-up này
-    public PowerUpType type = PowerUpType.EXTRA_LIFE;
-    // Cờ đánh dấu power-up đã được kích hoạt
+    public PowerUpType powerUpType = null;
+
+    // Loại của power-down này
+    public PowerDownType powerDownType = null;
+
+    // Cờ đánh dấu đã được kích hoạt
     public boolean isActivated = false;
+
+    // Phương thức kiểm tra loại
+    public boolean isPowerUp() {
+        return powerUpType != null;
+    }
+
+    public boolean isPowerDown() {
+        return powerDownType != null;
+    }
 
     @Override
     public void reset() {
-        type = PowerUpType.EXTRA_LIFE;
+        powerUpType = null;
+        powerDownType = null;
         isActivated = false;
     }
 }

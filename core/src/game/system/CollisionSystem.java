@@ -298,7 +298,7 @@ public class CollisionSystem extends IteratingSystem {
         }
 
         int baseScore = 100;
-        int finalScoree = (int)(baseScore * multiplier);
+        int finalScoree = (int) (baseScore * multiplier);
 
         scoreChangeListener.onScoreChanged(finalScoree);
 
@@ -356,10 +356,9 @@ public class CollisionSystem extends IteratingSystem {
         // KẾT THÚC LOGIC THẮNG
         // --- LOGIC RANDOM POWER-UP ---
         // Tỉ lệ 20% rơi ra power-up (random số từ 1 đến 5, nếu bằng 1 thì rơi)
-        if (MathUtils.random(1, 2) == 1) {
-            // Gọi hàm tạo power-up tại vị trí của gạch
-            spawnPowerUp(blockB2Body.body.getPosition());
-        }
+        //if (MathUtils.random(1, 2) == 1)
+        // Gọi hàm tạo power-up tại vị trí của gạch
+        spawnPowerUp(blockB2Body.body.getPosition());
     }
 
     /**
@@ -394,41 +393,72 @@ public class CollisionSystem extends IteratingSystem {
         b2body.body.setLinearVelocity(0, -1.5f); // Cho vận tốc rơi ban đầu
         b2body.body.setUserData(powerUpEntity); // Gắn Entity vào body (để B2dContactListener nhận diện)
 
-        // 2. Tạo TextureComponent
+        // --- 2. TextureComponent ---
         TextureComponent texture = engine.createComponent(TextureComponent.class);
-        // Lấy hình ảnh "power_up" từ atlas
-        TextureRegion tex = levelManager.currentLevel.getTextures().findRegion("power_up");
 
-        // Phòng trường hợp load lỗi (không tìm thấy ảnh "power_up")
+        // --- 3. PowerUpComponent (chọn loại) ---
+        PowerUpComponent powerUp = engine.createComponent(PowerUpComponent.class);
+
+        int rand = MathUtils.random(1, 100);
+
+        TextureRegion tex;
+
+        // POWER-UPS (tổng 70%)
+        if (rand <= 18) {
+            powerUp.powerUpType = PowerUpComponent.PowerUpType.EXTRA_LIFE;
+            tex = levelManager.currentLevel.getTextures().findRegion("power_up");
+            System.out.println(" EXTRA_LIFE (18%)");
+
+        } else if (rand <= 36) {
+            powerUp.powerUpType = PowerUpComponent.PowerUpType.DOUBLE_SCORE;
+            tex = levelManager.currentLevel.getTextures().findRegion("power_up");
+            System.out.println(" DOUBLE_SCORE (18%)");
+
+        } else if (rand <= 54) {
+            powerUp.powerUpType = PowerUpComponent.PowerUpType.EXPAND_PADDLE;
+            tex = levelManager.currentLevel.getTextures().findRegion("power_up");
+            System.out.println(" EXPAND_PADDLE (18%)");
+
+        } else if (rand <= 70) {
+            powerUp.powerUpType = PowerUpComponent.PowerUpType.SLOWDOWN_BALL;
+            tex = levelManager.currentLevel.getTextures().findRegion("power_up");
+            System.out.println("SLOWDOWN_BALL (16%)");
+
+            // POWER-DOWNS (tổng 30%)
+        } else if (rand <= 80) {
+            powerUp.powerDownType = PowerUpComponent.PowerDownType.SHRINK_PADDLE;
+            tex = levelManager.currentLevel.getTextures().findRegion("power_down");
+            System.out.println(" SHRINK_PADDLE (10%)");
+
+        } else if (rand <= 90) {
+            powerUp.powerDownType = PowerUpComponent.PowerDownType.SPEEDUP_BALL;
+            tex = levelManager.currentLevel.getTextures().findRegion("power_down");
+            System.out.println(" SPEEDUP_BALL (10%)");
+
+        } else {
+            powerUp.powerDownType = PowerUpComponent.PowerDownType.LOSE_LIFE;
+            tex = levelManager.currentLevel.getTextures().findRegion("power_down");
+            System.out.println(" LOSE_LIFE (10%)");
+        }
+
+        // Fallback texture
         if (tex == null) {
-            System.out.println("LỖI: Không tìm thấy hình 'power_up'. Dùng tạm hình bóng.");
-            // Dùng tạm ảnh quả bóng nếu không thấy
             tex = levelManager.currentLevel.getTextures().findRegion("Ball_small-blue");
         }
         texture.currImage = tex;
 
-        // 3. Tạo TypeComponent
         TypeComponent type = engine.createComponent(TypeComponent.class);
-        type.type = TypeComponent.POWERUP_TYPE; // Đặt loại là POWERUP
-
-        // 4. Tạo PowerUpComponent
-        PowerUpComponent powerUp = engine.createComponent(PowerUpComponent.class);
-        // (Component này có thể rỗng, chỉ dùng để đánh dấu)
-
-        // 5. Tạo ColliderComponent
+        type.type = TypeComponent.POWERUP_TYPE;
         ColliderComponent collider = engine.createComponent(ColliderComponent.class);
-        // (Để nhận va chạm với Player, sẽ được xử lý trong PowerUpSystem)
 
-        // --- Thêm tất cả component vào entity ---
         powerUpEntity.add(b2body);
         powerUpEntity.add(texture);
         powerUpEntity.add(type);
         powerUpEntity.add(powerUp);
         powerUpEntity.add(collider);
 
-        // Thêm entity power-up vào engine để nó bắt đầu được xử lý
         engine.addEntity(powerUpEntity);
-        System.out.println("ĐÃ TẠO XONG POWER-UP!");
+        System.out.println("✅ HOÀN TẤT!");
     }
 
     /**
