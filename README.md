@@ -6,7 +6,7 @@
 
 ## 🧑‍💻 Tác giả
 
-Group [Số nhóm] - Class [Mã lớp]
+Group 9 - Fantastic Four
 
 1. Nguyễn Thành Đô - 24020070
 2. Nguyễn Đình Công Huy - 24020160
@@ -43,11 +43,11 @@ Chào mừng thầy, cô . Đây là một dự án game được phát triển 
   
 * **Đồ họa & Âm thanh:** Đồ họa 2D Phong cách đồ họa, pixel art, hiện đại... bắt mắt cùng hiệu ứng âm thanh sống động.
 * **Hệ thống bảng xếp hạng:** Thử thách bản thân để đạt điểm số cao nhất!
-## Class Diagram
+## Class Diagram (Sơ đồ lớp)
 
-    ```bash
-    https://drive.google.com/file/d/1PbJ80h1iBk3NW4A8u2Tc-Wv2doWmVbJK/view?fbclid=IwY2xjawOBM49leHRuA2FlbQIxMABicmlkETFkSDVTT0tpREFLMGFhWG9nc3J0YwZhcHBfaWQQMjIyMDM5MTc4ODIwMDg5MgABHrTQYueeMdzBiJzd4tYEPQIgGTWn95kB2o6bWw7xm8W8oGDD4EMBmc0QYosn_aem_eDKP63M4uWlSJ1Jf-GVjrw
-    ```
+## Class Diagram (Sơ đồ lớp)
+
+[Nhấp vào đây để xem Sơ đồ lớp](https://drive.google.com/file/d/1PbJ80h1iBk3NW4A8u2Tc-Wv2doWmVbJK/view)
 
 ## 📸 Hình ảnh trong game
 
