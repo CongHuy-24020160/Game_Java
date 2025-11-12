@@ -43,7 +43,7 @@ Chào mừng thầy, cô . Đây là một dự án game được phát triển 
   
 * **Đồ họa & Âm thanh:** Đồ họa 2D Phong cách đồ họa, pixel art, hiện đại... bắt mắt cùng hiệu ứng âm thanh sống động.
 * **Hệ thống bảng xếp hạng:** Thử thách bản thân để đạt điểm số cao nhất!
-## Class Diagram (Sơ đồ lớp)
+
 
 ## Class Diagram (Sơ đồ lớp)
 
@@ -62,7 +62,7 @@ Chào mừng thầy, cô . Đây là một dự án game được phát triển 
 Dự án này được xây dựng hoàn toàn bằng:
 
 * **Ngôn ngữ lập trình:**  Java
-* * **Framework / Game Engine:** LibGDx
+* **Framework / Game Engine:** LibGDx
 * **Công cụ phát triển:** IntelliJ IDEA / Visual Studio / VS Code 
 * **Thiết kế đồ họa:** Genmini , printerest
 * **Thiết kế âm thanh:**  Internet
