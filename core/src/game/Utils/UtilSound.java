@@ -72,13 +72,13 @@ public class UtilSound {
      * Lấy âm thanh từ assetManager và phát với âm lượng hiện tại trong
      * GameSettings.
      */
-    public void playDingSound1() {
-        Sound dingSound1 = assetManager.manager.get(assetManager.hitBrickSound);
-        if (dingSound1 == null)
+    public void playHitBrickSound() {
+        Sound hitBrickSound = assetManager.manager.get(assetManager.hitBrickSound);
+        if (hitBrickSound == null)
             System.out.println(" Sound hitBrickSound == null!");
         else {
-                System.out.println("✅ Sound hitBrickSound loaded OK");
-                dingSound1.play(GameSettings.getInstance().getSoundVolume());
+                System.out.println("Sound hitBrickSound loaded OK");
+                hitBrickSound.play(GameSettings.getInstance().getSoundVolume());
             }
     }
 
@@ -96,6 +96,16 @@ public class UtilSound {
     public void playGameOver() {
         Sound gameOverSound = assetManager.manager.get(assetManager.gameOverSound);
         gameOverSound.play(GameSettings.getInstance().getSoundVolume());
+    }
+
+    public void playLevelComplete() {
+        Sound levelCompleteSound = assetManager.manager.get(assetManager.levelcompleteSound);
+        levelCompleteSound.play(GameSettings.getInstance().getSoundVolume());
+    }
+
+    public void playHitPaddleSound() {
+        Sound hitPaddleSound = assetManager.manager.get(assetManager.hitPaddleSound);
+        hitPaddleSound.play(GameSettings.getInstance().getSoundVolume());
     }
 
     /**

@@ -61,10 +61,10 @@ public class SoundSystem extends IteratingSystem {
 
         switch (otherEntityType.type) {
             case TypeComponent.BLOCK_TYPE:
-                UtilSound.getInstance().playDingSound1(); // Âm thanh khi va vào gạch
+                //UtilSound.getInstance().playDingSound1(); // Âm thanh khi va vào gạch
                 break;
             case TypeComponent.PLAYER_TYPE:
-                UtilSound.getInstance().playDingSound2(); // Âm thanh khi va vào thanh trượt
+                //UtilSound.getInstance().playDingSound2(); // Âm thanh khi va vào thanh trượt
                 break;
             // thêm các case khác ở đây cho các loại va chạm mới .
         }

@@ -155,12 +155,12 @@ public class CollisionSystem extends IteratingSystem {
             case TypeComponent.PLAYER_TYPE:
                 // Nếu là thanh trượt
                 handleBallPlayerCollision(ballEntity, otherEntity);
-                UtilSound.getInstance().playDingSound1();
+                UtilSound.getInstance().playHitPaddleSound();
                 break;
             case TypeComponent.BLOCK_TYPE:
                 // Nếu là gạch
                 handleBallBlockCollision(ballEntity, otherEntity);
-                UtilSound.getInstance().playDingSound2();
+                UtilSound.getInstance().playHitBrickSound();
                 break;
         }
     }
@@ -282,11 +282,11 @@ public class CollisionSystem extends IteratingSystem {
     private void handleBallBlockCollision(Entity ballEntity, Entity blockEntity) {
         // Lấy body vật lý của gạch
         final PhysicsBodyComponent blockB2Body = b2BodyC.get(blockEntity);
-
         // if the block is unbreakable, do nothing
         if (blockB2Body.lives == 5) {
             return;
         }
+
         // Trừ 1 "mạng" (lives) của viên gạch
         blockB2Body.lives--;
 
@@ -364,7 +364,9 @@ public class CollisionSystem extends IteratingSystem {
                 // CHƯA PHẢI MÀN CUỐI (QUA MÀN)
                 if (levelManager.currentLevel.numOfBlocksLeft - levelManager.currentLevel.numOfUnbreakableBlocksLeft <= 0) {
                     // Hiển thị dialog "Level Complete!"
+
                     hud.showLevelCompleteDialog();
+                    UtilSound.getInstance().playLevelComplete();
                     // Tạm dừng game (dừng bóng, dừng di chuyển)
                     mainScreen.pauseGameSystems();
                 }
@@ -372,10 +374,12 @@ public class CollisionSystem extends IteratingSystem {
 
             return; // Thoát hàm vì đã xử lý xong
         }
+
         // Tỉ lệ 20% rơi ra power-up (random số từ 1 đến 5, nếu bằng 1 thì rơi)
         if (MathUtils.random(1, 2) == 1)
             // Gọi hàm tạo power-up tại vị trí của gạch
             spawnPowerUp(blockB2Body.body.getPosition());
+
     }
 
     /**

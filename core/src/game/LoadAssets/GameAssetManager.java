@@ -58,7 +58,11 @@ public class GameAssetManager {
     /**
      * Âm thanh khi trò chơi kết thúc
      */
+    public final String hitPaddleSound = "sounds/padde_hit_ball.wav";
+
     public final String gameOverSound = "sounds/game_over.wav";
+
+    public final String levelcompleteSound = "sounds/level_complete.wav";
     /**
      * Âm thanh khi người chơi đánh trượt bóng
      */
@@ -146,6 +150,8 @@ public class GameAssetManager {
         manager.load(hitWallSound, Sound.class);
         manager.load(gameOverSound, Sound.class);
         manager.load(missBallSound, Sound.class);
+        manager.load(levelcompleteSound, Sound.class);
+        manager.load(hitPaddleSound, Sound.class);
     }
 
     /**

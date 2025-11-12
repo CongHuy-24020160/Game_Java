@@ -117,7 +117,7 @@ public class LevelLoader implements Disposable {
         PhysicsBodyComponent b2bodyC = en.createComponent(PhysicsBodyComponent.class);
         LinkedEntityComponent attachC = en.createComponent(LinkedEntityComponent.class);
 
-        // === TẠO BODY VỚI KÍCH THƯỚC GỐC ===
+        // TẠO BODY VỚI KÍCH THƯỚC GỐC
         float baseWidth = Utilities.PADDLE_WIDTH;   // ví dụ: 100
         float baseHeight = Utilities.PADDLE_HEIGHT; // ví dụ: 20
 
