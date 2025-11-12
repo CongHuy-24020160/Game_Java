@@ -53,7 +53,7 @@ Chào mừng thầy, cô . Đây là một dự án game được phát triển 
 
 | Màn hình chính 1 | Màn hình chính 2 | Gameplay 2 (Vật phẩm) |
 | :---: | :---: | :---: |
-| ![Màn hình chính](assets/images/background.png) | ![Ảnh Gameplay 1](assets/images/Background1.png) | ![Ảnh Vật phẩm](power_up.png) |
+| ![Màn hình chính](assets/images/background.png) | ![Ảnh Gameplay 1](assets/images/Background1.png) | ![Ảnh Vật phẩm](assets/images/power_up.png) |
 
 
 
