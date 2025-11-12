@@ -49,11 +49,13 @@ Chào mừng thầy, cô . Đây là một dự án game được phát triển 
 
 [Nhấp vào đây để xem Sơ đồ lớp](https://drive.google.com/file/d/1PbJ80h1iBk3NW4A8u2Tc-Wv2doWmVbJK/view)
 
-## 📸 Hình ảnh trong game
+## 📸 Hình ảnh trong game và demo
+[Nhấp vào đây để xem demo]([https://drive.google.com/file/d/1PbJ80h1iBk3NW4A8u2Tc-Wv2doWmVbJK/view](https://drive.google.com/file/d/1rbKrqxmmupidhrmR3HDjIXSGJ0_keUbB/view?fbclid=IwY2xjawOBN1lleHRuA2FlbQIxMABicmlkETFkSDVTT0tpREFLMGFhWG9nc3J0YwZhcHBfaWQQMjIyMDM5MTc4ODIwMDg5MgABHhO3OedkQ0lgD9rdEiHbqpPyPNXLMZhJsHnyLe3ujiG5pUs3Nhww0ubv7Hve_aem_0jmvDBkjZNzCg6rIwhUScA)
 
 | Màn hình chính 1 | Màn hình chính 2 | Gameplay 2 (Vật phẩm) |
 | :---: | :---: | :---: |
 | ![Màn hình chính](assets/images/background.png) | ![Ảnh Gameplay 1](assets/images/Background1.png) | ![Ảnh Vật phẩm](assets/images/power_up.png) |
+
 
 
 
