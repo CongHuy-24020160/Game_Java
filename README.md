@@ -1,6 +1,20 @@
-# ] - Project Game Arkanoid
+#   Project Game Arkanoid
+
 
 > Một phiên bản hiện đại của tựa game phá gạch (Brick Breaker) cổ điển, được xây dựng bằng [Java - GDX].
+
+
+## Author
+
+Group [Số nhóm] - Class [Mã lớp]
+
+1. Nguyễn Thành Đô - 24020070
+2. Nguyễn Đình Công Huy - 24020160
+3. Đào Mạnh Hải Long - 24020205
+4. Nguyễn Hoàng Đức - 24020079
+
+**Instructor:** Tô Văn Khánh - Kiều Văn Tuyên - Trương Xuân Hiếu
+**Semester:** HK1 - Năm học
 
 
 
@@ -25,7 +39,7 @@ Chào mừng thầy, cô . Đây là một dự án game được phát triển 
     * 💥 **Giảm số mạng sống(Lose Lives)** giảm số mạng sống
     * 🛡️ **Thu nhỏ thanh đỡ:** Làm hạn chế khả năng đỡ trúng bóng
   
-* **Đồ họa & Âm thanh:** Đồ họa 2D [Phong cách đồ họa, ví dụ: pixel art, hiện đại...] bắt mắt cùng hiệu ứng âm thanh sống động.
+* **Đồ họa & Âm thanh:** Đồ họa 2D Phong cách đồ họa, pixel art, hiện đại... bắt mắt cùng hiệu ứng âm thanh sống động.
 * **Hệ thống bảng xếp hạng:** Thử thách bản thân để đạt điểm số cao nhất!
 
 ## 📸 Hình ảnh trong game
@@ -34,7 +48,7 @@ Chào mừng thầy, cô . Đây là một dự án game được phát triển 
 | :---: | :---: | :---: |
 | ![Ảnh Màn hình chính]([Link đến ảnh 1]) | ![Ảnh Gameplay 1]([Link đến ảnh 2]) | ![Ảnh Gameplay 2]([Link đến ảnh 3]) |
 
-*(Hãy thay thế `[Link đến ảnh]` bằng đường dẫn thật đến file ảnh của bạn trong dự án, hoặc link ảnh đã upload lên mạng)*
+
 
 ## 💻 Công nghệ sử dụng
 
@@ -67,14 +81,9 @@ Bạn có thể tự mình chạy và trải nghiệm game bằng các bước s
     https://github.com/CongHuy-24020160/Game_Java/tree/test_game
     ```
 
-3.  **Cài đặt các thư viện/phụ thuộc:**
-    * *(Mô tả cách cài đặt, ví dụ: "Dự án sử dụng Gradle, hãy chạy: `gradlew build`" ")*
-    ```bash
-    [Lệnh cài đặt nếu có]
-    ```
 
-4.  **Chạy dự án:**
-    * *(Mô tả cách chạy game, ví dụ: "Chạy file `DesktopLauncher.java`")*
+3.  **Chạy dự án:**
+    *"Chạy file `DesktopLauncher.java`")*
 
 
 ## 🎮 Cách chơi
@@ -94,5 +103,6 @@ Bạn có thể tự mình chạy và trải nghiệm game bằng các bước s
 ## 🤝 Cách đóng góp
 
 Nếu bạn muốn đóng góp cho dự án, vui lòng "Fork" repository này và tạo một "Pull Request" với những thay đổi của bạn. Mọi sự đóng góp đều được trân trọng!
+
 
 
