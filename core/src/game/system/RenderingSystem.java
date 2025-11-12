@@ -26,21 +26,12 @@ public class RenderingSystem extends IteratingSystem {
 
     @Override
     public void update(float deltaTime) {
-        // Chúng ta chỉ gọi batch.begin() một lần duy nhất
-        // trước khi vẽ tất cả các đối tượng.
-//        batch.begin();
-
         super.update(deltaTime);
-        // Sau khi đã vẽ xong tất cả các đối tượng,
-        // chúng ta gọi batch.end() một lần duy nhất.
-//        batch.end();
     }
 
     @Override
     protected void processEntity(Entity entity, float v) {
-
         // Sử dụng các mapper đã được tối ưu hóa để lấy component.
-
         final TextureComponent texture = textureMapper.get(entity);
         final PhysicsBodyComponent b2body = b2BodyMapper.get(entity);
 

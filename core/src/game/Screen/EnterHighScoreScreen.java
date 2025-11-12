@@ -41,11 +41,11 @@ public class EnterHighScoreScreen implements Screen {
 
     public EnterHighScoreScreen(ArkanoidGame game) {
         this.game = game;
-        // Dùng kích thước ảo (VIRTUAL_WIDTH/HEIGHT) giống như MenuScreen của bạn
+
         Viewport viewport = new FitViewport(Utilities.VIRTUAL_WIDTH, Utilities.VIRTUAL_HEIGHT);
         this.stage = new Stage(viewport);
 
-        // Lấy điểm số cuối cùng từ biến tạm (chúng ta sẽ tạo biến này sau)
+        // Lấy điểm số cuối cùng từ biến tạm
         this.currentScore = game.lastScore;
     }
 
@@ -54,9 +54,9 @@ public class EnterHighScoreScreen implements Screen {
         this.skin = game.assetManager.manager.get(game.assetManager.skin, Skin.class);
         this.font = game.assetManager.manager.get(game.assetManager.gameFont, BitmapFont.class);
 
-        // 1. Lấy atlas
+        //  Lấy atlas
         TextureAtlas atlas = game.assetManager.manager.get(game.assetManager.gameImagaes, TextureAtlas.class);
-        // 2. Tìm ảnh nền "background" (tên file .png) bên trong atlas
+        //  Tìm ảnh nền "background" (tên file .png) bên trong atlas
         this.backgroundTexture = atlas.findRegion("background");
 
         Gdx.input.setInputProcessor(stage);

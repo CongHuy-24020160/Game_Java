@@ -26,48 +26,6 @@ public class PlayerIn4Component implements Component, Pool.Poolable {
      */
     public OrthographicCamera camera;
 
-    /**
-     * Enum {@code PaddleSize} mô tả các cấp độ kích thước khác nhau của paddle (vợt).
-     * <p>
-     * Mỗi cấp độ có thể ảnh hưởng đến gameplay như tốc độ di chuyển, vùng va chạm,
-     * hoặc độ khó của trò chơi.
-     * <ul>
-     *   <li>{@code SMALL}: Paddle nhỏ – khó điều khiển nhưng có thể tăng điểm thưởng.</li>
-     *   <li>{@code MEDIUM}: Paddle trung bình – trạng thái mặc định, cân bằng giữa tốc độ và kích thước.</li>
-     *   <li>{@code LARGE}: Paddle lớn – dễ điều khiển hơn nhưng có thể giảm điểm hoặc tốc độ.</li>
-     * </ul>
-     */
-    /*
-    public enum PaddleSize {
-        SMALL,
-        MEDIUM,
-        LARGE
-    }
-
-     */
-
-    /**
-     * Kích thước hiện tại của paddle, mặc định là {@code SMALL}.
-     * <p>
-     * Thuộc tính này có thể thay đổi khi người chơi nhận được vật phẩm tăng cấp hoặc giảm cấp.
-     */
-    /*
-
-    public PaddleSize sizeLevel = PaddleSize.SMALL;
-
-    public PaddleSize currentSizeLevel = PaddleSize.SMALL;
-    public PaddleSize targetSizeLevel = PaddleSize.SMALL;
-
-    public void setSizeLevel(PaddleSize sizeLevel) {
-        this.targetSizeLevel = sizeLevel;
-    }
-
-    public boolean needsResize() {
-        return currentSizeLevel != targetSizeLevel;
-    }
-
-     */
-
     public float lengthMultiplier = 0.8f;
 
     public void expand(float amount) {
@@ -102,22 +60,11 @@ public class PlayerIn4Component implements Component, Pool.Poolable {
         this.camera = camera;
     }
 
-    /**
-     * Phương thức {@code reset()} được gọi khi đối tượng này được trả về Pool để tái sử dụng.
-     * <p>
-     * Nó giúp đặt lại trạng thái mặc định của component nhằm tránh rò rỉ dữ liệu từ lần sử dụng trước.
-     * <p>
-     * Cụ thể:
-     * <ul>
-     *   <li>Đặt {@code camera} về {@code null}.</li>
-     *   <li>Đặt {@code sizeLevel} về {@code PaddleSize.SMALL}.</li>
-     * </ul>
-     */
     @Override
     public void reset() {
         camera = null;
-       // currentSizeLevel = PaddleSize.SMALL;
-       // targetSizeLevel = PaddleSize.SMALL;
         lengthMultiplier = 0.8f;
     }
+
+
 }

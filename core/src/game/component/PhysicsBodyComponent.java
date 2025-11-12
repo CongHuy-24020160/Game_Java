@@ -1,4 +1,3 @@
-// import packages vô đây
 package game.component;
 
 import com.badlogic.ashley.core.Component; // mọi component đều phải implement interface Component

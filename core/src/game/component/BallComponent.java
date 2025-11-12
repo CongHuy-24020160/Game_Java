@@ -1,6 +1,4 @@
-package game.component; // Khai báo package chứa class BallComponent
-
-// Import các thư viện cần thiết từ libGDX và Ashley
+package game.component;
 
 import com.badlogic.ashley.core.Component; // Mọi Component trong ECS (Entity Component System) đều phải implement interface này
 import com.badlogic.gdx.math.MathUtils;    // Dùng cho các hàm toán học ngẫu nhiên và lượng giác
@@ -30,8 +28,6 @@ public class BallComponent implements Component, Pool.Poolable {
      */
     public enum Direction {LEFT, RIGHT, MID}
 
-    // ========================== THUỘC TÍNH ==========================
-
     /**
      * Tốc độ hiện tại của bóng (đơn vị tùy theo thế giới vật lý Box2D)
      */
@@ -56,8 +52,6 @@ public class BallComponent implements Component, Pool.Poolable {
      * Vận tốc trước khi bóng bị dừng hoặc va chạm
      */
     public Vector2 preSpeed;
-
-    // ========================== PHƯƠNG THỨC XỬ LÝ CHÍNH ==========================
 
     /**
      * Xử lý khi bóng bật lại từ thanh đỡ (paddle) hoặc tường.
@@ -150,8 +144,6 @@ public class BallComponent implements Component, Pool.Poolable {
         System.out.println("Đảo Y: " + ballB2body.getLinearVelocity());
     }
 
-    // ========================== GETTER & SETTER ==========================
-
     /**
      * @return tốc độ hiện tại của bóng
      */
@@ -221,8 +213,6 @@ public class BallComponent implements Component, Pool.Poolable {
     public void setPreSpeed(Vector2 preSpeed) {
         this.preSpeed = preSpeed;
     }
-
-    // ========================== RESET TRẠNG THÁI ==========================
 
     /**
      * Đặt lại toàn bộ trạng thái của bóng về mặc định.

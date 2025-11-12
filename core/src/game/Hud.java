@@ -19,7 +19,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -152,11 +151,6 @@ public class Hud implements Disposable {
         textures = game.assetManager.manager.get(game.assetManager.gameImagaes);
         skin = game.assetManager.manager.get("ui/uiskin.json", Skin.class);
 
-        // Lấy texture quả bóng hiển thị mạng sống
-        // = new TextureRegion(
-        //  textures.findRegion("Ball_small-blue"),
-        //   8, 31, 25, 25
-        // );
         ballTexture = textures.findRegion("Ball_small-blue");
         if (ballTexture.getTexture() == null) {
             System.out.println("Ball Texture is null");
@@ -205,7 +199,6 @@ public class Hud implements Disposable {
         table.add(livesTable).left().padLeft(5);
 
         stage.addActor(table);
-        //Gdx.input.setInputProcessor(stage);
     }
 
     /**
@@ -398,7 +391,6 @@ public class Hud implements Disposable {
     public void showPauseDialog() {
         System.out.println("Show Pause Dialog");
 
-        // Chúng ta không dùng openDialog() vì cần nhiều hơn 2 nút
         // Chúng ta tự tạo Dialog
         final Dialog pauseDialog = new Dialog("", skin);
 
@@ -437,7 +429,7 @@ public class Hud implements Disposable {
         dimOverlay[0].setTouchable(Touchable.disabled);
 
 
-        // 1. Nút CONTINUE
+        //  Nút CONTINUE
         TextButton continueButton = new TextButton("Continue", skin);
         continueButton.addListener(new ClickListener() {
             @Override
@@ -460,7 +452,7 @@ public class Hud implements Disposable {
             }
         });
 
-        // 2. Nút SAVE GAME
+        //  Nút SAVE GAME
         TextButton saveButton = new TextButton("Save Game", skin);
         saveButton.addListener(new ClickListener() {
             @Override
@@ -468,15 +460,10 @@ public class Hud implements Disposable {
                 GameData.save(getScore(), getLives(), getLevel());
 
                 saveFeedbackLabel.setText("Game Saved!");
-
-                //pauseDialog.hide();
-                //handleDialogClosed();
-                //game.screenManager.changeScreen(ScreenManager.MENU); // Về Menu
-                //mainScreen.resumeGameSystems(); // Reset pause
             }
         });
 
-        // 3. Nút NEW GAME
+        //  Nút NEW GAME
         TextButton newGameButton = new TextButton("New Game", skin);
         newGameButton.addListener(new ClickListener() {
             @Override
@@ -493,7 +480,7 @@ public class Hud implements Disposable {
                 pauseDialog.hide();
                 handleDialogClosed();
                 userChoice = UserChoice.RETRY;
-                mainScreen.resumeGameSystems(); // ⭐️ TIẾP TỤC GAME
+                mainScreen.resumeGameSystems(); //  TIẾP TỤC GAME
 
                 if (dimOverlay[0] != null && dimOverlay[0].hasParent()) {
                     dimOverlay[0].addAction(Actions.sequence(
@@ -510,7 +497,7 @@ public class Hud implements Disposable {
             }
         });
 
-        // 4. Nút EXIT (về Menu chính)
+        //  Nút EXIT (về Menu chính)
         TextButton exitButton = new TextButton("Exit to Menu", skin);
         exitButton.addListener(new ClickListener() {
             @Override
@@ -605,8 +592,6 @@ public class Hud implements Disposable {
      */
     private void handleDialogClosed() {
         logger.info("Dialog Closed");
-
-        //Hud.this.dialog.setVisible(false);
         Hud.this.dialog.remove();
         dialogJustClosed = true;
     }

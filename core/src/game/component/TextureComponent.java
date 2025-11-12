@@ -15,6 +15,7 @@ public class TextureComponent implements Component, Pool.Poolable {
         this.width = w;
         this.height = h;
     }
+
     // lấy lại hình ảnh hiện tại
     public TextureRegion getCurrImage() {
         return currImage;

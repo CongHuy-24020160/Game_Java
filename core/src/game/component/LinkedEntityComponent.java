@@ -1,5 +1,4 @@
 package game.component;
-// import packback vô đây sau khi code
 
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;

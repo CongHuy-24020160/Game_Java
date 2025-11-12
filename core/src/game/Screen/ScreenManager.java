@@ -54,26 +54,19 @@ public class ScreenManager {
                 if (ArkanoidGame.DEBUG_MODE) {
                     System.out.println("ScreenManager.java) Changing to Menu Screen");
                 }
-                //if (menuScreen == null) menuScreen = new MenuScreen(game);
                 setScreen(new MenuScreen(game));
                 break;
             case PREFERENCES:
-                //if (preferencesScreen == null) preferencesScreen = new PreferenceScreen(game);
                 setScreen(new PreferenceScreen(game));
                 break;
             case APPLICATION:
                 if (ArkanoidGame.IS_LOADING_SAVE_GAME) {
-
-                    // Nếu là LOAD:
                     GameData savedData = GameData.load(); // Tải dữ liệu
                     setScreen(new MainScreen(game, savedData));
 
                 } else {
-
-                    // Nếu là NEW GAME:
                     setScreen(new MainScreen(game));
                 }
-
                 // Reset cờ hiệu (dù là load hay new)
                 ArkanoidGame.IS_LOADING_SAVE_GAME = false;
                 break;
@@ -81,20 +74,16 @@ public class ScreenManager {
                 if (ArkanoidGame.DEBUG_MODE) {
                     System.out.println("ScreenManager.java) Changing to End Screen");
                 }
-                //if (endScreen == null) endScreen = new EndScreen(game);
                 setScreen(new EndScreen(game));
                 break;
             case LOADING:
-                //if (loadingScreen == null) loadingScreen = new LoadingScreen(game);
                 if (ArkanoidGame.DEBUG_MODE) System.out.println("(ScreenManager.java) Changing to Loading Screen");
                 setScreen(new LoadingScreen(game));
                 break;
             case HIGHSCORE:
-                //if (highScoreScreen == null) highScoreScreen = new HighScoreScreen(game);
                 setScreen(new HighScoreScreen(game));
                 break;
             case ENTER_HIGHSCORE:
-                // Luôn tạo mới để nó lấy điểm 'lastScore' mới nhất
                 EnterHighScoreScreen enterHighScoreScreen = new EnterHighScoreScreen(game);
                 setScreen(enterHighScoreScreen);
                 break;

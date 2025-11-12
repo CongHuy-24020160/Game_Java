@@ -11,14 +11,15 @@ import game.Screen.MainScreen;
 import game.Utilities;
 import game.component.PhysicsBodyComponent;
 import game.component.BallComponent;
+import game.component.PlayerIn4Component;
 import game.level.LevelManager;
 import game.Utils.UtilSound;
 import game.Utils.ScoreManager;
 import game.Screen.ScreenManager;
 
-/*
-    System quản lý các logic đặc thù của quả bóng,
-    chủ yếu là va chạm với các cạnh màn hình và điều kiện thua cuộc.
+/**
+ * System quản lý các logic đặc thù của quả bóng,
+ * chủ yếu là va chạm với các cạnh màn hình và điều kiện thua cuộc.
  */
 public class BallSystem extends IteratingSystem {
     // tốc độ mặc định của bóng.
@@ -39,66 +40,22 @@ public class BallSystem extends IteratingSystem {
         this.mainScreen = mainScreen;
     }
 
-
-    /* protected void processEntity(Entity entity, float v) {
-
-        final BallComponent ballC = ballMapper.get(entity);
-        final PhysicsBodyComponent ballB2body = b2bodyMapper.get(entity);
-        // Bỏ qua nếu bóng đã bị hủy
-        if (ballB2body.isDead)
-            return;
-
-        // CHỈ CHẠY CODE KIỂM SOÁT TỐC ĐỘ/CHỐNG KẸT KHI BÓNG ĐÃ RỜI PADDLE
-        // (Kiểm tra !ballC.canLinked)
-        if (!ballC.canLinked) {
-
-            // --- BẮT ĐẦU CODE CHỐNG KẸT (Nảy vô hạn) & CHỐNG VĂNG ---
-            Vector2 currentVelocity = ballB2body.body.getLinearVelocity();
-            float desiredSpeed = ballC.BallSpeed;
-
-            // 1. KIỂM TRA VÀ SỬA LỖI "KHÓA NGANG" (vận tốc Y quá nhỏ)
-            // Math.abs là hàm lấy giá trị tuyệt đối
-            if (Math.abs(currentVelocity.y) < 0.5f) { // Nếu kẹt ngang
-                // "Hích" nhẹ cho bóng bay lên (hoặc xuống)
-                currentVelocity.y = Math.signum(currentVelocity.y) * 0.5f;
-                // Nếu vận tốc y = 0, mặc định cho bay lên
-                if (currentVelocity.y == 0) currentVelocity.y = 0.5f;
-            }
-
-            // 2. KIỂM TRA VÀ SỬA LỖI "KHÓA DỌC" (vận tốc X quá nhỏ)
-            if (Math.abs(currentVelocity.x) < 0.5f) { // Nếu kẹt dọc
-                // "Hích" nhẹ cho bóng bay sang ngang
-                currentVelocity.x = Math.signum(currentVelocity.x) * 0.5f;
-                // Nếu vận tốc x = 0, mặc định cho bay sang phải
-                if (currentVelocity.x == 0) currentVelocity.x = 0.5f;
-            }
-
-            // Bỏ qua nếu bóng đã bị hủy (ví dụ: khi tải màn chơi mới).
-            if (ballB2body.isDead)
-                return;
-
-            handleScreenBoundaryCollisions(ballC, ballB2body);
-            handleOutOfBounds(ballC, ballB2body);
-        }
-    } */
-
     @Override
     protected void processEntity(Entity entity, float v) {
         final BallComponent ballC = ballMapper.get(entity);
         final PhysicsBodyComponent ballB2body = b2bodyMapper.get(entity);
 
         // Bỏ qua nếu bóng đã bị hủy
-        // Fixme
         if (ballB2body.isDead)
             return;
 
-        // 1. CHẠY CÁC HÀM CŨ TRƯỚC
+        //  CHẠY CÁC HÀM CŨ TRƯỚC
         // Hàm này có thể sẽ gọi reverseX/reverseY và làm hỏng vận tốc Y
         handleScreenBoundaryCollisions(ballC, ballB2body);
         handleOutOfBounds(ballC, ballB2body);
 
 
-        // 2. CHẠY CODE SỬA LỖI (CHỐNG KẸT/VĂNG) SAU CÙNG
+        //  CHẠY CODE SỬA LỖI (CHỐNG KẸT/VĂNG) SAU CÙNG
         // Code này sẽ "ghi đè" lên bất kỳ lỗi nào do reverseX gây ra
         if (!ballC.canLinked) {
 
@@ -106,21 +63,21 @@ public class BallSystem extends IteratingSystem {
             float desiredSpeed = ballC.BallSpeed;
             boolean isStuck = false;
 
-            // 1. KIỂM TRA "KHÓA NGANG"
+            //  KIỂM TRA "KHÓA NGANG"
             if (Math.abs(currentVelocity.y) < 0.5f) {
                 currentVelocity.y = Math.signum(currentVelocity.y) * 0.5f;
                 if (currentVelocity.y == 0) currentVelocity.y = 0.5f;
                 isStuck = true;
             }
 
-            // 2. KIỂM TRA "KHÓA DỌC"
+            //  KIỂM TRA "KHÓA DỌC"
             if (Math.abs(currentVelocity.x) < 0.5f) {
                 currentVelocity.x = Math.signum(currentVelocity.x) * 0.5f;
                 if (currentVelocity.x == 0) currentVelocity.x = 0.5f;
                 isStuck = true;
             }
 
-            // 3. ÁP DỤNG LOGIC
+            //  ÁP DỤNG LOGIC
             if (isStuck) {
                 // NẾU BỊ KẸT: Áp dụng vận tốc đã "hích".
                 // Nó sẽ thoát khỏi vòng lặp vô hạn.
@@ -132,7 +89,7 @@ public class BallSystem extends IteratingSystem {
                 }
             }
 
-        } // Đóng 'if (!ballC.canLinked)'
+        }
     }
 
     /**
@@ -173,28 +130,61 @@ public class BallSystem extends IteratingSystem {
             // Kiểm tra điều kiện thua cuộc.
             if (hud.getLives() <= 0) {
 
-                // ⭐️ BẮT ĐẦU LOGIC BXH MỚI ⭐️
-
                 int finalScore = hud.getScore();
                 ballC.isDead = true; // Đánh dấu bóng chết
-
-                //mainScreen.pauseGameSystems();
 
                 mainScreen.gameOverPending = true;
                 mainScreen.finalScoreForGameOver = finalScore;
 
             } else {
-
-                // ⭐️ CHƯA HẾT MẠNG -> RESET BÓNG (Code cũ của bạn) ⭐️
                 ballC.isDead = true;
-                levelManager.currentLevel.paddleAndBall.attachBallToPaddle();
-                ballC.reset();
-                ballC.canLinked = true; // báo rằng bóng đã dc gắn lại
-                ballC.setBallSpeed(DEFAULT_BALL_SPEED);
+
+                // DỪNG HOÀN TOÀN vận tốc bóng
                 ballB2body.body.setLinearVelocity(0, 0);
+                ballB2body.body.setAngularVelocity(0);
+
+                // Reset các thuộc tính bóng
+                ballC.reset();
+                ballC.setBallSpeed(DEFAULT_BALL_SPEED);
+                resetPaddleSize();
+
+                // Đánh dấu bóng có thể gắn vào paddle
+                ballC.canLinked = true;
+
+                // Gắn bóng vào paddle (phải gọi SAU KHI set canLinked = true)
+                levelManager.currentLevel.paddleAndBall.attachBallToPaddle();
+
+                //  HỒI SINH bóng (cho phép render và xử lý)
+                ballC.isDead = false;
+                ballB2body.isDead = false;
 
             }
         }
     }
+
+    /**
+     * Reset paddle về kích thước ban đầu khi mất mạng
+     */
+    private void resetPaddleSize() {
+        // Lấy tất cả entity có PlayerIn4Component
+        com.badlogic.ashley.utils.ImmutableArray<Entity> players = getEngine().getEntitiesFor(
+            Family.all(PlayerIn4Component.class).get()
+        );
+
+        if (players.size() > 0) {
+            Entity playerEntity = players.first();
+            ComponentMapper<PlayerIn4Component> playerInfoMapper =
+                ComponentMapper.getFor(PlayerIn4Component.class);
+
+            PlayerIn4Component playerInfo = playerInfoMapper.get(playerEntity);
+
+            if (playerInfo != null) {
+                // Reset về kích thước ban đầu
+                playerInfo.resetLength();
+                System.out.println("⚡ RESET Paddle về kích thước ban đầu!");
+            }
+        }
+    }
+
 }
 

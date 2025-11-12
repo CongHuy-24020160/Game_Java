@@ -3,9 +3,7 @@ package game.LoadAssets;
 import com.badlogic.gdx.physics.box2d.*;
 
 public class BodyFactory {
-    public enum BlockType {ONE_HIT, TWO_HIT, UNBREAKABLE, PASSTHROUGH}
-
-    ;
+    public enum BlockType {ONE_HIT, TWO_HIT, UNBREAKABLE, PASSTHROUGH};
 
     public enum Material {PLASTIC, HARDENED, STEEL, PUFF}
 

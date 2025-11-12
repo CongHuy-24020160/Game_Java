@@ -181,8 +181,7 @@ public class LevelLoader implements Disposable {
 
         // load texture
         tc.currImage = new TextureRegion(
-            textures.findRegion("Ball_small-blue"),
-            0, 0, 13, 12
+            textures.findRegion("Ball_small-blue")
         );
 
         // create box2d body

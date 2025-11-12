@@ -105,7 +105,6 @@ public class LevelManager implements Disposable {
     @Override
     public void dispose() {
         System.out.println("Calling Level Manager dispose");
-        //cleanupCurrentLevel();
         if (currentLevel != null) {
             currentLevel.dispose();
         }

@@ -42,20 +42,18 @@ public class LoadingScreen implements Screen {
     public void show() {
         stage = new Stage();
 
-        // 1. Chỉ queue font, KHÔNG gọi finishLoading()
+        //  Chỉ queue font, KHÔNG gọi finishLoading()
         game.assetManager.queueAddFonts();
 
         // Chờ cho font tải xong để có thể dùng cho Label
         game.assetManager.manager.finishLoading();
 
-        // --- Bắt đầu queue TẤT CẢ các tài nguyên khác ở đây ---
         System.out.println("(LoadingScreen) Queuing all assets...");
         game.assetManager.queueAddImages();
         game.assetManager.queueLoadSkin();
         game.assetManager.queueLoadSound();
-        game.assetManager.queueLoadMusic(); // <-- THÊM DÒNG QUAN TRỌNG NÀY
+        game.assetManager.queueLoadMusic();
 
-        // --- Thiết lập UI ---
         table = new Table();
         table.setFillParent(true);
         table.setDebug(false);
@@ -70,7 +68,7 @@ public class LoadingScreen implements Screen {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        // 2. Vòng lặp render chỉ cần làm một việc: update trình quản lý
+        //  Vòng lặp render chỉ cần làm một việc: update trình quản lý
         // manager.update() sẽ trả về true khi TẤT CẢ đã tải xong.
         if (game.assetManager.manager.update()) {
             // Đã tải xong, chuyển màn hình

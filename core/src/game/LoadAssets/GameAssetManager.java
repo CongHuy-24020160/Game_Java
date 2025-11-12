@@ -35,62 +35,46 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;                   // Định ngh
  * </ul>
  */
 public class GameAssetManager {
-
-    // ========================== BIẾN TOÀN CỤC ==========================
-
     /**
      * Thể hiện duy nhất (Singleton instance) của GameAssetManager
      */
     private static volatile GameAssetManager instance;
-
     /**
      * Đối tượng AssetManager chính của libGDX
      */
     public final AssetManager manager;
-
-    // ========================== ĐƯỜNG DẪN TÀI NGUYÊN ==========================
-
     /**
      * File chứa tất cả hình ảnh của trò chơi (TextureAtlas)
      */
     public final String gameImagaes = "images/ArkanoidGame.atlas";
-
     /**
      * Âm thanh khi bóng đập gạch
      */
     public final String hitBrickSound = "sounds/ball_hit_brick.wav";
-
     /**
      * Âm thanh khi bóng đập tường
      */
     public final String hitWallSound = "sounds/ball_hit_wall.wav";
-
     /**
      * Âm thanh khi trò chơi kết thúc
      */
     public final String gameOverSound = "sounds/game_over.wav";
-
     /**
      * Âm thanh khi người chơi đánh trượt bóng
      */
     public final String missBallSound = "sounds/miss_the_ball.wav";
-
     /**
      * Nhạc nền chính của trò chơi
      */
     public final String backgroundMusic = "sounds/backgroundMusic1.mp3";
-
     /**
      * Font chữ chính được sử dụng trong trò chơi
      */
     public final String gameFont = "fonts/GUNDAM.ttf";
-
     /**
      * File định nghĩa giao diện (UI Skin)
      */
     public final String skin = "ui/uiskin.json";
-
-    // ========================== CONSTRUCTOR ==========================
 
     /**
      * <p>Constructor riêng (private) nhằm ngăn không cho tạo đối tượng từ bên ngoài.</p>
@@ -99,8 +83,6 @@ public class GameAssetManager {
     private GameAssetManager() {
         manager = new AssetManager();
     }
-
-    // ========================== SINGLETON PATTERN ==========================
 
     /**
      * <p>Phương thức truy cập duy nhất đến thể hiện GameAssetManager.</p>
@@ -121,8 +103,6 @@ public class GameAssetManager {
         return instance;
     }
 
-    // ========================== LOAD HÌNH ẢNH ==========================
-
     /**
      * <p>Đưa yêu cầu load toàn bộ hình ảnh trò chơi vào hàng đợi của AssetManager.</p>
      * <p>Hình ảnh được lưu trong file TextureAtlas (nhiều hình gộp trong 1 file).</p>
@@ -130,8 +110,6 @@ public class GameAssetManager {
     public void queueAddImages() {
         manager.load(gameImagaes, TextureAtlas.class);
     }
-
-    // ========================== LOAD FONT ==========================
 
     /**
      * <p>Đưa yêu cầu load font chữ vào hàng đợi.</p>
@@ -159,8 +137,6 @@ public class GameAssetManager {
         manager.load(gameFont, BitmapFont.class, fontParameterSmall);
     }
 
-    // ========================== LOAD ÂM THANH ==========================
-
     /**
      * <p>Đưa tất cả các file âm thanh ngắn (hiệu ứng) vào hàng đợi của AssetManager.</p>
      * <p>Các âm thanh này thường được kích hoạt khi va chạm hoặc sự kiện đặc biệt xảy ra.</p>
@@ -172,8 +148,6 @@ public class GameAssetManager {
         manager.load(missBallSound, Sound.class);
     }
 
-    // ========================== LOAD NHẠC NỀN ==========================
-
     /**
      * <p>Đưa nhạc nền chính của trò chơi vào hàng đợi để load.</p>
      * <p>Nhạc nền thường được phát ở chế độ lặp vô hạn (loop).</p>
@@ -181,8 +155,6 @@ public class GameAssetManager {
     public void queueLoadMusic() {
         manager.load(backgroundMusic, Music.class);
     }
-
-    // ========================== LOAD GIAO DIỆN (SKIN) ==========================
 
     /**
      * <p>Đưa yêu cầu load skin giao diện UI vào AssetManager.</p>
@@ -192,8 +164,6 @@ public class GameAssetManager {
         SkinLoader.SkinParameter params = new SkinLoader.SkinParameter("ui/uiskin.atlas");
         manager.load(skin, Skin.class, params);
     }
-
-    // ========================== GIẢI PHÓNG BỘ NHỚ ==========================
 
     /**
      * <p>Giải phóng toàn bộ tài nguyên đã load và xóa thể hiện Singleton hiện tại.</p>

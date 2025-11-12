@@ -165,39 +165,33 @@ public class MenuScreen implements Screen {
         table.row();
 
 
-
         stage.addActor(table);
     }
 
     @Override
     public void render(float delta) {
-        // Gdx.gl.glClearColor(0, 0, 0, 1);
-        // Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        //  stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
-        //  stage.draw();
-
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        // 1. Cập nhật viewport của stage
+        //  Cập nhật viewport của stage
         stage.getViewport().apply();
 
-        // 2. Lấy batch (cọ vẽ) của stage và thiết lập
+        //  Lấy batch (cọ vẽ) của stage và thiết lập
         stage.getBatch().setProjectionMatrix(stage.getCamera().combined);
 
-        // 3. Bắt đầu vẽ
+        //  Bắt đầu vẽ
         stage.getBatch().begin();
 
-        // 4. VẼ ẢNH NỀN (vừa với kích thước ảo)
+        //  VẼ ẢNH NỀN (vừa với kích thước ảo)
         stage.getBatch().draw(backgroundTexture,
             0, 0,
             Utilities.VIRTUAL_WIDTH,
             Utilities.VIRTUAL_HEIGHT);
 
-        // 5. Kết thúc vẽ batch
+        //  Kết thúc vẽ batch
         stage.getBatch().end();
 
-        // 6. Vẽ các nút bấm (UI) đè lên trên ảnh nền
+        //  Vẽ các nút bấm (UI) đè lên trên ảnh nền
         stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
         stage.draw();
 

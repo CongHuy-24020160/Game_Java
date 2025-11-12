@@ -1,29 +1,21 @@
 package game.system;
 
-// Import các thư viện lõi của Ashley (framework Entity-Component-System)
-
 import com.badlogic.ashley.core.*;
-import com.badlogic.ashley.core.PooledEngine; // Engine được tối ưu hóa, sử dụng lại các đối tượng
-import com.badlogic.ashley.systems.IteratingSystem; // System tự động lặp qua các entity
-// Import thư viện đồ họa 2D của LibGDX
+import com.badlogic.ashley.core.PooledEngine;
+import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-// Import thư viện toán học (cho việc random và vector)
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-// Import thư viện vật lý Box2D
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.World;
-// Import các class chính của game
 import game.ArkanoidGame;
 import game.Hud;
 import game.LoadAssets.BodyFactory;
 import game.Screen.MainScreen;
 import game.Utilities;
-// Import tất cả các component (thành phần) mà system này cần biết
 import game.component.*;
 import game.component.TypeComponent;
-// Import các class quản lý
 import game.level.LevelManager;
 import game.ScoreChangeListener;
 import game.Utils.ParticleHandler;
@@ -43,19 +35,16 @@ import game.Screen.ScreenManager;
  */
 public class CollisionSystem extends IteratingSystem {
 
-    // --- CÁC BIẾN (FIELDS) QUAN TRỌNG ---
-
-    // Tham chiếu đến các đối tượng quản lý cốt lõi của game
     private ArkanoidGame game;
-    private PooledEngine engine; // Engine ECS để tạo/xóa entity (ví dụ: power-up)
-    private World world; // Thế giới vật lý Box2D
-    private BodyFactory bodyFactory; // "Nhà máy" tạo ra các body vật lý
-    private ScoreChangeListener scoreChangeListener; // Interface để báo cho HUD/MainScreen khi điểm thay đổi
-    private LevelManager levelManager; // Quản lý màn chơi (level)
-    private Hud hud; // Quản lý giao diện (điểm, mạng, nút bấm)
-    public ParticleHandler particlesManager; // Quản lý hiệu ứng hạt (vụ nổ)
+    private PooledEngine engine;
+    private World world;
+    private BodyFactory bodyFactory;
+    private ScoreChangeListener scoreChangeListener;
+    private LevelManager levelManager;
+    private Hud hud;
+    public ParticleHandler particlesManager;
 
-    private MainScreen mainScreen; // Tham chiếu đến màn hình game chính
+    private MainScreen mainScreen;
 
     /**
      * Hàm khởi tạo (Constructor) của CollisionSystem.
@@ -72,18 +61,12 @@ public class CollisionSystem extends IteratingSystem {
      */
     public CollisionSystem(MainScreen mainScreen, PooledEngine engine, World world, Hud hud,
                            LevelManager levelManager, ScoreChangeListener scoreChangeListener, ArkanoidGame game) {
-
-        // --- BỘ LỌC (FAMILY) ---
-        // Yêu cầu IteratingSystem này chỉ lặp qua các entity
-        // PHẢI có cả 3 component sau:
         super(Family.all(
-            ColliderComponent.class,    // Phải có component va chạm
-            PhysicsBodyComponent.class, // Phải có thân vật lý
-            BallComponent.class         // Phải là một quả bóng
+            ColliderComponent.class,
+            PhysicsBodyComponent.class,
+            BallComponent.class
         ).get());
 
-        // --- GÁN CÁC BIẾN ---
-        // Lưu lại các tham chiếu được truyền vào
         this.mainScreen = mainScreen;
         this.scoreChangeListener = scoreChangeListener;
         this.levelManager = levelManager;
@@ -99,10 +82,6 @@ public class CollisionSystem extends IteratingSystem {
         particlesManager = new ParticleHandler("particles/block-particle.p", "particles");
         particlesManager.resizeAll(1f); // Cài đặt tỉ lệ hạt
     }
-
-
-    // --- BỘ TRUY XUẤT COMPONENT (MAPPERS) ---
-    // ComponentMapper giúp lấy component từ entity một cách nhanh chóng
 
     // Lấy ColliderComponent (chứa thông tin va chạm)
     private final ComponentMapper<ColliderComponent> collisionC
@@ -171,7 +150,6 @@ public class CollisionSystem extends IteratingSystem {
             return;
         }
 
-        // Sử dụng switch-case để gọi hàm xử lý tương ứng
         switch (otherType.type) {
             case TypeComponent.PLAYER_TYPE:
                 // Nếu là thanh trượt
@@ -194,61 +172,102 @@ public class CollisionSystem extends IteratingSystem {
      * @param playerEntity Entity của thanh trượt
      */
     private void handleBallPlayerCollision(Entity ballEntity, Entity playerEntity) {
-        // Lấy component của bóng
         final BallComponent ball = ballC.get(ballEntity);
-
-        // --- Logic làm chậm bóng (có thể bỏ nếu muốn) ---
-        final float SLOW_DOWN_FACTOR = 0.8f; // Giảm 20% tốc độ
-        final float MIN_BALL_SPEED = 3.5f;   // Tốc độ tối thiểu
-        ball.BallSpeed = ball.BallSpeed * SLOW_DOWN_FACTOR;
-        if (ball.BallSpeed < MIN_BALL_SPEED) {
-            ball.BallSpeed = MIN_BALL_SPEED;
-        }
-        // --- Kết thúc logic làm chậm ---
-
-        // Lấy body vật lý của bóng và thanh trượt
         final PhysicsBodyComponent ballB2body = b2BodyC.get(ballEntity);
         final PhysicsBodyComponent playerB2body = b2BodyC.get(playerEntity);
 
-        // Lấy vị trí (tọa độ thế giới Box2D)
         final Vector2 ballPosition = ballB2body.body.getPosition();
         final Vector2 playerPosition = playerB2body.body.getPosition();
-        // Lấy chiều rộng của thanh trượt (đã chuyển sang đơn vị mét)
         final float paddleWidth = Utilities.convertToPPM(Utilities.PADDLE_WIDTH);
+        final float paddleHeight = Utilities.convertToPPM(Utilities.PADDLE_HEIGHT);
 
-        // --- Tính toán góc nảy ---
+        // KIỂM TRA VA CHẠM TỪ PHÍA TRÊN
+        float relativeY = ballPosition.y - playerPosition.y;
 
-        // 1. Tính vị trí va chạm tương đối (từ -nửa_thanh đến +nửa_thanh)
-        float relativeIntersectX = ballPosition.x - playerPosition.x;
-        // 2. Chuẩn hóa về khoảng [-1, 1] (từ trái qua phải)
-        float normalizedIntersectX = relativeIntersectX / (paddleWidth / 2f);
-        // 3. Giới hạn giá trị trong khoảng [-1, 1] để tránh lỗi
-        normalizedIntersectX = MathUtils.clamp(normalizedIntersectX, -1f, 1f);
+        // Nếu bóng ở phía trên paddle (va chạm mặt trên)
+        if (relativeY > paddleHeight / 2f * 0.5f) {
+            // Logic làm chậm bóng
+            final float SLOW_DOWN_FACTOR = 0.8f;
+            final float MIN_BALL_SPEED = 3.5f;
+            ball.BallSpeed = ball.BallSpeed * SLOW_DOWN_FACTOR;
+            if (ball.BallSpeed < MIN_BALL_SPEED) {
+                ball.BallSpeed = MIN_BALL_SPEED;
+            }
 
-        // 4. Đặt góc nảy tối đa (ví dụ: 60 độ)
-        float maxBounceAngle = 60f;
-        // 5. Tính góc nảy mới (90 độ = thẳng đứng, càng gần mép càng nghiêng)
-        float bounceAngle = 90f - normalizedIntersectX * maxBounceAngle;
+            // Tính góc nảy
+            float relativeIntersectX = ballPosition.x - playerPosition.x;
+            float normalizedIntersectX = MathUtils.clamp(
+                relativeIntersectX / (paddleWidth / 2f), -1f, 1f
+            );
 
-        // In ra log nếu ở chế độ DEBUG
-        if (ArkanoidGame.DEBUG_MODE) {
-            System.out.println("relativeIntersectX: " + relativeIntersectX);
-            System.out.println("normalizedIntersectX: " + normalizedIntersectX);
-            System.out.println("bounceAngle: " + bounceAngle);
+            float maxBounceAngle = 60f;
+            float bounceAngle = 90f - normalizedIntersectX * maxBounceAngle;
+
+            //  Kiểm tra nếu paddle gần tường
+            float screenWidth = Utilities.getPPMWidth();
+            float distanceToLeftWall = playerPosition.x - paddleWidth / 2f;
+            float distanceToRightWall = screenWidth - (playerPosition.x + paddleWidth / 2f);
+            float wallThreshold = paddleWidth * 0.3f; // 30% độ rộng paddle
+
+            // Nếu paddle gần tường trái/phải
+            if (distanceToLeftWall < wallThreshold || distanceToRightWall < wallThreshold) {
+                // Giới hạn góc nảy để tránh bóng đi dọc tường
+                float minSafeAngle = 30f;  // Góc tối thiểu 30°
+                float maxSafeAngle = 150f; // Góc tối đa 150°
+
+                bounceAngle = MathUtils.clamp(bounceAngle, minSafeAngle, maxSafeAngle);
+
+                // Nếu gần tường trái, ép bóng bay sang phải
+                if (distanceToLeftWall < wallThreshold && normalizedIntersectX < -0.5f) {
+                    bounceAngle = 60f; // Bật về góc an toàn
+                }
+
+                // Nếu gần tường phải, ép bóng bay sang trái
+                if (distanceToRightWall < wallThreshold && normalizedIntersectX > 0.5f) {
+                    bounceAngle = 120f; // Bật về góc an toàn
+                }
+            }
+
+            Vector2 velocity = new Vector2(1, 0)
+                .setAngleDeg(bounceAngle)
+                .scl(ball.BallSpeed);
+
+            // Đảm bảo bóng luôn bay lên
+            if (velocity.y < 0) {
+                velocity.y *= -1;
+            }
+
+            //  Đảm bảo vận tốc Y tối thiểu
+            float minVerticalSpeed = ball.BallSpeed * 0.3f; // Ít nhất 30% tốc độ theo trục Y
+            if (Math.abs(velocity.y) < minVerticalSpeed) {
+                velocity.y = Math.signum(velocity.y) * minVerticalSpeed;
+                // Chuẩn hóa lại tổng tốc độ
+                velocity.nor().scl(ball.BallSpeed);
+            }
+
+            ballB2body.body.setLinearVelocity(velocity);
+
+        } else {
+            // Va chạm cạnh bên - chỉ đảo chiều X, giữ nguyên Y
+            Vector2 currentVel = ballB2body.body.getLinearVelocity();
+
+            // Đảo chiều ngang
+            if ((ballPosition.x < playerPosition.x && currentVel.x > 0) ||
+                (ballPosition.x > playerPosition.x && currentVel.x < 0)) {
+                currentVel.x *= -1;
+            }
+
+            // Đảm bảo vận tốc X và Y đủ lớn để không bị kẹt
+            float minSpeed = 0.8f;
+            if (Math.abs(currentVel.x) < minSpeed) {
+                currentVel.x = Math.signum(currentVel.x) * minSpeed;
+            }
+            if (Math.abs(currentVel.y) < minSpeed) {
+                currentVel.y = Math.signum(currentVel.y) * minSpeed;
+            }
+
+            ballB2body.body.setLinearVelocity(currentVel);
         }
-
-        // 6. Tạo vector vận tốc mới
-        Vector2 velocity = new Vector2(1, 0) // Vector ngang
-            .setAngleDeg(bounceAngle)       // Xoay vector theo góc nảy
-            .scl(ball.BallSpeed);         // Đặt tốc độ
-
-        // 7. Đảm bảo bóng luôn bay lên (không bao giờ bay xuống)
-        if (velocity.y < 0) {
-            velocity.y *= -1;
-        }
-
-        // 8. Áp dụng vận tốc mới cho body vật lý của bóng
-        ballB2body.body.setLinearVelocity(velocity);
     }
 
     /**
@@ -285,7 +304,7 @@ public class CollisionSystem extends IteratingSystem {
 
         // Giảm số gạch còn lại của màn chơi
         levelManager.currentLevel.numOfBlocksLeft--;
-        float multiplier = 1.0f; // Mặc định x1
+        float multiplier = 1.0f;
         ImmutableArray<Entity> gameStates = getEngine().getEntitiesFor(
             Family.all(GameStateComponent.class).get()
         );
@@ -311,9 +330,6 @@ public class CollisionSystem extends IteratingSystem {
 
         // Kích hoạt hiệu ứng hạt (vụ nổ) tại vị trí của viên gạch
         particlesManager.trigger(blockB2Body.body.getPosition().x, blockB2Body.body.getPosition().y);
-
-
-        // --- LOGIC THẮNG CUỘC / QUA MÀN ---
 
         // Kiểm tra xem đã phá hết gạch VÀ màn chơi này chưa được đánh dấu là "hoàn thành"
         if (levelManager.currentLevel.numOfBlocksLeft - levelManager.currentLevel.numOfUnbreakableBlocksLeft <= 0 && !levelManager.isLevelCompleted) {
@@ -342,7 +358,7 @@ public class CollisionSystem extends IteratingSystem {
 
             } else {
 
-                // --- CHƯA PHẢI MÀN CUỐI (QUA MÀN) ---
+                // CHƯA PHẢI MÀN CUỐI (QUA MÀN)
                 if (levelManager.currentLevel.numOfBlocksLeft - levelManager.currentLevel.numOfUnbreakableBlocksLeft <= 0) {
                     // Hiển thị dialog "Level Complete!"
                     hud.showLevelCompleteDialog();
@@ -353,12 +369,10 @@ public class CollisionSystem extends IteratingSystem {
 
             return; // Thoát hàm vì đã xử lý xong
         }
-        // KẾT THÚC LOGIC THẮNG
-        // --- LOGIC RANDOM POWER-UP ---
         // Tỉ lệ 20% rơi ra power-up (random số từ 1 đến 5, nếu bằng 1 thì rơi)
-        //if (MathUtils.random(1, 2) == 1)
-        // Gọi hàm tạo power-up tại vị trí của gạch
-        spawnPowerUp(blockB2Body.body.getPosition());
+        if (MathUtils.random(1, 2) == 1)
+            // Gọi hàm tạo power-up tại vị trí của gạch
+            spawnPowerUp(blockB2Body.body.getPosition());
     }
 
     /**
@@ -375,9 +389,7 @@ public class CollisionSystem extends IteratingSystem {
         // Tạo một Entity rỗng mới
         Entity powerUpEntity = engine.createEntity();
 
-        // --- Bắt đầu thêm các Component cho Entity này ---
-
-        // 1. Tạo PhysicsBodyComponent
+        //  Tạo PhysicsBodyComponent
         PhysicsBodyComponent b2body = engine.createComponent(PhysicsBodyComponent.class);
         // Dùng BodyFactory để tạo body vật lý
         b2body.body = this.bodyFactory.makeBoxPolyBody(
@@ -393,10 +405,10 @@ public class CollisionSystem extends IteratingSystem {
         b2body.body.setLinearVelocity(0, -1.5f); // Cho vận tốc rơi ban đầu
         b2body.body.setUserData(powerUpEntity); // Gắn Entity vào body (để B2dContactListener nhận diện)
 
-        // --- 2. TextureComponent ---
+        //  TextureComponent
         TextureComponent texture = engine.createComponent(TextureComponent.class);
 
-        // --- 3. PowerUpComponent (chọn loại) ---
+        //  PowerUpComponent (chọn loại)
         PowerUpComponent powerUp = engine.createComponent(PowerUpComponent.class);
 
         int rand = MathUtils.random(1, 100);
@@ -458,14 +470,14 @@ public class CollisionSystem extends IteratingSystem {
         powerUpEntity.add(collider);
 
         engine.addEntity(powerUpEntity);
-        System.out.println("✅ HOÀN TẤT!");
+        System.out.println(" HOÀN TẤT!");
     }
 
     /**
      * Dọn dẹp các tài nguyên mà System này sử dụng.
      */
     public void dispose() {
-        System.out.println("--- DỌN DẸP CollisionSystem (Hạt) ---");
+        System.out.println("DỌN DẸP CollisionSystem");
         // Hủy trình quản lý hạt để tránh rò rỉ bộ nhớ
         if (particlesManager != null) {
             particlesManager.destroy();

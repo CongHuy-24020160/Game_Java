@@ -54,15 +54,6 @@ public class PlayerControlSystem extends IteratingSystem {
 
     @Override
     protected void processEntity(Entity entity, float v) {
-        // Nếu có dialog đang hiển thị hoặc màn chơi đã kết thúc, vô hiệu hóa điều khiển.
-        // FIXME
-        // if( (hud.getDialog() != null && hud.getDialog().isVisible()) || lvlManager.isLevelCompleted ){
-        //     // Dừng paddle lại ngay lập tức
-        //     final PhysicsBodyComponent b2body = b2BodyMapper.get(entity);
-        //     b2body.body.setLinearVelocity(0, 0);
-        //     return; // Bỏ qua phần còn lại của hàm
-        //   }
-
         final PhysicsBodyComponent b2body = b2BodyMapper.get(entity);
         final LinkedEntityComponent attachComponent = attachMapper.get(entity);
         final float width = Utilities.convertToPPM(Utilities.PADDLE_WIDTH); // Giả sử chiều rộng paddle là hằng số
@@ -118,7 +109,7 @@ public class PlayerControlSystem extends IteratingSystem {
             // Chỉ chạy nếu game chưa bị pause
             if (!mainScreen.isPaused()) {
                 mainScreen.pauseGameSystems(); // Dừng game
-                hud.showPauseDialog();       // Hiện hộp thoại (sẽ tạo ở Bước 5)
+                hud.showPauseDialog();       // Hiện hộp thoại
             }
             keyCon.p_pause = false; // Xử lý phím xong, reset ngay
         }

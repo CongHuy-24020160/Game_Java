@@ -12,7 +12,6 @@ public class PowerUpComponent implements Component, Pool.Poolable {
         EXPAND_PADDLE,
         SLOWDOWN_BALL,
         DOUBLE_SCORE
-        // Có thể thêm: MULTI_BALL, MAGNET_PADDLE, SHIELD, etc.
     }
 
     // Enum định nghĩa các loại power-down (hiệu ứng TIÊU CỰC)
@@ -20,7 +19,6 @@ public class PowerUpComponent implements Component, Pool.Poolable {
         LOSE_LIFE,
         SHRINK_PADDLE,
         SPEEDUP_BALL
-        // Có thể thêm: REVERSE_CONTROLS, INVISIBLE_BALL, etc.
     }
 
     // Loại của power-up này

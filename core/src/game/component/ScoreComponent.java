@@ -87,6 +87,6 @@ public class ScoreComponent implements Component, Pool.Poolable {
      * Tính điểm cuối cùng dựa trên base score và multiplier
      */
     public int getFinalScore() {
-        return (int)(baseScore * scoreMultiplier);
+        return (int) (baseScore * scoreMultiplier);
     }
 }

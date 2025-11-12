@@ -24,14 +24,13 @@ public class Utilities {
         switch (lives) {
             case 1:
                 return "Brick2";
-            case 2:
-                return "Brick1";
             case 3:
                 return "Brick3";
             case 5:
                 return "Brick_unbreakable2";
+            case 2:
             default:
-                return "Brick_unbreakable2";
+                return "Brick1";
         }
     }
 }

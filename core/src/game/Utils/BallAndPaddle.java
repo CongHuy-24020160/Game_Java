@@ -1,7 +1,5 @@
 package game.Utils;
 
-// import các package cần thiết
-
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import game.Utilities;
@@ -28,8 +26,6 @@ import game.component.LinkedEntityComponent;
  * - Các Entity (paddle và ball) được giữ ở dạng immutable (final) trong suốt
  * vòng đời của đối tượng
  * BallAndPaddle để tránh thay đổi tham chiếu bất ngờ.
- *
- * @author
  */
 public class BallAndPaddle {
 
@@ -114,35 +110,19 @@ public class BallAndPaddle {
         PhysicsBodyComponent ballBody = bodyMapper.get(ball);
         PhysicsBodyComponent paddleBody = bodyMapper.get(paddle);
 
-        // --- Kiểm tra nhanh (không thay đổi logic) ---
-        // Ở đây chúng ta không thêm kiểm tra null để giữ nguyên logic ban đầu.
-        // Nếu muốn an toàn hơn: kiểm tra ballBody != null && paddleBody != null.
-
-        // Dừng chuyển động của bóng: đặt vận tốc tuyến tính về 0.
-        // Điều này loại bỏ mọi vận tốc hiện tại (cả theo phương x và y).
+        // Dừng chuyển động của bóng
         ballBody.body.setLinearVelocity(0, 0);
 
-        // Đặt lại vị trí bóng lên phía trên paddle.
-        // Lấy toạ độ x của paddle để đảm bảo bóng nằm cùng trục ngang với paddle.
-        float newX = paddleBody.body.getPosition().x;
+        //  Ngủ body để KHÔNG xử lý va chạm
+        ballBody.body.setAwake(false);
 
-        // Đặt y của bóng lên phía trên paddle. Sử dụng Utilities.convertToPPM để quy
-        // đổi
-        // chiều cao paddle (vật lý/hiển thị) sang đơn vị PPM (pixels-per-meter) hoặc
-        // đơn vị engine đang dùng.
-        // Cộng thêm 2 để tạo khoảng đệm nhỏ giữa paddle và bóng.
+        // Đặt lại vị trí bóng lên phía trên paddle
+        float newX = paddleBody.body.getPosition().x;
         float newY = paddleBody.body.getPosition().y + Utilities.convertToPPM(Utilities.PADDLE_HEIGHT + 2);
 
-        // Dịch chuyển (transform) body của bóng tới vị trí mới và đặt góc xoay = 0f.
-        // setTransform(x, y, angle) thường được dùng để dịch chuyển tức thời body trong
-        // Box2D.
         ballBody.body.setTransform(newX, newY, 0f);
 
-        // Cập nhật liên kết: đặt LinkedEntityComponent của paddle để nó "giữ" tham
-        // chiếu tới ball.
-        // LinkedEntityComponent cho phép các hệ thống khác (ví dụ: hệ thống input hoặc
-        // render) biết
-        // paddle đang nắm quả bóng và có thể xử lý tương tác phù hợp.
+        // Cập nhật liên kết
         LinkedEntityComponent link = linkMapper.get(paddle);
         link.setLinkedEntity(ball);
     }

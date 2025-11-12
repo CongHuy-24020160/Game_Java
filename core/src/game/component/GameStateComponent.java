@@ -46,6 +46,7 @@ public class GameStateComponent implements Component, Pool.Poolable {
             }
         }
     }
+
     public boolean isDoubleScoreActive() {
         return doubleScoreTimeLeft > 0;
     }

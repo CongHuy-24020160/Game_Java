@@ -24,9 +24,9 @@ public class GameStateSystem extends IteratingSystem {
         if (gameState != null) {
             gameState.update(deltaTime);
 
-            // Debug: In ra khi còn 3 giây
+            // In ra khi còn 3 giây
             if (gameState.doubleScoreTimeLeft > 0 && gameState.doubleScoreTimeLeft <= 3) {
-                System.out.println("Double Score còn: " + (int)gameState.doubleScoreTimeLeft + "s");
+                System.out.println("Double Score còn: " + (int) gameState.doubleScoreTimeLeft + "s");
             }
         }
     }

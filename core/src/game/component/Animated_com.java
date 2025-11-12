@@ -1,14 +1,11 @@
-// Sau khi có đủ cấu trúc thì import lại package vào đây
-
-// Mỗi "Component" trong game được dùng để lưu trữ dữ liệu hoặc đánh dấu cho một thực thể.
-// 
-// Lớp Animated_com được sử dụng để đánh dấu rằng thực thể này có khả năng hoạt hình (animation),
-// tức là có thể di chuyển, thay đổi khung hình, hoặc có trạng thái chuyển động.
-// 
-// Đây là một "marker component" - không chứa dữ liệu, chỉ dùng để nhận diện.
-// Khi hệ thống animation chạy, nó sẽ kiểm tra các entity có Animated_com
-// để thực hiện việc cập nhật và hiển thị hoạt hình tương ứng.
-//
+/**
+ * Sau khi có đủ cấu trúc thì import lại package vào đây
+ * Mỗi "Component" trong game được dùng để lưu trữ dữ liệu hoặc đánh dấu cho một thực thể.
+ * Lớp Animated_com được sử dụng để đánh dấu rằng thực thể này có khả năng hoạt hình (animation),
+ * tức là có thể di chuyển, thay đổi khung hình, hoặc có trạng thái chuyển động.
+ * Đây là một "marker component" - không chứa dữ liệu, chỉ dùng để nhận diện.
+ * để thực hiện việc cập nhật và hiển thị hoạt hình tương ứng.
+ */
 
 package game.component;
 

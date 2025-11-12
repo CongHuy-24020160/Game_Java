@@ -41,7 +41,6 @@ public class MainScreen implements Screen, ScoreChangeListener {
 
     public boolean gameOverPending = false;
     public int finalScoreForGameOver = 0;
-    public int livesToSubtract = 0;
 
     private CollisionSystem collisionSystem;
     private PhysicSystem physicSystem;
@@ -97,17 +96,15 @@ public class MainScreen implements Screen, ScoreChangeListener {
 
         // Kiểm tra xem có phải là "load game" không?
         if (loadedData != null) {
-            // == LOAD GAME ==
             System.out.println("Đang TẢI game từ dữ liệu đã lưu...");
             levelManager.loadLevel(loadedData.level);
             hud.setLives(loadedData.lives);
             hud.setScore(loadedData.score);
             hud.setLevel(loadedData.level);
         } else {
-            // == NEW GAME == (Như code cũ của bạn)
             System.out.println("Đang TẠO game mới...");
             levelManager.loadLevel(1);
-            hud.setLives(5); // (Hoặc Hud.DEFAULT_LIVES)
+            hud.setLives(5);
             hud.setScore(0);
             hud.setLevel(1);
         }
@@ -172,7 +169,7 @@ public class MainScreen implements Screen, ScoreChangeListener {
                     game.screenManager.changeScreen(ScreenManager.ENDGAME);
                 }
             });
-            return; // THOÁT RENDER ĐỂ TRÁNH UPDATE SAU ĐÓ
+            return;
         }
 
         // Update logic game
@@ -229,14 +226,12 @@ public class MainScreen implements Screen, ScoreChangeListener {
         return gamePaused;
     }
 
-    // ĐÃ XÓA PHẦN BỊ XUNG ĐỘT (CONFLICT)
-
     @Override
     public void resize(int width, int height) {
-        // 1. Cập nhật viewport cho Game (bóng, gạch...)
+        //  Cập nhật viewport cho Game (bóng, gạch...)
         viewport.update(width, height);
 
-        // 2. Cập nhật viewport cho HUD (nút, điểm số, "Game Paused")
+        //  Cập nhật viewport cho HUD (nút, điểm số, "Game Paused")
         hud.getStage().getViewport().update(width, height, true);
     }
 
@@ -261,7 +256,7 @@ public class MainScreen implements Screen, ScoreChangeListener {
 
         pauseGameSystems();
 
-        // ⭐️ ĐỢI 1 FRAME ĐỂ SYSTEMS HOÀN THÀNH
+        //  ĐỢI 1 FRAME ĐỂ SYSTEMS HOÀN THÀNH
         Gdx.app.postRunnable(new Runnable() {
             @Override
             public void run() {

@@ -67,10 +67,6 @@ public class UtilSound {
         return instance;
     }
 
-    // ---------------------------------------------------------
-    // Các phương thức phát âm thanh (Sound Effect Methods)
-    // ---------------------------------------------------------
-
     /**
      * Phát âm thanh khi bóng chạm vào viên gạch.
      * Lấy âm thanh từ assetManager và phát với âm lượng hiện tại trong
