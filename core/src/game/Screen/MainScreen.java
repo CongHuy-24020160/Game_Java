@@ -203,7 +203,7 @@ public class MainScreen implements Screen, ScoreChangeListener {
         if (playerControlSystem != null) playerControlSystem.setProcessing(false);
         if (attachSystem != null) attachSystem.setProcessing(false);
         if (collisionSystem != null) collisionSystem.setProcessing(false); // Dừng xử lý va chạm mới
-        if (soundSystem != null) soundSystem.setProcessing(false);
+       // if (soundSystem != null) soundSystem.setProcessing(false);
         gamePaused = true;
     }
 

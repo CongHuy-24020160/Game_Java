@@ -17,7 +17,6 @@ images/Frame.png
 images/Player.png
 images/Player_flash.png
 images/background.png
-images/background_menu.png
 images/power_down.png
 images/power_up.png
 levels/ArkanoidGame.tsx

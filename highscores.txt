@@ -5,6 +5,6 @@ huynguvailon,2900
 PLAYER,2900
 PLAYER,2900
 W_D,2700
+whysoserious,1900
 kaka,700
 haha,300
-PLAYER,300

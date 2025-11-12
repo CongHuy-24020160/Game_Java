@@ -26,6 +26,6 @@ public class SoundEffectComponent implements Component, Pool.Poolable {
 
     @Override
     public void reset() {
-        dispose();
+        //dispose();
     }
 }
