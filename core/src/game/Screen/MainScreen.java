@@ -18,6 +18,7 @@ import game.*;
 import game.LoadAssets.BodyFactory;
 import game.Utils.ParticleHandler;
 import game.Utils.ScoreManager;
+import game.Utils.UtilSound;
 import game.component.GameStateComponent;
 import game.controller.KeyboardController;
 import game.data.GameData;
@@ -167,6 +168,7 @@ public class MainScreen implements Screen, ScoreChangeListener {
                 } else {
                     game.lastScore = score;
                     game.screenManager.changeScreen(ScreenManager.ENDGAME);
+                    UtilSound.getInstance().playGameOver();
                 }
             });
             return;
@@ -282,12 +284,12 @@ public class MainScreen implements Screen, ScoreChangeListener {
                     hud.dispose();
                     hud = null;
                 }
-                if (levelManager != null) {
-                    levelManager.dispose();
-                    levelManager = null;
-                }
+                //if (levelManager != null) {
+                 //   levelManager.dispose();
+                 //   levelManager = null;
+                //}
                 BodyFactory.destroyInstance();
-                System.out.println("--- DỌN DẸP HOÀN TẤT ---");
+                System.out.println("DỌN DẸP HOÀN TẤT");
             }
         });
     }

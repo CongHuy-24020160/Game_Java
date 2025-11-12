@@ -14,6 +14,7 @@ import game.Hud;
 import game.LoadAssets.BodyFactory;
 import game.Screen.MainScreen;
 import game.Utilities;
+import game.Utils.UtilSound;
 import game.component.*;
 import game.component.TypeComponent;
 import game.level.LevelManager;
@@ -154,10 +155,12 @@ public class CollisionSystem extends IteratingSystem {
             case TypeComponent.PLAYER_TYPE:
                 // Nếu là thanh trượt
                 handleBallPlayerCollision(ballEntity, otherEntity);
+                UtilSound.getInstance().playDingSound1();
                 break;
             case TypeComponent.BLOCK_TYPE:
                 // Nếu là gạch
                 handleBallBlockCollision(ballEntity, otherEntity);
+                UtilSound.getInstance().playDingSound2();
                 break;
         }
     }

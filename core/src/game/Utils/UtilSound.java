@@ -1,5 +1,6 @@
 package game.Utils;
 
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 // Đường dẫn của GameSettings — cần sửa lại nếu package khác
 import game.GameSettings;
@@ -66,7 +67,6 @@ public class UtilSound {
         }
         return instance;
     }
-
     /**
      * Phát âm thanh khi bóng chạm vào viên gạch.
      * Lấy âm thanh từ assetManager và phát với âm lượng hiện tại trong
@@ -74,7 +74,12 @@ public class UtilSound {
      */
     public void playDingSound1() {
         Sound dingSound1 = assetManager.manager.get(assetManager.hitBrickSound);
-        dingSound1.play(GameSettings.getInstance().getSoundVolume());
+        if (dingSound1 == null)
+            System.out.println(" Sound hitBrickSound == null!");
+        else {
+                System.out.println("✅ Sound hitBrickSound loaded OK");
+                dingSound1.play(GameSettings.getInstance().getSoundVolume());
+            }
     }
 
     /**
@@ -110,8 +115,18 @@ public class UtilSound {
      * {@link com.badlogic.gdx.audio.Music} thay vì {@link Sound}.
      */
     public void playBackgroundMusic() {
-        Sound backgroundMusic = assetManager.manager.get(assetManager.backgroundMusic);
-        // Hiện chưa gọi play() vì âm nhạc nền thường cần cơ chế lặp (loop) — dùng Music
-        // class thì phù hợp hơn.
+        Music backgroundMusic = assetManager.manager.get(assetManager.backgroundMusic, Music.class);
+        backgroundMusic.setLooping(true);
+        backgroundMusic.setVolume(GameSettings.getInstance().getMusicVolume());
+        if (GameSettings.getInstance().isMusicEnabled()) {
+            backgroundMusic.play();
+        } else {
+            backgroundMusic.pause();
+        }
+    }
+
+    public void pauseBackgroundMusic() {
+        Music backgroundMusic = assetManager.manager.get(assetManager.backgroundMusic, Music.class);
+        backgroundMusic.pause();
     }
 }

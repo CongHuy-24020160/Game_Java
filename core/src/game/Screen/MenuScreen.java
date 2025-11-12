@@ -17,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import game.ArkanoidGame;
+import game.Utils.UtilSound;
 import game.data.GameData;
 import game.Utilities;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -35,6 +36,7 @@ public class MenuScreen implements Screen {
     private Label title;
     private TextButton startGame, settings, exit, highScores, continueButton;
     private Music backgroundMusic;
+    private UtilSound utilSound;
 
 
     /**
@@ -57,15 +59,7 @@ public class MenuScreen implements Screen {
         // 2. Tìm ảnh nền "background" (tên file .png) bên trong atlas
         this.backgroundTexture = atlas.findRegion("background_menu");
         // --- KẾT THÚC THÊM ---
-        this.backgroundMusic = game.assetManager.manager.get(game.assetManager.backgroundMusic, Music.class);
-
-        backgroundMusic.setLooping(true);
-        backgroundMusic.setVolume(game.getGameSettings().getMusicVolume());
-        if (game.getGameSettings().isMusicEnabled()) {
-            backgroundMusic.play();
-        } else {
-            backgroundMusic.pause();
-        }
+        utilSound.getInstance().playBackgroundMusic();
 
         // --- Bắt đầu xây dựng UI ---
         stage.clear();
@@ -108,6 +102,7 @@ public class MenuScreen implements Screen {
                 GameData.clear(); // Xóa file save khi bắt đầu game mới
                 ArkanoidGame.IS_LOADING_SAVE_GAME = false;
                 game.screenManager.changeScreen(ScreenManager.APPLICATION);
+                UtilSound.getInstance().pauseBackgroundMusic();
             }
         });
 
