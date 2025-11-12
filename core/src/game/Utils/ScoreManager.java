@@ -4,8 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -165,12 +163,9 @@ public class ScoreManager {
      * Sắp xếp danh sách điểm, từ cao nhất đến thấp nhất.
      */
     private void sortScores(List<ScoreEntry> scores) {
-        Collections.sort(scores, new Comparator<ScoreEntry>() {
-            @Override
-            public int compare(ScoreEntry o1, ScoreEntry o2) {
-                // Sắp xếp giảm dần (descending)
-                return Integer.compare(o2.score, o1.score);
-            }
+        scores.sort((o1, o2) -> {
+            // Sắp xếp giảm dần (descending)
+            return Integer.compare(o2.score, o1.score);
         });
     }
 

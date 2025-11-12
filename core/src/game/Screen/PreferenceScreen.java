@@ -20,13 +20,11 @@ import game.ArkanoidGame;
 import game.Utilities;
 
 public class PreferenceScreen implements Screen {
-    private ArkanoidGame game;
-    private Viewport viewport;
-    private Stage stage;
+    private final ArkanoidGame game;
+    private final Stage stage;
     private TextureRegion backgroundTexture;
-    private Skin skin;
     private Music backgroundMusic;
-    private Sound ding1Sound, ding2Sound;
+    private Sound ding1Sound;
 
     /**
      * Hàm khởi tạo chỉ nên làm những việc cơ bản nhất,
@@ -34,21 +32,17 @@ public class PreferenceScreen implements Screen {
      */
     public PreferenceScreen(ArkanoidGame game) {
         this.game = game;
-        this.viewport = new FitViewport(Utilities.VIRTUAL_WIDTH, Utilities.VIRTUAL_HEIGHT);
+        Viewport viewport = new FitViewport(Utilities.VIRTUAL_WIDTH, Utilities.VIRTUAL_HEIGHT);
         this.stage = new Stage(viewport);
     }
 
     @Override
     public void show() {
-        // LẤY TÀI NGUYÊN Ở ĐÂY
-        this.skin = game.assetManager.manager.get(game.assetManager.skin, Skin.class);
+        Skin skin = game.assetManager.manager.get(game.assetManager.skin, Skin.class);
         this.backgroundMusic = game.assetManager.manager.get(game.assetManager.backgroundMusic, Music.class);
         this.ding1Sound = game.assetManager.manager.get(game.assetManager.hitBrickSound, Sound.class);
-        this.ding2Sound = game.assetManager.manager.get(game.assetManager.hitWallSound, Sound.class);
 
-        //  Lấy atlas
         TextureAtlas atlas = game.assetManager.manager.get(game.assetManager.gameImagaes, TextureAtlas.class);
-        //  Tìm ảnh nền "background" (tên file .png) bên trong atlas
         this.backgroundTexture = atlas.findRegion("background");
         stage.clear();
         Gdx.input.setInputProcessor(stage);
@@ -82,7 +76,7 @@ public class PreferenceScreen implements Screen {
             @Override
             public void touchDragged(InputEvent event, float x, float y, int pointer) {
                 if (game.getGameSettings().isSoundEnabled()) {
-                    game.getGameSettings().setMusicVolume(volumeSoundSlider.getValue());
+                    game.getGameSettings().setSoundVolume(volumeSoundSlider.getValue());
                     long id = ding1Sound.play();
                     ding1Sound.setVolume(id, volumeSoundSlider.getValue());
                 }
@@ -94,7 +88,7 @@ public class PreferenceScreen implements Screen {
         backButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.screenManager.changeScreen(ScreenManager.MENU);
+                ScreenManager.changeScreen(ScreenManager.MENU);
             }
         });
 

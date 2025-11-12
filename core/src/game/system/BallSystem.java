@@ -14,8 +14,6 @@ import game.component.BallComponent;
 import game.component.PlayerIn4Component;
 import game.level.LevelManager;
 import game.Utils.UtilSound;
-import game.Utils.ScoreManager;
-import game.Screen.ScreenManager;
 
 /**
  * System quản lý các logic đặc thù của quả bóng,
@@ -25,12 +23,12 @@ public class BallSystem extends IteratingSystem {
     // tốc độ mặc định của bóng.
     public static final float DEFAULT_BALL_SPEED = 5f;
 
-    private ComponentMapper<BallComponent> ballMapper = ComponentMapper.getFor(BallComponent.class);
-    private ComponentMapper<PhysicsBodyComponent> b2bodyMapper = ComponentMapper.getFor(PhysicsBodyComponent.class);
+    private final ComponentMapper<BallComponent> ballMapper = ComponentMapper.getFor(BallComponent.class);
+    private final ComponentMapper<PhysicsBodyComponent> b2bodyMapper = ComponentMapper.getFor(PhysicsBodyComponent.class);
 
     private final Hud hud;
     private final LevelManager levelManager;
-    private MainScreen mainScreen;
+    private final MainScreen mainScreen;
 
 
     public BallSystem(Hud hud, LevelManager levelManager, MainScreen mainScreen) {
@@ -49,14 +47,10 @@ public class BallSystem extends IteratingSystem {
         if (ballB2body.isDead)
             return;
 
-        //  CHẠY CÁC HÀM CŨ TRƯỚC
         // Hàm này có thể sẽ gọi reverseX/reverseY và làm hỏng vận tốc Y
         handleScreenBoundaryCollisions(ballC, ballB2body);
         handleOutOfBounds(ballC, ballB2body);
 
-
-        //  CHẠY CODE SỬA LỖI (CHỐNG KẸT/VĂNG) SAU CÙNG
-        // Code này sẽ "ghi đè" lên bất kỳ lỗi nào do reverseX gây ra
         if (!ballC.canLinked) {
 
             Vector2 currentVelocity = ballB2body.body.getLinearVelocity();
@@ -181,7 +175,8 @@ public class BallSystem extends IteratingSystem {
             if (playerInfo != null) {
                 // Reset về kích thước ban đầu
                 playerInfo.resetLength();
-                System.out.println("⚡ RESET Paddle về kích thước ban đầu!");
+                if (ArkanoidGame.DEBUG_MODE)
+                    System.out.println("⚡ RESET Paddle về kích thước ban đầu!");
             }
         }
     }

@@ -2,6 +2,7 @@ package game.component;
 
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
+import game.ArkanoidGame;
 
 /**
  * Lớp {@code LinkedEntityComponent} là một thành phần (component) trong hệ thống ECS (Entity Component System)
@@ -45,7 +46,7 @@ public class LinkedEntityComponent implements Component {
      * @param carry thực thể được gán làm đối tượng liên kết (thực thể mà thực thể hiện tại gắn với).
      */
     public void setLinkedEntity(Entity carry) {
-        System.out.println(carry);
+        if(ArkanoidGame.DEBUG_MODE) System.out.println(carry);
         this.LinkedEntity = carry;
     }
 }

@@ -23,28 +23,23 @@ import game.Utils.ScoreManager;
 import java.util.List;
 
 public class HighScoreScreen implements Screen {
-    private ArkanoidGame game;
-    private Viewport viewport;
-    private Stage stage;
+    private final ArkanoidGame game;
+    private final Stage stage;
 
-    private Skin skin;
-    private BitmapFont font;
     private TextureRegion backgroundTexture;
 
     public HighScoreScreen(ArkanoidGame game) {
         this.game = game;
-        this.viewport = new FitViewport(Utilities.VIRTUAL_WIDTH, Utilities.VIRTUAL_HEIGHT);
+        Viewport viewport = new FitViewport(Utilities.VIRTUAL_WIDTH, Utilities.VIRTUAL_HEIGHT);
         this.stage = new Stage(viewport);
     }
 
     @Override
     public void show() {
-        this.skin = game.assetManager.manager.get(game.assetManager.skin, Skin.class);
-        this.font = game.assetManager.manager.get(game.assetManager.gameFont, BitmapFont.class);
+        Skin skin = game.assetManager.manager.get(game.assetManager.skin, Skin.class);
+        BitmapFont font = game.assetManager.manager.get(game.assetManager.gameFont, BitmapFont.class);
 
-        //  Lấy atlas
         TextureAtlas atlas = game.assetManager.manager.get(game.assetManager.gameImagaes, TextureAtlas.class);
-        //  Tìm ảnh nền "background" (tên file .png) bên trong atlas
         this.backgroundTexture = atlas.findRegion("background");
 
         Gdx.input.setInputProcessor(stage);
@@ -85,7 +80,7 @@ public class HighScoreScreen implements Screen {
         backButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.screenManager.changeScreen(ScreenManager.MENU);
+                ScreenManager.changeScreen(ScreenManager.MENU);
             }
         });
         table.add(backButton).width(200).height(50);

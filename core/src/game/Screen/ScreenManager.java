@@ -12,16 +12,9 @@ public class ScreenManager {
     public static final int APPLICATION = 2;
     public static final int ENDGAME = 3;
     public static final int LOADING = 4;
-    public static final int HIGHSCORE = 5;       // ⭐️ THÊM DÒNG NÀY ⭐
+    public static final int HIGHSCORE = 5;
     public static final int ENTER_HIGHSCORE = 6;
 
-    // screens to load
-    private LoadingScreen loadingScreen;
-    private PreferenceScreen preferencesScreen;
-    private MenuScreen menuScreen;
-    private MainScreen mainScreen;
-    private EndScreen endScreen;
-    private HighScoreScreen highScoreScreen;
     private static Screen currentScreen;
 
     private static ScreenManager instance;
@@ -34,7 +27,7 @@ public class ScreenManager {
     }
 
     public ScreenManager(ArkanoidGame game) {
-        this.game = game;
+        ScreenManager.game = game;
     }
 
     /**

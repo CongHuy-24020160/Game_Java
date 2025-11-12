@@ -19,10 +19,10 @@ import game.ArkanoidGame;
 import game.Utilities;
 
 public class EndScreen implements Screen {
-    private ArkanoidGame game;
+    private final ArkanoidGame game;
     private Stage stage;
-    private Skin skin;
-    private int score;
+    private final Skin skin;
+    private final int score;
     private World world;
     private Engine engine;
     private TextureRegion backgroundTexture;
@@ -43,7 +43,6 @@ public class EndScreen implements Screen {
 
     private void createUI() {
         TextureAtlas atlas = game.assetManager.manager.get(game.assetManager.gameImagaes, TextureAtlas.class);
-        // 2. Tìm ảnh nền "background" (tên file .png) bên trong atlas
         this.backgroundTexture = atlas.findRegion("background");
         stage.clear();
         Gdx.input.setInputProcessor(stage);
@@ -51,13 +50,13 @@ public class EndScreen implements Screen {
         table.setFillParent(true);
         stage.addActor(table);
 
-        // === TIÊU ĐỀ ===
+        //TIÊU ĐỀ
         Label title = new Label("GAME OVER", skin, "title");
         title.setFontScale(1.75f);
         title.setColor(Color.RED); // Đỏ
         table.add(title).padBottom(20).row();
 
-        // === ĐIỂM SỐ ===
+        //ĐIỂM SỐ
         Label.LabelStyle ls = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
         ls.fontColor = Color.GOLD;
         Label scoreLabel = new Label("Score: " + score, ls);
@@ -65,7 +64,7 @@ public class EndScreen implements Screen {
         table.add(scoreLabel).padBottom(25).row();
 
 
-        // === NÚT RETRY ===
+        //NÚT RETRY
         TextButton retryButton = new TextButton("RETRY", skin);
         retryButton.getLabel().setFontScale(1.1f);
         retryButton.addListener(new ClickListener() {
@@ -76,7 +75,7 @@ public class EndScreen implements Screen {
         });
         table.add(retryButton).width(300).height(70).padBottom(25).row();
 
-        // === NÚT MENU ===
+        //NÚT MENU
         TextButton menuButton = new TextButton("MENU", skin);
         menuButton.getLabel().setFontScale(1.1f);
         menuButton.addListener(new ClickListener() {
@@ -87,7 +86,7 @@ public class EndScreen implements Screen {
         });
         table.add(menuButton).width(300).height(70).padBottom(25).row();
 
-        // === NÚT EXIT ===
+        //NÚT EXIT
         TextButton exitButton = new TextButton("EXIT GAME", skin);
         exitButton.getLabel().setFontScale(1.1f);
         exitButton.addListener(new ChangeListener() {
@@ -110,19 +109,19 @@ public class EndScreen implements Screen {
 
         stage.getViewport().apply();
 
-        // 2. Lấy batch (cọ vẽ) của stage và thiết lập
+        //  Lấy batch (cọ vẽ) của stage và thiết lập
         stage.getBatch().setProjectionMatrix(stage.getCamera().combined);
 
-        // 3. Bắt đầu vẽ
+        //  Bắt đầu vẽ
         stage.getBatch().begin();
 
-        // 4. VẼ ẢNH NỀN (vừa với kích thước ảo)
+        //  VẼ ẢNH NỀN (vừa với kích thước ảo)
         stage.getBatch().draw(backgroundTexture,
             0, 0,
             Utilities.VIRTUAL_WIDTH,
             Utilities.VIRTUAL_HEIGHT);
 
-        // 5. Kết thúc vẽ batch
+        //  Kết thúc vẽ batch
         stage.getBatch().end();
         stage.act(delta);
         stage.draw();

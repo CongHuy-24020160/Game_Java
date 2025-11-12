@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import game.ArkanoidGame;
 import game.component.GameStateComponent;
 
 /**
@@ -11,7 +12,7 @@ import game.component.GameStateComponent;
  */
 public class GameStateSystem extends IteratingSystem {
 
-    private ComponentMapper<GameStateComponent> gameStateMapper = ComponentMapper.getFor(GameStateComponent.class);
+    private final ComponentMapper<GameStateComponent> gameStateMapper = ComponentMapper.getFor(GameStateComponent.class);
 
     public GameStateSystem() {
         super(Family.all(GameStateComponent.class).get());
@@ -26,7 +27,8 @@ public class GameStateSystem extends IteratingSystem {
 
             // In ra khi còn 3 giây
             if (gameState.doubleScoreTimeLeft > 0 && gameState.doubleScoreTimeLeft <= 3) {
-                System.out.println("Double Score còn: " + (int) gameState.doubleScoreTimeLeft + "s");
+                if (ArkanoidGame.DEBUG_MODE)
+                    System.out.println("Double Score còn: " + (int) gameState.doubleScoreTimeLeft + "s");
             }
         }
     }

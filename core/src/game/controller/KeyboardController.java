@@ -47,8 +47,8 @@ public class KeyboardController implements InputProcessor {
      */
 
     public boolean hasMouseMoved = false;
-
-    public boolean mouseClick; // Trạng thái nhấn chuột
+    // Trạng thái nhấn chuột
+    public boolean mouseClick;
 
     public KeyboardController() {
         mouseLocation = new Vector2();
@@ -126,7 +126,8 @@ public class KeyboardController implements InputProcessor {
         boolean keyProcessed = false;
 
         switch (keycode) {
-            case Input.Keys.A: // A or left  sang trai
+            // A or left  sang trai
+            case Input.Keys.A:
             case Input.Keys.LEFT:
                 if (ArkanoidGame.DEBUG_MODE)
                     System.out.println("(KeyboardController) Released A/Left");
@@ -150,11 +151,12 @@ public class KeyboardController implements InputProcessor {
                 break;
             // esc = out game
             case Input.Keys.ESCAPE:
-                System.out.println("Releasing Escape key");
+                if(ArkanoidGame.DEBUG_MODE)
+                    System.out.println("Releasing Escape key");
                 escape = false;
                 keyProcessed = true;
                 break;
-            case Input.Keys.P: // ⭐️ THÊM CASE NÀY
+            case Input.Keys.P:
                 p_pause = false;
                 keyProcessed = true;
                 break;
@@ -178,7 +180,7 @@ public class KeyboardController implements InputProcessor {
         mouseLocation.set(screenX, screenY);
         // Đặt cờ thành true để PlayerControlSystem biết và xử lý
         hasMouseMoved = true;
-        return true; // Trả về true để báo rằng ta đã xử lý sự kiện này
+        return true;
     }
 
 
@@ -191,9 +193,9 @@ public class KeyboardController implements InputProcessor {
         // Kiểm tra xem có phải là chuột phải không
         if (button == Input.Buttons.RIGHT || button == Input.Buttons.LEFT) {
             mouseClick = true; // Đặt cờ thành true
-            return true; // Đã xử lý
+            return true;
         }
-        return false; // Bỏ qua các nút chuột khác
+        return false;
     }
 
     /**
@@ -204,9 +206,9 @@ public class KeyboardController implements InputProcessor {
         // Kiểm tra xem có phải là chuột phải không
         if (button == Input.Buttons.RIGHT || button == Input.Buttons.LEFT) {
             mouseClick = false; // Đặt cờ thành false
-            return true; // Đã xử lý
+            return true;
         }
-        return false; // Bỏ qua các nút chuột khác
+        return false;
     }
 
     /**

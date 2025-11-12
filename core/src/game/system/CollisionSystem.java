@@ -36,16 +36,14 @@ import game.Screen.ScreenManager;
  */
 public class CollisionSystem extends IteratingSystem {
 
-    private ArkanoidGame game;
-    private PooledEngine engine;
-    private World world;
-    private BodyFactory bodyFactory;
-    private ScoreChangeListener scoreChangeListener;
-    private LevelManager levelManager;
-    private Hud hud;
+    private final ArkanoidGame game;
+    private final BodyFactory bodyFactory;
+    private final ScoreChangeListener scoreChangeListener;
+    private final LevelManager levelManager;
+    private final Hud hud;
     public ParticleHandler particlesManager;
 
-    private MainScreen mainScreen;
+    private final MainScreen mainScreen;
 
     /**
      * Hàm khởi tạo (Constructor) của CollisionSystem.
@@ -53,14 +51,13 @@ public class CollisionSystem extends IteratingSystem {
      * Nhận vào tất cả các đối tượng quản lý cần thiết từ MainScreen (Dependency Injection).
      *
      * @param mainScreen          Màn hình game chính
-     * @param engine              Engine ECS
      * @param world               Thế giới vật lý Box2D
      * @param hud                 Quản lý giao diện
      * @param levelManager        Quản lý màn chơi
      * @param scoreChangeListener Đối tượng lắng nghe sự kiện thay đổi điểm
      * @param game                Đối tượng ArkanoidGame chính
      */
-    public CollisionSystem(MainScreen mainScreen, PooledEngine engine, World world, Hud hud,
+    public CollisionSystem(MainScreen mainScreen, World world, Hud hud,
                            LevelManager levelManager, ScoreChangeListener scoreChangeListener, ArkanoidGame game) {
         super(Family.all(
             ColliderComponent.class,
@@ -72,8 +69,6 @@ public class CollisionSystem extends IteratingSystem {
         this.scoreChangeListener = scoreChangeListener;
         this.levelManager = levelManager;
         this.hud = hud;
-        this.engine = engine;
-        this.world = world;
         this.game = game;
 
         // Lấy một thể hiện (instance) của BodyFactory
@@ -159,7 +154,7 @@ public class CollisionSystem extends IteratingSystem {
                 break;
             case TypeComponent.BLOCK_TYPE:
                 // Nếu là gạch
-                handleBallBlockCollision(ballEntity, otherEntity);
+                handleBallBlockCollision(otherEntity);
                 UtilSound.getInstance().playHitBrickSound();
                 break;
         }
@@ -276,10 +271,9 @@ public class CollisionSystem extends IteratingSystem {
     /**
      * Xử lý logic khi bóng va chạm với gạch (Block).
      *
-     * @param ballEntity  Entity của bóng
      * @param blockEntity Entity của gạch
      */
-    private void handleBallBlockCollision(Entity ballEntity, Entity blockEntity) {
+    private void handleBallBlockCollision(Entity blockEntity) {
         // Lấy body vật lý của gạch
         final PhysicsBodyComponent blockB2Body = b2BodyC.get(blockEntity);
         // if the block is unbreakable, do nothing
@@ -301,9 +295,8 @@ public class CollisionSystem extends IteratingSystem {
             return;
         }
 
-        // --- TỪ ĐÂY TRỞ XUỐNG: Code chỉ chạy khi GẠCH BỊ PHÁ HỦY (lives <= 0) ---
-
-        System.out.println("ĐÃ PHÁ GẠCH!");
+        if (ArkanoidGame.DEBUG_MODE)
+            System.out.println("ĐÃ PHÁ GẠCH!");
 
         // Giảm số gạch còn lại của màn chơi
         levelManager.currentLevel.numOfBlocksLeft--;
@@ -325,7 +318,8 @@ public class CollisionSystem extends IteratingSystem {
         scoreChangeListener.onScoreChanged(finalScoree);
 
         if (multiplier > 1.0f) {
-            System.out.println("🎯 Cộng " + finalScoree + " điểm (x" + multiplier + ")");
+            if (ArkanoidGame.DEBUG_MODE)
+                System.out.println("🎯 Cộng " + finalScoree + " điểm (x" + multiplier + ")");
         }
 
         // Đánh dấu body vật lý này là "sẽ bị phá hủy" (sẽ được PhysicSystem dọn dẹp)
@@ -353,10 +347,10 @@ public class CollisionSystem extends IteratingSystem {
                 // Kiểm tra xem có phải điểm cao không
                 if (ScoreManager.getInstance().isHighScore(finalScore)) {
                     game.lastScore = finalScore; // Lưu điểm để EnterHighScoreScreen lấy
-                    game.screenManager.changeScreen(ScreenManager.ENTER_HIGHSCORE);
+                    ScreenManager.changeScreen(ScreenManager.ENTER_HIGHSCORE);
                 } else {
                     // Nếu không phải điểm cao, đến màn hình kết thúc
-                    game.screenManager.changeScreen(ScreenManager.ENDGAME);
+                    ScreenManager.changeScreen(ScreenManager.ENDGAME);
                 }
 
             } else {
@@ -372,7 +366,7 @@ public class CollisionSystem extends IteratingSystem {
                 }
             }
 
-            return; // Thoát hàm vì đã xử lý xong
+            return;
         }
 
         // Tỉ lệ 20% rơi ra power-up (random số từ 1 đến 5, nếu bằng 1 thì rơi)
@@ -388,7 +382,8 @@ public class CollisionSystem extends IteratingSystem {
      * @param position Vị trí (tọa độ) của viên gạch đã vỡ
      */
     private void spawnPowerUp(Vector2 position) {
-        System.out.println("ĐANG TẠO POWER-UP");
+        if (ArkanoidGame.DEBUG_MODE)
+            System.out.println("ĐANG TẠO POWER-UP");
 
         // Lấy engine ECS (vì chúng ta đang ở trong 1 system)
         PooledEngine engine = (PooledEngine) getEngine();
@@ -426,38 +421,45 @@ public class CollisionSystem extends IteratingSystem {
         if (rand <= 18) {
             powerUp.powerUpType = PowerUpComponent.PowerUpType.EXTRA_LIFE;
             tex = levelManager.currentLevel.getTextures().findRegion("power_up");
-            System.out.println(" EXTRA_LIFE (18%)");
+            if (ArkanoidGame.DEBUG_MODE)
+                System.out.println(" EXTRA_LIFE (18%)");
 
         } else if (rand <= 36) {
             powerUp.powerUpType = PowerUpComponent.PowerUpType.DOUBLE_SCORE;
             tex = levelManager.currentLevel.getTextures().findRegion("power_up");
-            System.out.println(" DOUBLE_SCORE (18%)");
+            if (ArkanoidGame.DEBUG_MODE)
+                System.out.println(" DOUBLE_SCORE (18%)");
 
         } else if (rand <= 54) {
             powerUp.powerUpType = PowerUpComponent.PowerUpType.EXPAND_PADDLE;
             tex = levelManager.currentLevel.getTextures().findRegion("power_up");
-            System.out.println(" EXPAND_PADDLE (18%)");
+            if (ArkanoidGame.DEBUG_MODE)
+                System.out.println(" EXPAND_PADDLE (18%)");
 
         } else if (rand <= 70) {
             powerUp.powerUpType = PowerUpComponent.PowerUpType.SLOWDOWN_BALL;
             tex = levelManager.currentLevel.getTextures().findRegion("power_up");
-            System.out.println("SLOWDOWN_BALL (16%)");
+            if (ArkanoidGame.DEBUG_MODE)
+                System.out.println("SLOWDOWN_BALL (16%)");
 
             // POWER-DOWNS (tổng 30%)
         } else if (rand <= 80) {
             powerUp.powerDownType = PowerUpComponent.PowerDownType.SHRINK_PADDLE;
             tex = levelManager.currentLevel.getTextures().findRegion("power_down");
-            System.out.println(" SHRINK_PADDLE (10%)");
+            if (ArkanoidGame.DEBUG_MODE)
+                System.out.println(" SHRINK_PADDLE (10%)");
 
         } else if (rand <= 90) {
             powerUp.powerDownType = PowerUpComponent.PowerDownType.SPEEDUP_BALL;
             tex = levelManager.currentLevel.getTextures().findRegion("power_down");
-            System.out.println(" SPEEDUP_BALL (10%)");
+            if (ArkanoidGame.DEBUG_MODE)
+                System.out.println(" SPEEDUP_BALL (10%)");
 
         } else {
             powerUp.powerDownType = PowerUpComponent.PowerDownType.LOSE_LIFE;
             tex = levelManager.currentLevel.getTextures().findRegion("power_down");
-            System.out.println(" LOSE_LIFE (10%)");
+            if (ArkanoidGame.DEBUG_MODE)
+                System.out.println(" LOSE_LIFE (10%)");
         }
 
         // Fallback texture
@@ -477,14 +479,16 @@ public class CollisionSystem extends IteratingSystem {
         powerUpEntity.add(collider);
 
         engine.addEntity(powerUpEntity);
-        System.out.println(" HOÀN TẤT!");
+        if (ArkanoidGame.DEBUG_MODE)
+            System.out.println(" HOÀN TẤT!");
     }
 
     /**
      * Dọn dẹp các tài nguyên mà System này sử dụng.
      */
     public void dispose() {
-        System.out.println("DỌN DẸP CollisionSystem");
+        if (ArkanoidGame.DEBUG_MODE)
+            System.out.println("DỌN DẸP CollisionSystem");
         // Hủy trình quản lý hạt để tránh rò rỉ bộ nhớ
         if (particlesManager != null) {
             particlesManager.destroy();

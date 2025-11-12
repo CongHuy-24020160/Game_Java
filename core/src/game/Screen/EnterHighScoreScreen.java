@@ -20,23 +20,14 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import game.ArkanoidGame;
 import game.Utilities;
 import game.Utils.ScoreManager;
-import game.Utils.UtilSound;
 
 public class EnterHighScoreScreen implements Screen {
-    private ArkanoidGame game;
-    private Stage stage;
+    private final ArkanoidGame game;
+    private final Stage stage;
 
-    private Skin skin;
-    private BitmapFont font;
-    private Table table;
-
-    private Label titleLabel;
-    private Label scoreLabel;
-    private Label maxScoreLabel;
     private TextField nameField;
-    private TextButton submitButton;
 
-    private int currentScore;
+    private final int currentScore;
     private TextureRegion backgroundTexture;
 
     public EnterHighScoreScreen(ArkanoidGame game) {
@@ -51,8 +42,8 @@ public class EnterHighScoreScreen implements Screen {
 
     @Override
     public void show() {
-        this.skin = game.assetManager.manager.get(game.assetManager.skin, Skin.class);
-        this.font = game.assetManager.manager.get(game.assetManager.gameFont, BitmapFont.class);
+        Skin skin = game.assetManager.manager.get(game.assetManager.skin, Skin.class);
+        BitmapFont font = game.assetManager.manager.get(game.assetManager.gameFont, BitmapFont.class);
 
         //  Lấy atlas
         TextureAtlas atlas = game.assetManager.manager.get(game.assetManager.gameImagaes, TextureAtlas.class);
@@ -62,7 +53,7 @@ public class EnterHighScoreScreen implements Screen {
         Gdx.input.setInputProcessor(stage);
         stage.clear();
 
-        table = new Table();
+        Table table = new Table();
         table.setFillParent(true);
 
         int bestScore = ScoreManager.getInstance().getHighestScore();
@@ -73,17 +64,17 @@ public class EnterHighScoreScreen implements Screen {
         String titleText = isNewRecord ? "NEW RECORD!" : "SCORE!";
         Color titleColor = isNewRecord ? Color.RED : Color.YELLOW;
 
-        titleLabel = new Label(titleText, new Label.LabelStyle(font, titleColor));
+        Label titleLabel = new Label(titleText, new Label.LabelStyle(font, titleColor));
 
         // HIỂN THỊ ĐIỂM CAO NHẤT
-        maxScoreLabel = new Label("Best: " + ScoreManager.getInstance().getHighestScore(),
+        Label maxScoreLabel = new Label("Best: " + ScoreManager.getInstance().getHighestScore(),
             new Label.LabelStyle(font, Color.GOLD));
-        scoreLabel = new Label("Your Score: " + currentScore, new Label.LabelStyle(font, Color.WHITE));
+        Label scoreLabel = new Label("Your Score: " + currentScore, new Label.LabelStyle(font, Color.WHITE));
 
         nameField = new TextField("", skin);
         nameField.setMessageText("Enter Your Name");
 
-        submitButton = new TextButton("Submit", skin);
+        TextButton submitButton = new TextButton("Submit", skin);
         submitButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -114,7 +105,7 @@ public class EnterHighScoreScreen implements Screen {
         }
 
         ScoreManager.getInstance().addScore(playerName, this.currentScore);
-        game.screenManager.changeScreen(ScreenManager.HIGHSCORE);
+        ScreenManager.changeScreen(ScreenManager.HIGHSCORE);
     }
 
     @Override
@@ -122,22 +113,22 @@ public class EnterHighScoreScreen implements Screen {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        // 1. Cập nhật viewport của stage
+        //  Cập nhật viewport của stage
         stage.getViewport().apply();
 
-        // 2. Lấy batch (cọ vẽ) của stage và thiết lập
+        //  Lấy batch (cọ vẽ) của stage và thiết lập
         stage.getBatch().setProjectionMatrix(stage.getCamera().combined);
 
-        // 3. Bắt đầu vẽ
+        //  Bắt đầu vẽ
         stage.getBatch().begin();
 
-        // 4. VẼ ẢNH NỀN (vừa với kích thước ảo)
+        //  VẼ ẢNH NỀN (vừa với kích thước ảo)
         stage.getBatch().draw(backgroundTexture,
             0, 0,
             Utilities.VIRTUAL_WIDTH,
             Utilities.VIRTUAL_HEIGHT);
 
-        // 5. Kết thúc vẽ batch
+        //  Kết thúc vẽ batch
         stage.getBatch().end();
 
         stage.act(delta);

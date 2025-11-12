@@ -9,8 +9,6 @@ public class B2dContactListener implements ContactListener {
     public void beginContact(Contact contact) {
         Fixture fa = contact.getFixtureA();
         Fixture fb = contact.getFixtureB();
-
-//        System.out.println(fa.getBody().getType()+" has hit "+ fb.getBody().getType());
         if (fa.getBody().getUserData() instanceof Entity) {
             Entity ent = (Entity) fa.getBody().getUserData();
             entityCollision(ent, fb);

@@ -6,6 +6,7 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.Vector2;
+import game.ArkanoidGame;
 import game.Hud;
 import game.component.*;
 
@@ -63,21 +64,13 @@ public class PowerUpSystem extends IteratingSystem {
             PowerUpComponent powerUp = powerUpMapper.get(entity);
 
             if (!powerUp.isActivated) {
-                // 1. Chọn một loại power-up ngẫu nhiên
-                //ArrayList<PowerUpComponent.PowerUpType> types = new ArrayList<>(EnumSet.allOf(PowerUpComponent.PowerUpType.class));
-                //PowerUpComponent.PowerUpType randomType = //PowerUpComponent.PowerUpType.DOUBLE_SCORE;
-                    //types.get(MathUtils.random(0, types.size() - 1));
-
-                //System.out.println("ĐÃ ĂN! HIỆU ỨNG LÀ: " + randomType);
-
-                // 2. Kích hoạt hiệu ứng ngẫu nhiên đó
-                //activateEffect(targetEntity, randomType);
-
                 if (powerUp.isPowerUp()) {
-                    System.out.println(" ĐÃ ĂN POWER-UP: " + powerUp.powerUpType);
+                    if (ArkanoidGame.DEBUG_MODE)
+                        System.out.println(" ĐÃ ĂN POWER-UP: " + powerUp.powerUpType);
                     activatePowerUp(targetEntity, powerUp.powerUpType);
                 } else if (powerUp.isPowerDown()) {
-                    System.out.println(" ĐÃ ĂN POWER-DOWN: " + powerUp.powerDownType);
+                    if (ArkanoidGame.DEBUG_MODE)
+                        System.out.println(" ĐÃ ĂN POWER-DOWN: " + powerUp.powerDownType);
                     activatePowerDown(targetEntity, powerUp.powerDownType);
                 }
 
@@ -86,7 +79,7 @@ public class PowerUpSystem extends IteratingSystem {
             }
         }
 
-        collider.targetEntity = null; // Xử lý xong va chạm
+        collider.targetEntity = null;
     }
 
     /**
@@ -97,7 +90,8 @@ public class PowerUpSystem extends IteratingSystem {
             case EXTRA_LIFE: {
                 hud.setLives(hud.getLives() + 1);
                 hud.updateLives();
-                System.out.println("  ➜ +1 Mạng!");
+                if (ArkanoidGame.DEBUG_MODE)
+                    System.out.println("  ➜ +1 Mạng!");
                 break;
             }
 
@@ -105,7 +99,8 @@ public class PowerUpSystem extends IteratingSystem {
                 PlayerIn4Component playerInfo = playerInfoMapper.get(playerEntity);
                 if (playerInfo != null) {
                     playerInfo.expand(0.25f);
-                    System.out.println("  ➜ PADDLE LỚN RA!");
+                    if (ArkanoidGame.DEBUG_MODE)
+                        System.out.println("  ➜ PADDLE LỚN RA!");
                 }
                 break;
             }
@@ -130,7 +125,8 @@ public class PowerUpSystem extends IteratingSystem {
                         currentVel.setLength(newSpeed);
                         ballBody.body.setLinearVelocity(currentVel);
 
-                        System.out.println("  ➜ BÓNG CHẬM LẠI!");
+                        if (ArkanoidGame.DEBUG_MODE)
+                            System.out.println("  ➜ BÓNG CHẬM LẠI!");
                     }
                 }
                 break;
@@ -141,10 +137,12 @@ public class PowerUpSystem extends IteratingSystem {
                     GameStateComponent gameState = gameStateMapper.get(gameStateEntity);
                     if (gameState != null) {
                         gameState.activateDoubleScore();
-                        System.out.println("  ➜ ĐIỂM NHÂN ĐÔI! (10 giây)");
+                        if (ArkanoidGame.DEBUG_MODE)
+                            System.out.println("  ➜ ĐIỂM NHÂN ĐÔI! (10 giây)");
                     }
                 } else {
-                    System.err.println("WARNING: gameStateEntity chưa được set!");
+                    if (ArkanoidGame.DEBUG_MODE)
+                        System.err.println("WARNING: gameStateEntity chưa được set!");
                 }
                 break;
             }
@@ -159,7 +157,8 @@ public class PowerUpSystem extends IteratingSystem {
             case LOSE_LIFE: {
                 hud.setLives(hud.getLives() - 1);
                 hud.updateLives();
-                System.out.println("  ➜ -1 Mạng!");
+                if (ArkanoidGame.DEBUG_MODE)
+                    System.out.println("  ➜ -1 Mạng!");
                 break;
             }
 
@@ -167,7 +166,8 @@ public class PowerUpSystem extends IteratingSystem {
                 PlayerIn4Component playerInfo = playerInfoMapper.get(playerEntity);
                 if (playerInfo != null) {
                     playerInfo.shrink(0.25f);
-                    System.out.println("  ➜ PADDLE NHỎ LẠI!");
+                    if (ArkanoidGame.DEBUG_MODE)
+                        System.out.println("  ➜ PADDLE NHỎ LẠI!");
                 }
                 break;
             }
@@ -192,7 +192,8 @@ public class PowerUpSystem extends IteratingSystem {
                         currentVel.setLength(newSpeed);
                         ballBody.body.setLinearVelocity(currentVel);
 
-                        System.out.println("  ➜ BÓNG NHANH LẠI!");
+                        if (ArkanoidGame.DEBUG_MODE)
+                            System.out.println("  ➜ BÓNG NHANH LẠI!");
                     }
                 }
                 break;

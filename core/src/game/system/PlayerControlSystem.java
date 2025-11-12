@@ -13,7 +13,6 @@ import game.Hud;
 import game.Utilities;
 import game.controller.KeyboardController;
 import game.component.*;
-import game.level.LevelManager;
 import game.Screen.MainScreen;
 
 /*
@@ -35,18 +34,16 @@ public class PlayerControlSystem extends IteratingSystem {
 
     private final KeyboardController keyCon;
     private final Hud hud;
-    private final LevelManager lvlManager;
     private final MainScreen mainScreen;
 
     private final Viewport viewport;
     private final Vector3 worldCoordinates;
 
-    public PlayerControlSystem(KeyboardController keyCon, Hud hud, LevelManager lvlManager, Viewport viewport, MainScreen mainScreen) {
+    public PlayerControlSystem(KeyboardController keyCon, Hud hud, Viewport viewport, MainScreen mainScreen) {
         // System này chỉ xử lý các Entity có PlayerComponent (chính là thanh trượt).
         super(Family.all(PlayerIn4Component.class).get());
         this.keyCon = keyCon;
         this.hud = hud;
-        this.lvlManager = lvlManager;
         this.mainScreen = mainScreen;
         this.viewport = viewport;
         this.worldCoordinates = new Vector3();

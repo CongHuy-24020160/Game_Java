@@ -16,7 +16,7 @@ public class GameStateComponent implements Component, Pool.Poolable {
     public float doubleScoreTimeLeft = 0f;
 
     // Thời gian hiệu ứng double score (mặc định 10 giây)
-    public static final float DOUBLE_SCORE_DURATION = 5f;
+    public static final float DOUBLE_SCORE_DURATION = 10f;
 
     @Override
     public void reset() {
@@ -47,7 +47,4 @@ public class GameStateComponent implements Component, Pool.Poolable {
         }
     }
 
-    public boolean isDoubleScoreActive() {
-        return doubleScoreTimeLeft > 0;
-    }
 }

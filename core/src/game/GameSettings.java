@@ -64,4 +64,8 @@ public class GameSettings {
         return getPrefs().getFloat(SOUND_VOLUME, 0.5f);
     }
 
+    public void setSoundVolume(float volume) {
+        getPrefs().putFloat(SOUND_VOLUME, volume);
+        getPrefs().flush();
+    }
 }

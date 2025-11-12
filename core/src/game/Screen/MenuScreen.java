@@ -2,13 +2,11 @@ package game.Screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -25,18 +23,11 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 
 public class MenuScreen implements Screen {
-    private ArkanoidGame game;
-    private Viewport viewport;
-    private Stage stage;
+    private final ArkanoidGame game;
+    private final Stage stage;
 
     // Các biến này sẽ được khởi tạo trong show()
     private TextureRegion backgroundTexture;
-    private Table table;
-    private Skin skin;
-    private Label title;
-    private TextButton startGame, settings, exit, highScores, continueButton;
-    private Music backgroundMusic;
-    private UtilSound utilSound;
 
 
     /**
@@ -45,35 +36,30 @@ public class MenuScreen implements Screen {
      */
     public MenuScreen(ArkanoidGame game) {
         this.game = game;
-        this.viewport = new FitViewport(Utilities.VIRTUAL_WIDTH, Utilities.VIRTUAL_HEIGHT);
+        Viewport viewport = new FitViewport(Utilities.VIRTUAL_WIDTH, Utilities.VIRTUAL_HEIGHT);
         this.stage = new Stage(viewport);
     }
 
     @Override
     public void show() {
-        // --- LẤY TÀI NGUYÊN Ở ĐÂY ---
-        // Đây là thời điểm an toàn nhất để lấy tài nguyên đã được tải
-        this.skin = game.assetManager.manager.get("ui/uiskin.json", Skin.class);
-        // 1. Lấy atlas
+        Skin skin = game.assetManager.manager.get("ui/uiskin.json", Skin.class);
+        //  Lấy atlas
         TextureAtlas atlas = game.assetManager.manager.get(game.assetManager.gameImagaes, TextureAtlas.class);
-        // 2. Tìm ảnh nền "background" (tên file .png) bên trong atlas
         this.backgroundTexture = atlas.findRegion("background_menu");
-        // --- KẾT THÚC THÊM ---
-        utilSound.getInstance().playBackgroundMusic();
+        // KẾT THÚC THÊM
+        UtilSound.getInstance().playBackgroundMusic();
 
-        // --- Bắt đầu xây dựng UI ---
+        // Bắt đầu xây dựng UI
         stage.clear();
         Gdx.input.setInputProcessor(stage);
 
-        table = new Table();
+        Table table = new Table();
         table.setFillParent(true);
         table.setDebug(false);
 
-        //title = new Label("ARKANOID", skin);
-
         final GameData savedGame = GameData.load(); // Gọi hàm load ở Bước 1
         boolean hasSave = (savedGame != null);
-        continueButton = new TextButton("Continue", skin);
+        TextButton continueButton = new TextButton("Continue", skin);
 
         continueButton.setDisabled(!hasSave); // Vô hiệu hóa nút nếu không có save
         if (!hasSave) {
@@ -88,35 +74,35 @@ public class MenuScreen implements Screen {
                     ArkanoidGame.IS_LOADING_SAVE_GAME = true;
 
                     // 2. Đổi màn hình như bình thường
-                    game.screenManager.changeScreen(ScreenManager.APPLICATION);
+                    ScreenManager.changeScreen(ScreenManager.APPLICATION);
                 }
             }
         });
 
 
         // Nút Start Game
-        startGame = new TextButton("New Game", skin);
+        TextButton startGame = new TextButton("New Game", skin);
         startGame.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 GameData.clear(); // Xóa file save khi bắt đầu game mới
                 ArkanoidGame.IS_LOADING_SAVE_GAME = false;
-                game.screenManager.changeScreen(ScreenManager.APPLICATION);
+                ScreenManager.changeScreen(ScreenManager.APPLICATION);
                 UtilSound.getInstance().pauseBackgroundMusic();
             }
         });
 
         // Nút Settings
-        settings = new TextButton("Settings", skin);
+        TextButton settings = new TextButton("Settings", skin);
         settings.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.screenManager.changeScreen(ScreenManager.PREFERENCES);
+                ScreenManager.changeScreen(ScreenManager.PREFERENCES);
             }
         });
 
         // Nút Exit
-        exit = new TextButton("Exit", skin);
+        TextButton exit = new TextButton("Exit", skin);
         exit.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -124,19 +110,15 @@ public class MenuScreen implements Screen {
             }
         });
 
-// ... (code nút exit)
-
-
-        highScores = new TextButton("High Scores", skin);
+        TextButton highScores = new TextButton("High Scores", skin);
         highScores.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.screenManager.changeScreen(ScreenManager.HIGHSCORE);
+                ScreenManager.changeScreen(ScreenManager.HIGHSCORE);
             }
         });
 
         // Thêm các thành phần vào table
-        //table.add(title).colspan(2).expandX().padBottom(60);
         table.row();
 
         // Thêm một spacer để đẩy khối nút xuống (tăng giá trị để đẩy xuống nhiều hơn)

@@ -41,17 +41,12 @@ public class Hud implements Disposable {
     // dùng default live để đỡ phải gán nhiều
     private static final int DEFAULT_LIVES = 5;
 
-    /**
-     * Tham chiếu đến game chính
-     */
-    private ArkanoidGame game;
-
-    private MainScreen mainScreen;
+    private final MainScreen mainScreen;
 
     /**
      * Stage chứa các actor giao diện HUD
      */
-    private Stage stage;
+    private final Stage stage;
 
     /**
      * Trả về Stage để có thể thêm Actor từ bên ngoài
@@ -60,10 +55,9 @@ public class Hud implements Disposable {
         return stage;
     }
 
-    private Skin skin;
-    private TextureAtlas textures;
-    private Viewport viewport;
-    private LevelManager levelManager;
+    private final Skin skin;
+    private final Viewport viewport;
+    private final LevelManager levelManager;
 
     /**
      * Hộp thoại hiện tại (Menu, Next Level, v.v...)
@@ -85,7 +79,7 @@ public class Hud implements Disposable {
     /**
      * Các loại dialog có thể xuất hiện.
      */
-    public enum DialogType {NEXT_LEVEL, MENU, FINAL, GAME_OVER}
+    public enum DialogType {NEXT_LEVEL, MENU}
 
     public DialogType lastDialogType;
 
@@ -96,10 +90,11 @@ public class Hud implements Disposable {
 
     public UserChoice userChoice = UserChoice.NONE;
 
-    // Bảng chứa các thành phần HUD
-    private Table table, livesTable;
-    private TextureRegion ballTexture;
-    private Label scoreLabel, levelLabel, livesLabel;
+    private final Table livesTable;
+    private final TextureRegion ballTexture;
+    private final Label scoreLabel;
+    private final Label levelLabel;
+    private final Label livesLabel;
     private Image ballImage;
     private int score, level, lives;
 
@@ -130,10 +125,6 @@ public class Hud implements Disposable {
         this.lives = lives;
     }
 
-    public void setLevelManager(LevelManager levelManager) {
-        this.levelManager = levelManager;
-    }
-
     /**
      * Khởi tạo HUD.
      *
@@ -143,17 +134,19 @@ public class Hud implements Disposable {
     public Hud(ArkanoidGame game, MainScreen mainScreen, LevelManager levelManager) {
         if (DEBUG_MODE) logger.info("Constructor");
 
-        this.game = game;
+        /*
+          Tham chiếu đến game chính
+         */
         this.mainScreen = mainScreen;
         this.levelManager = levelManager;
 
         // Lấy atlas và skin từ AssetManager
-        textures = game.assetManager.manager.get(game.assetManager.gameImagaes);
+        TextureAtlas textures = game.assetManager.manager.get(game.assetManager.gameImagaes);
         skin = game.assetManager.manager.get("ui/uiskin.json", Skin.class);
 
         ballTexture = textures.findRegion("Ball_small-blue");
         if (ballTexture.getTexture() == null) {
-            System.out.println("Ball Texture is null");
+            if (ArkanoidGame.DEBUG_MODE) System.out.println("Ball Texture is null");
         }
 
         // Giá trị khởi tạo
@@ -166,7 +159,8 @@ public class Hud implements Disposable {
         stage = new Stage(viewport);
 
         // Tạo table chính chứa các thành phần HUD
-        table = new Table();
+        // Bảng chứa các thành phần HUD
+        Table table = new Table();
         table.setFillParent(true);
         table.setDebug(false);
 
@@ -241,18 +235,6 @@ public class Hud implements Disposable {
     }
 
     /**
-     * Gọi khi kích thước màn hình thay đổi để cập nhật viewport.
-     *
-     * @param width  chiều rộng mới
-     * @param height chiều cao mới
-     */
-    public void resize(int width, int height) {
-
-        viewport.update(width, height, true);
-        centerDialog();
-    }
-
-    /**
      * Mở dialog với các nút xác nhận/hủy tuỳ chỉnh.
      *
      * @param message            Nội dung thông báo
@@ -320,7 +302,8 @@ public class Hud implements Disposable {
                 public void clicked(InputEvent event, float x, float y) {
                     if (level < LevelManager.MAX_LEVELS) {
                         levelManager.loadLevel(++level);
-                        System.out.println("They clicked");
+                        if (ArkanoidGame.DEBUG_MODE)
+                            System.out.println("They clicked");
                         userChoice = UserChoice.NEXT_LEVEL;
                         //  Khởi động lại các hệ thống game
                         mainScreen.resumeGameSystems();
@@ -331,7 +314,7 @@ public class Hud implements Disposable {
                         score = 0;
 
                         // quay về menu
-                        game.screenManager.changeScreen(ScreenManager.MENU);
+                        ScreenManager.changeScreen(ScreenManager.MENU);
                         userChoice = UserChoice.MENU;
                     }
                     handleDialogClosed();
@@ -344,52 +327,10 @@ public class Hud implements Disposable {
     }
 
     /**
-     * Hiển thị dialog "Game Over" khi người chơi thua.
-     */
-    public void showGameOverDialog() {
-        openDialog(
-            "Game Over",
-            "Retry",
-            "Menu",
-            new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    // reset lại game
-                    logger.info("clicked on retry");
-                    level = 1;
-                    lives = DEFAULT_LIVES;
-                    score = 0;
-                    levelManager.loadLevel(level);
-                    handleDialogClosed();
-                    userChoice = UserChoice.RETRY;
-                    updateLives();
-                    mainScreen.resumeGameSystems();
-                }
-            },
-
-            new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    logger.info("clicked on menu");
-                    level = 1;
-                    lives = DEFAULT_LIVES;
-                    score = 0;
-                    game.screenManager.changeScreen(ScreenManager.MENU);
-                    handleDialogClosed();
-                    userChoice = UserChoice.MENU;
-
-                    mainScreen.resumeGameSystems();
-                }
-            },
-            DialogType.GAME_OVER
-        );
-    }
-
-    /**
      * Hiển thị dialog Tạm Dừng (Pause) với 4 nút.
      */
     public void showPauseDialog() {
-        System.out.println("Show Pause Dialog");
+        if (ArkanoidGame.DEBUG_MODE) System.out.println("Show Pause Dialog");
 
         // Chúng ta tự tạo Dialog
         final Dialog pauseDialog = new Dialog("", skin);
@@ -437,15 +378,12 @@ public class Hud implements Disposable {
                 pauseDialog.hide(); // Ẩn dialog
                 handleDialogClosed(); // Đặt lại cờ
                 userChoice = UserChoice.CANCEL;
-                mainScreen.resumeGameSystems(); // ⭐️ TIẾP TỤC GAME
+                mainScreen.resumeGameSystems();
                 if (dimOverlay[0] != null && dimOverlay[0].hasParent()) {
                     dimOverlay[0].addAction(Actions.sequence(
                         Actions.alpha(0f, 0.12f, Interpolation.fade),
-                        Actions.run(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (dimOverlay[0] != null && dimOverlay[0].hasParent()) dimOverlay[0].remove();
-                            }
+                        Actions.run(() -> {
+                            if (dimOverlay[0] != null && dimOverlay[0].hasParent()) dimOverlay[0].remove();
                         })
                     ));
                 }
@@ -468,7 +406,7 @@ public class Hud implements Disposable {
         newGameButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                GameData.clear(); // ⭐️ XÓA FILE SAVE CŨ
+                GameData.clear();
 
                 // Reset lại game
                 level = 1;
@@ -485,11 +423,8 @@ public class Hud implements Disposable {
                 if (dimOverlay[0] != null && dimOverlay[0].hasParent()) {
                     dimOverlay[0].addAction(Actions.sequence(
                         Actions.alpha(0f, 0.12f, Interpolation.fade),
-                        Actions.run(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (dimOverlay[0] != null && dimOverlay[0].hasParent()) dimOverlay[0].remove();
-                            }
+                        Actions.run(() -> {
+                            if (dimOverlay[0] != null && dimOverlay[0].hasParent()) dimOverlay[0].remove();
                         })
                     ));
                 }
@@ -510,7 +445,7 @@ public class Hud implements Disposable {
 
                 pauseDialog.hide();
                 handleDialogClosed();
-                game.screenManager.changeScreen(ScreenManager.MENU);
+                ScreenManager.changeScreen(ScreenManager.MENU);
                 userChoice = UserChoice.MENU;
                 mainScreen.resumeGameSystems(); // Reset pause
             }
@@ -533,8 +468,6 @@ public class Hud implements Disposable {
         pauseDialog.show(stage);
         pauseDialog.invalidateHierarchy();
         pauseDialog.pack();
-        // Overlay dim (dùng texture 1x1 trắng "white.png" trong assets; nếu không có, fallback tạo 1 bitmap font texture)
-        //Image dimOverlay;
 
         // Thêm overlay trước khi show để nằm dưới dialog
         stage.addActor(dimOverlay[0]);
@@ -557,7 +490,7 @@ public class Hud implements Disposable {
      * Hiển thị dialog xác nhận khi người chơi mở menu tạm dừng.
      */
     public void showMenuDialog() {
-        System.out.println("Show Menu Dialog");
+        if (ArkanoidGame.DEBUG_MODE) System.out.println("Show Menu Dialog");
         openDialog(
             "Exit Game?",
             "Confirm",
@@ -569,7 +502,7 @@ public class Hud implements Disposable {
                     level = 1;
                     lives = DEFAULT_LIVES;
                     score = 0;
-                    game.screenManager.changeScreen(ScreenManager.MENU);
+                    ScreenManager.changeScreen(ScreenManager.MENU);
                     handleDialogClosed();
                     userChoice = UserChoice.MENU;
                     mainScreen.resumeGameSystems();
@@ -601,7 +534,7 @@ public class Hud implements Disposable {
      */
     @Override
     public void dispose() {
-        System.out.println("Disposing HUD");
+        if (DEBUG_MODE) System.out.println("Disposing HUD");
 
         stage.dispose();
     }

@@ -16,27 +16,9 @@ public class TypeComponent implements Component, Pool.Poolable {
 
     public int type = OTHER_TYPE;
 
-    //getters and setters
-    public int getType() {
-        return type;
-    }
-
-    public void setType(int type) {
-        this.type = type;
-    }
-
     // reset method to reset the type to OTHER_TYPE
     public void reset() {
         type = OTHER_TYPE;
     }
 
-    // constructor
-    public TypeComponent(int type) {
-        this.type = type;
-    }
-
-    // default constructor
-    public TypeComponent() {
-        this.type = OTHER_TYPE;
-    }
 }

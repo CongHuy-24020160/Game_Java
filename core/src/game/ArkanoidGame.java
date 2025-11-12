@@ -5,7 +5,7 @@ import com.badlogic.gdx.Game;
 import game.Screen.ScreenManager;
 
 public class ArkanoidGame extends Game {
-    public static final boolean DEBUG_MODE = true;
+    public static final boolean DEBUG_MODE = false;
     public GameAssetManager assetManager;
     private GameSettings gameSettings;
     public static boolean IS_LOADING_SAVE_GAME = false;

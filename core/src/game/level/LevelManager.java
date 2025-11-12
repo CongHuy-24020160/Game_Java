@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Disposable;
 import game.ArkanoidGame;
-import game.Hud;
 import game.component.PhysicsBodyComponent;
 
 public class LevelManager implements Disposable {
@@ -16,15 +15,13 @@ public class LevelManager implements Disposable {
 
     public enum Level {TEST, LEVEL1, LEVEL2, LEVEL3}
 
-    private World world;
-    private OrthographicCamera cam;
-    private PooledEngine en;
-    private ArkanoidGame game;
+    private final World world;
+    private final OrthographicCamera cam;
+    private final PooledEngine en;
+    private final ArkanoidGame game;
     public LevelLoader currentLevel;
-    private Hud hud;
 
     public boolean isLevelCompleted = false;
-    public boolean loadNextLevelFlag = false;
     public int currentLevelNumber = 0;
 
     public LevelManager(ArkanoidGame game, World world, PooledEngine en, OrthographicCamera cam) {
@@ -104,7 +101,8 @@ public class LevelManager implements Disposable {
 
     @Override
     public void dispose() {
-        System.out.println("Calling Level Manager dispose");
+        if (ArkanoidGame.DEBUG_MODE)
+            System.out.println("Calling Level Manager dispose");
         if (currentLevel != null) {
             currentLevel.dispose();
         }

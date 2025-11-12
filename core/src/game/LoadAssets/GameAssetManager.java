@@ -1,18 +1,18 @@
 package game.LoadAssets;
 
-import com.badlogic.gdx.Gdx;                                      // Truy cập tài nguyên nội bộ của libGDX
-import com.badlogic.gdx.assets.AssetManager;                      // Quản lý việc load và unload tài nguyên
-import com.badlogic.gdx.assets.loaders.SkinLoader;                // Loader cho giao diện UI Skin
-import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver; // Dùng để xác định đường dẫn nội bộ
-import com.badlogic.gdx.graphics.Color;                           // Dùng khi cần tạo font màu
-import com.badlogic.gdx.graphics.g2d.BitmapFont;                  // Font bitmap
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator; // Sinh font từ file TTF
-import com.badlogic.gdx.audio.Music;                              // Nhạc nền
-import com.badlogic.gdx.audio.Sound;                              // Âm thanh ngắn (hiệu ứng)
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;                // Chứa nhiều hình ảnh trong 1 file nén
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader; // Loader tạo font TTF
-import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader; // Loader cho font FreeType
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;                   // Định nghĩa giao diện UI (button, slider, ...)
+
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.assets.loaders.SkinLoader;
+import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
+import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 /**
  * <h2>GameAssetManager</h2>
@@ -176,9 +176,7 @@ public class GameAssetManager {
      * <p>Phương thức này nên được gọi khi thoát trò chơi hoặc đổi cảnh.</p>
      */
     public void dispose() {
-        if (manager != null) {
-            manager.dispose(); // Giải phóng bộ nhớ của AssetManager
-        }
+        manager.dispose(); // Giải phóng bộ nhớ của AssetManager
         instance = null; // Reset Singleton
     }
 }

@@ -40,7 +40,6 @@ public class PaddleResizeSystem extends IteratingSystem {
         // CHỈ RESIZE NẾU CẦN
         if (Math.abs(targetWidth - currentWidth) > 0.01f) {
             resizePaddle(bodyComp.body, targetWidth, texture);
-            // System.out.println("Paddle resized: " + targetWidth + " (x" + player.lengthMultiplier + ")");
         }
     }
 

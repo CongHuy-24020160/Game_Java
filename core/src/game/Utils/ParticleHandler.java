@@ -53,8 +53,8 @@ public class ParticleHandler {
      *                      Ví dụ:
      *
      *                      <pre>
-     *                                                                new ParticleHandler("effects/explosion.p", "effects");
-     *                                                                </pre>
+     *                                                                                                          new ParticleHandler("effects/explosion.p", "effects");
+     *                                                                                                          </pre>
      */
     public ParticleHandler(String effectPath, String textureFolder) {
         // Nạp hiệu ứng mẫu từ file cấu hình
@@ -96,7 +96,6 @@ public class ParticleHandler {
      */
     public void update(float deltaTime) {
         // Duyệt ngược để tránh lỗi ConcurrentModification khi loại bỏ phần tử trong
-        // vòng lặp.
         for (int i = runningEffects.size - 1; i >= 0; i--) {
             ParticleEffectPool.PooledEffect fx = runningEffects.get(i);
             fx.update(deltaTime);
@@ -141,18 +140,6 @@ public class ParticleHandler {
         }
         runningEffects.clear();
         templateEffect.dispose();
-    }
-
-    /**
-     * Dừng toàn bộ hiệu ứng hiện có trên màn hình.
-     * <p>
-     * Không dừng ngay lập tức, mà cho phép hiệu ứng tự chạy hết phần còn lại rồi
-     * biến mất.
-     */
-    public void stopAll() {
-        for (ParticleEffectPool.PooledEffect fx : runningEffects) {
-            fx.allowCompletion();
-        }
     }
 
     /**

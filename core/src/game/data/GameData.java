@@ -2,6 +2,7 @@ package game.data;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
+import game.ArkanoidGame;
 
 /**
  * Lớp tĩnh (static) để quản lý việc Save/Load
@@ -34,7 +35,8 @@ public class GameData {
         prefs.putInteger(KEY_LEVEL, level);
 
         prefs.flush(); // Bắt buộc phải gọi 'flush()' để lưu file
-        System.out.println("GAME ĐÃ ĐƯỢC LƯU! Level: " + level + ", Score: " + score);
+        if (ArkanoidGame.DEBUG_MODE)
+            System.out.println("GAME ĐÃ ĐƯỢC LƯU! Level: " + level + ", Score: " + score);
     }
 
     /**
@@ -44,7 +46,8 @@ public class GameData {
         Preferences prefs = getPrefs();
         prefs.clear();
         prefs.flush();
-        System.out.println("Đã xóa file save.");
+        if (ArkanoidGame.DEBUG_MODE)
+            System.out.println("Đã xóa file save.");
     }
 
     /**
@@ -57,8 +60,9 @@ public class GameData {
 
         // Kiểm tra xem có file save không
         if (!prefs.getBoolean(KEY_HAS_SAVE, false)) {
-            System.out.println("Không tìm thấy file save.");
-            return null; // Không có file save, trả về null
+            if (ArkanoidGame.DEBUG_MODE)
+                System.out.println("Không tìm thấy file save.");
+            return null;
         }
 
         // Nếu có, đọc dữ liệu
@@ -67,7 +71,8 @@ public class GameData {
         savedData.lives = prefs.getInteger(KEY_LIVES, 5); // 5 là giá trị mặc định nếu lỗi
         savedData.level = prefs.getInteger(KEY_LEVEL, 1);
 
-        System.out.println("GAME ĐÃ ĐƯỢC TẢI! Level: " + savedData.level + ", Score: " + savedData.score);
+        if (ArkanoidGame.DEBUG_MODE)
+            System.out.println("GAME ĐÃ ĐƯỢC TẢI! Level: " + savedData.level + ", Score: " + savedData.score);
         return savedData;
     }
 

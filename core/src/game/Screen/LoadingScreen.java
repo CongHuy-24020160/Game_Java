@@ -11,28 +11,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import game.ArkanoidGame;
 
 public class LoadingScreen implements Screen {
-    private static final int NUM_OF_STAGES = 3;
 
-    private ArkanoidGame game;
+    private final ArkanoidGame game;
 
     // ui
     private Stage stage;
-    private Table table;
     private Label loadingTitle;
-
-    // loading state time
-    private float loadingStateTimer = 0f;
-    private float loadingStateDuration = 0.5f;
-
-    // loading state fake timer (comment for prod)
-    private float loadingtimer = 0f;
-    private float loadingDuration = 1.5f;
-
-    // loading assets
-    private final int IMAGE = 0;
-    private final int SKIN = 1;
-    private final int SOUND = 2;
-    private int currentLoadingStage = 0;
 
     public LoadingScreen(ArkanoidGame game) {
         this.game = game;
@@ -48,13 +32,13 @@ public class LoadingScreen implements Screen {
         // Chờ cho font tải xong để có thể dùng cho Label
         game.assetManager.manager.finishLoading();
 
-        System.out.println("(LoadingScreen) Queuing all assets...");
+        if(ArkanoidGame.DEBUG_MODE) System.out.println("(LoadingScreen) Queuing all assets...");
         game.assetManager.queueAddImages();
         game.assetManager.queueLoadSkin();
         game.assetManager.queueLoadSound();
         game.assetManager.queueLoadMusic();
 
-        table = new Table();
+        Table table = new Table();
         table.setFillParent(true);
         table.setDebug(false);
         loadingTitle = new Label("Loading.", new Label.LabelStyle(
@@ -68,67 +52,25 @@ public class LoadingScreen implements Screen {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        //  Vòng lặp render chỉ cần làm một việc: update trình quản lý
         // manager.update() sẽ trả về true khi TẤT CẢ đã tải xong.
         if (game.assetManager.manager.update()) {
             // Đã tải xong, chuyển màn hình
-            game.screenManager.changeScreen(ScreenManager.MENU);
+            ScreenManager.changeScreen(ScreenManager.MENU);
         }
 
         // (Tùy chọn) Hiển thị tiến trình thực tế
         float progress = game.assetManager.manager.getProgress();
-        handleLoadingTitle(delta, progress); // Truyền progress vào để hiển thị
+        handleLoadingTitle(progress); // Truyền progress vào để hiển thị
 
         stage.act(delta);
         stage.draw();
     }
 
     // Sửa lại hàm này để hiển thị %
-    private void handleLoadingTitle(float delta, float progress) {
+    private void handleLoadingTitle(float progress) {
         loadingTitle.setText("Loading... " + (int) (progress * 100) + "%");
     }
 
-
-    private void handleLoadingTitle(float delta) {
-        loadingStateTimer += delta;
-        if (loadingStateTimer > loadingStateDuration) {
-
-            // update loading
-            // Loading. (8 chars) -> Loading.. (9 chars) -> Loading... (10 chars)
-            if (loadingTitle.getText().length == 8) {
-                loadingTitle.setText("Loading..");
-            } else if (loadingTitle.getText().length == 9) {
-                loadingTitle.setText("Loading...");
-            } else {
-                loadingTitle.setText("Loading.");
-            }
-
-            // reset timer
-            loadingStateTimer = 0;
-        }
-    }
-
-    private void handleLoadingAssets() {
-        switch (currentLoadingStage) {
-            case IMAGE:
-                if (ArkanoidGame.DEBUG_MODE) System.out.println("(LoadingScreen) Loading Textures...");
-                game.assetManager.queueAddImages();
-                break;
-            case SKIN:
-                if (ArkanoidGame.DEBUG_MODE) System.out.println("(LoadingScreen) Loading Skin...");
-                game.assetManager.queueLoadSkin();
-                break;
-            case SOUND:
-                if (ArkanoidGame.DEBUG_MODE) System.out.println("(LoadingScreen) Loading SoundFX...");
-                game.assetManager.queueLoadSound();
-                break;
-            default:
-                break;
-        }
-
-        // update currentLoadingStage
-        currentLoadingStage++;
-    }
 
     @Override
     public void resize(int width, int height) {

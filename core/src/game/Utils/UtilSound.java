@@ -2,9 +2,7 @@ package game.Utils;
 
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
-// Đường dẫn của GameSettings — cần sửa lại nếu package khác
 import game.GameSettings;
-// Đường dẫn của GameAssetManager — cần sửa lại nếu package khác (ví dụ: game.LoadAssets.GameAssetManager)
 import game.LoadAssets.GameAssetManager;
 
 /**
@@ -31,7 +29,6 @@ import game.LoadAssets.GameAssetManager;
  * - Khi đổi package, nhớ cập nhật import tương ứng.
  */
 public class UtilSound {
-
     /**
      * Thể hiện duy nhất (singleton instance) của lớp UtilSound.
      * Dùng từ khóa volatile để đảm bảo tính an toàn trong môi trường đa luồng.
@@ -67,6 +64,7 @@ public class UtilSound {
         }
         return instance;
     }
+
     /**
      * Phát âm thanh khi bóng chạm vào viên gạch.
      * Lấy âm thanh từ assetManager và phát với âm lượng hiện tại trong
@@ -74,20 +72,7 @@ public class UtilSound {
      */
     public void playHitBrickSound() {
         Sound hitBrickSound = assetManager.manager.get(assetManager.hitBrickSound);
-        if (hitBrickSound == null)
-            System.out.println(" Sound hitBrickSound == null!");
-        else {
-                System.out.println("Sound hitBrickSound loaded OK");
-                hitBrickSound.play(GameSettings.getInstance().getSoundVolume());
-            }
-    }
-
-    /**
-     * Phát âm thanh khi bóng chạm vào tường.
-     */
-    public void playDingSound2() {
-        Sound dingSound2 = assetManager.manager.get(assetManager.hitWallSound);
-        dingSound2.play(GameSettings.getInstance().getSoundVolume());
+        hitBrickSound.play(GameSettings.getInstance().getSoundVolume());
     }
 
     /**

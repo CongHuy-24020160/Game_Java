@@ -54,28 +54,6 @@ public class ScoreComponent implements Component, Pool.Poolable {
         this.baseScore = baseScore;
     }
 
-    /**
-     * Phương thức tăng điểm số cho thực thể.
-     * <p>
-     * Dùng khi người chơi đạt được thành tích hoặc thực hiện hành động được thưởng điểm.
-     *
-     * @param amount số điểm cần cộng thêm.
-     */
-    public void addScore(int amount) {
-        this.baseScore += amount;
-    }
-
-    /**
-     * Phương thức giảm điểm số của thực thể.
-     * <p>
-     * Dùng khi người chơi bị phạt hoặc thất bại trong một thử thách.
-     *
-     * @param amount số điểm cần trừ đi.
-     */
-    public void subtractScore(int amount) {
-        this.baseScore -= amount;
-    }
-
     @Override
     public void reset() {
         baseScore = 100;

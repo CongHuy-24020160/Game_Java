@@ -2,17 +2,14 @@ package game.level;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Disposable;
@@ -21,39 +18,23 @@ import game.Utilities;
 import game.component.*;
 import game.LoadAssets.BodyFactory;
 import game.Utils.BallAndPaddle;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.Texture;
 
 public class LevelLoader implements Disposable {
-    private BodyFactory bodyFactory;
+    private final BodyFactory bodyFactory;
     public TmxMapLoader mapLoader;
     public TiledMap map;
-    private World world;
-    private ArkanoidGame game;
-    private PooledEngine en;
-    private OrthogonalTiledMapRenderer mapRenderer;
+    private final ArkanoidGame game;
+    private final PooledEngine en;
+    private final OrthogonalTiledMapRenderer mapRenderer;
 
     public OrthogonalTiledMapRenderer getMapRenderer() {
         return mapRenderer;
     }
 
-    private TextureAtlas textures;
-
-    public World getWorld() {
-        return world;
-    }
-
-    public void setWorld(World world) {
-        this.world = world;
-    }
+    private final TextureAtlas textures;
 
     public TextureAtlas getTextures() {
         return textures;
-    }
-
-    public void setTextures(TextureAtlas textures) {
-        this.textures = textures;
     }
 
     public int numOfBlocksLeft;
@@ -62,24 +43,7 @@ public class LevelLoader implements Disposable {
     public BallAndPaddle paddleAndBall;
 
 
-    public static int[][] loadMap(String path) {
-        FileHandle file = Gdx.files.internal(path);
-        String text = file.readString();
-        String[] lines = text.split("\\r?\\n");
-        int[][] map = new int[lines.length][];
-        for (int i = 0; i < lines.length; i++) {
-            String[] tokens = lines[i].trim().split("\\s+");
-            map[i] = new int[tokens.length];
-            for (int j = 0; j < tokens.length; j++) {
-                map[i][j] = Integer.parseInt(tokens[j]);
-            }
-        }
-        return map;
-    }
-
-
     public LevelLoader(ArkanoidGame game, World world, PooledEngine en, String mapFilePath) {
-        this.world = world;
         this.en = en;
         this.game = game;
         bodyFactory = BodyFactory.getInstance(world);
@@ -93,8 +57,6 @@ public class LevelLoader implements Disposable {
 
     public void loadWorld() {
         renderPlayerAndBall();
-//        renderPlayer();
-//        renderBall();
         renderBlocks();
     }
 
@@ -107,7 +69,8 @@ public class LevelLoader implements Disposable {
     }
 
     private void renderPlayer(Entity playerEntity, Entity ballEntity) {
-        if (ArkanoidGame.DEBUG_MODE) System.out.println("(LevelLoader) Rendering Player");
+        if (ArkanoidGame.DEBUG_MODE)
+            System.out.println("(LevelLoader) Rendering Player");
 
         PlayerIn4Component pc = en.createComponent(PlayerIn4Component.class);
         TextureComponent tc = en.createComponent(TextureComponent.class);
@@ -159,11 +122,13 @@ public class LevelLoader implements Disposable {
         playerEntity.add(attachC);
 
         en.addEntity(playerEntity);
-        System.out.println("Player added to engine");
+       if(ArkanoidGame.DEBUG_MODE)
+           System.out.println("Player added to engine");
     }
 
     private void renderBall(Entity ballEntity) {
-        if (ArkanoidGame.DEBUG_MODE) System.out.println("(LevelLoader) Rendering Ball");
+        if (ArkanoidGame.DEBUG_MODE)
+            System.out.println("(LevelLoader) Rendering Ball");
         TextureComponent tc = en.createComponent(TextureComponent.class);
         MoveComponent tranC = en.createComponent(MoveComponent.class);
         ColliderComponent cc = en.createComponent(ColliderComponent.class);
@@ -173,9 +138,8 @@ public class LevelLoader implements Disposable {
         SoundEffectComponent soundComponent = en.createComponent(SoundEffectComponent.class);
 
         // add sound fx
-        soundComponent.soundEffects.put("ding1", (Sound) game.assetManager.manager.get(game.assetManager.hitBrickSound));
-        soundComponent.soundEffects.put("ding2", (Sound) game.assetManager.manager.get(game.assetManager.hitWallSound));
-        //soundComponent.soundEffects.put("explode", (Sound) game.assetManager.manager.get(game.assetManager.explosionSound));
+        soundComponent.soundEffects.put("ding1", game.assetManager.manager.get(game.assetManager.hitBrickSound));
+        soundComponent.soundEffects.put("ding2", game.assetManager.manager.get(game.assetManager.hitWallSound));
 
         ballC.BallSpeed = 3f;
 
@@ -212,15 +176,17 @@ public class LevelLoader implements Disposable {
         ballEntity.add(ballC);
         ballEntity.add(soundComponent);
         en.addEntity(ballEntity);
-        System.out.println("Ball added to engine");
+        if (ArkanoidGame.DEBUG_MODE)
+            System.out.println("Ball added to engine");
     }
 
     /**
      * This class to create blocks once at leverLoader
      */
     private void renderBlocks() {
-        if (ArkanoidGame.DEBUG_MODE) System.out.println("(LevelLoader) Rendering Blocks");
-        for (MapObject object : map.getLayers().get(1).getObjects().getByType(RectangleMapObject.class)) {
+        if (ArkanoidGame.DEBUG_MODE)
+            System.out.println("(LevelLoader) Rendering Blocks");
+        for (RectangleMapObject object : map.getLayers().get(1).getObjects().getByType(RectangleMapObject.class)) {
             Entity blockEntity = en.createEntity();
             // b2Body is the block
             PhysicsBodyComponent b2Body = en.createComponent(PhysicsBodyComponent.class);
@@ -231,7 +197,7 @@ public class LevelLoader implements Disposable {
             ScoreComponent scoreComponent = en.createComponent(ScoreComponent.class);
 
             // get the rectangle object from the map
-            Rectangle rect = ((RectangleMapObject) object).getRectangle();
+            Rectangle rect = object.getRectangle();
 
             MapProperties properties = object.getProperties();
             String blockType = (String) properties.get("BlockType");
@@ -299,7 +265,8 @@ public class LevelLoader implements Disposable {
             en.addEntity(blockEntity);
 
             numOfBlocksLeft++;
-            System.out.println("Block added to engine");
+            if (ArkanoidGame.DEBUG_MODE)
+                System.out.println("Block added to engine");
         }
     }
 

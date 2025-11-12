@@ -8,10 +8,7 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
-import game.Hud;
-import game.Screen.MainScreen;
 import game.component.PhysicsBodyComponent;
-import game.level.LevelManager;
 
 public class PhysicSystem extends IteratingSystem {
 
@@ -26,11 +23,6 @@ public class PhysicSystem extends IteratingSystem {
 
     private final ComponentMapper<PhysicsBodyComponent> b2BodyMapper
         = ComponentMapper.getFor(PhysicsBodyComponent.class);
-
-    private boolean pendingLevelComplete = false;
-    private LevelManager levelManager;
-    private Hud hud;
-    private MainScreen mainScreen;
 
     public PhysicSystem(World world, PooledEngine engine) {
         super(Family.all(PhysicsBodyComponent.class).get());
@@ -56,9 +48,6 @@ public class PhysicSystem extends IteratingSystem {
 
         final PhysicsBodyComponent b2BodyComponent = b2BodyMapper.get(entity);
 
-        /**
-         * Thêm vào danh sách xóa
-         */
         if (b2BodyComponent.setToDestroy && !b2BodyComponent.isDead) {
             bodiesToRemove.add(b2BodyComponent.body);
             entitiesToBeRemoved.add(entity);

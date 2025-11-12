@@ -4,9 +4,7 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.utils.Array;
 import game.Utilities;
 import game.component.PhysicsBodyComponent;
 import game.component.TextureComponent;
@@ -17,11 +15,10 @@ public class RenderingSystem extends IteratingSystem {
     private final ComponentMapper<TextureComponent> textureMapper = ComponentMapper.getFor(TextureComponent.class);
     private final ComponentMapper<PhysicsBodyComponent> b2BodyMapper = ComponentMapper.getFor(PhysicsBodyComponent.class);
 
-    public RenderingSystem(SpriteBatch batch, OrthographicCamera cam) {
+    public RenderingSystem(SpriteBatch batch) {
         // System này chỉ xử lý các Entity có cả B2BodyComponent và TextureComponent.
         super(Family.all(PhysicsBodyComponent.class, TextureComponent.class).get());
         this.batch = batch;
-        Array<Entity> renderQueue = new Array<>();
     }
 
     @Override

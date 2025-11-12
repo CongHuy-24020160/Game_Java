@@ -29,11 +29,11 @@ import game.system.*;
 public class MainScreen implements Screen, ScoreChangeListener {
 
     private static final Logger logger = new Logger(MainScreen.class.getName());
-    private ArkanoidGame game;
-    private OrthographicCamera camera;
-    private Viewport viewport;
+    private final ArkanoidGame game;
+    private final OrthographicCamera camera;
+    private final Viewport viewport;
     private PooledEngine engine;
-    private LevelManager levelManager;
+    private final LevelManager levelManager;
     private Hud hud;
 
     private boolean gamePaused = false;
@@ -48,15 +48,11 @@ public class MainScreen implements Screen, ScoreChangeListener {
     private BallSystem ballSystem;
     private PlayerControlSystem playerControlSystem;
     private AttachSystem attachSystem;
-    private SoundSystem soundSystem;
-    private RenderingSystem renderingSystem;
-    private PowerUpSystem powerUpSystem;
 
-    private InputMultiplexer inputMultiplexer;
-    private KeyboardController keyboardController;
+    private final InputMultiplexer inputMultiplexer;
+    private final KeyboardController keyboardController;
     private World world;
     private SpriteBatch spriteBatch;
-    private ParticleHandler particleHandler;
 
     public MainScreen(ArkanoidGame game) {
         this.game = game;
@@ -78,7 +74,7 @@ public class MainScreen implements Screen, ScoreChangeListener {
         hud = new Hud(game, this, levelManager);
 
 
-        particleHandler = new ParticleHandler("particles/test.p", "particles");
+        ParticleHandler particleHandler = new ParticleHandler("particles/test.p", "particles");
         particleHandler.resizeAll(1f);
         particleHandler.trigger(10, 20);
 
@@ -92,18 +88,18 @@ public class MainScreen implements Screen, ScoreChangeListener {
 
     @Override
     public void show() {
-        System.out.println("Hello from MainScreen.java");
+        if (ArkanoidGame.DEBUG_MODE) System.out.println("Hello from MainScreen.java");
         logger.info("show");
 
         // Kiểm tra xem có phải là "load game" không?
         if (loadedData != null) {
-            System.out.println("Đang TẢI game từ dữ liệu đã lưu...");
+            if (ArkanoidGame.DEBUG_MODE) System.out.println("Đang TẢI game từ dữ liệu đã lưu...");
             levelManager.loadLevel(loadedData.level);
             hud.setLives(loadedData.lives);
             hud.setScore(loadedData.score);
             hud.setLevel(loadedData.level);
         } else {
-            System.out.println("Đang TẠO game mới...");
+            if (ArkanoidGame.DEBUG_MODE) System.out.println("Đang TẠO game mới...");
             levelManager.loadLevel(1);
             hud.setLives(5);
             hud.setScore(0);
@@ -119,11 +115,10 @@ public class MainScreen implements Screen, ScoreChangeListener {
         physicSystem = new PhysicSystem(world, engine);
         ballSystem = new BallSystem(hud, levelManager, this);
         attachSystem = new AttachSystem();
-        soundSystem = new SoundSystem(game.getGameSettings());
-        playerControlSystem = new PlayerControlSystem(keyboardController, hud, levelManager, viewport, this);
-        collisionSystem = new CollisionSystem(this, engine, world, hud, levelManager, this, game);
-        renderingSystem = new RenderingSystem(spriteBatch, camera);
-        powerUpSystem = new PowerUpSystem(hud);
+        playerControlSystem = new PlayerControlSystem(keyboardController, hud, viewport, this);
+        collisionSystem = new CollisionSystem(this, world, hud, levelManager, this, game);
+        RenderingSystem renderingSystem = new RenderingSystem(spriteBatch);
+        PowerUpSystem powerUpSystem = new PowerUpSystem(hud);
         powerUpSystem.setGameStateEntity(gameStateEntity);
 
         engine.addSystem(new GameStateSystem());
@@ -136,7 +131,6 @@ public class MainScreen implements Screen, ScoreChangeListener {
         engine.addSystem(collisionSystem);
         engine.addSystem(powerUpSystem);
 
-        engine.addSystem(soundSystem);
         engine.addSystem(playerControlSystem);
         engine.addSystem(new PaddleResizeSystem());
 
@@ -164,10 +158,10 @@ public class MainScreen implements Screen, ScoreChangeListener {
 
                 if (ScoreManager.getInstance().isHighScore(score)) {
                     game.lastScore = score;
-                    game.screenManager.changeScreen(ScreenManager.ENTER_HIGHSCORE);
+                    ScreenManager.changeScreen(ScreenManager.ENTER_HIGHSCORE);
                 } else {
                     game.lastScore = score;
-                    game.screenManager.changeScreen(ScreenManager.ENDGAME);
+                    ScreenManager.changeScreen(ScreenManager.ENDGAME);
                     UtilSound.getInstance().playGameOver();
                 }
             });
@@ -197,13 +191,13 @@ public class MainScreen implements Screen, ScoreChangeListener {
      * Rendering và HUD vẫn chạy.
      */
     public void pauseGameSystems() {
-        System.out.println("Hệ thống game đã TẠM DỪNG!");
+        if (ArkanoidGame.DEBUG_MODE) System.out.println("Hệ thống game đã TẠM DỪNG!");
         if (physicSystem != null) physicSystem.setProcessing(false);
         if (ballSystem != null) ballSystem.setProcessing(false);
         if (playerControlSystem != null) playerControlSystem.setProcessing(false);
         if (attachSystem != null) attachSystem.setProcessing(false);
         if (collisionSystem != null) collisionSystem.setProcessing(false); // Dừng xử lý va chạm mới
-       // if (soundSystem != null) soundSystem.setProcessing(false);
+        // if (soundSystem != null) soundSystem.setProcessing(false);
         gamePaused = true;
     }
 
@@ -211,13 +205,12 @@ public class MainScreen implements Screen, ScoreChangeListener {
      * Khởi động lại các hệ thống logic game.
      */
     public void resumeGameSystems() {
-        System.out.println("Hệ thống game đã TIẾP TỤC!");
+        if (ArkanoidGame.DEBUG_MODE) System.out.println("Hệ thống game đã TIẾP TỤC!");
         if (physicSystem != null) physicSystem.setProcessing(true);
         if (ballSystem != null) ballSystem.setProcessing(true);
         if (playerControlSystem != null) playerControlSystem.setProcessing(true);
         if (attachSystem != null) attachSystem.setProcessing(true);
         if (collisionSystem != null) collisionSystem.setProcessing(true);
-        if (soundSystem != null) soundSystem.setProcessing(true);
         gamePaused = false;
     }
 
@@ -254,43 +247,36 @@ public class MainScreen implements Screen, ScoreChangeListener {
 
     @Override
     public void dispose() {
-        System.out.println("--- DỌN DẸP MAINSCREEN ---");
+        if (ArkanoidGame.DEBUG_MODE) System.out.println("--- DỌN DẸP MAINSCREEN ---");
 
         pauseGameSystems();
 
         //  ĐỢI 1 FRAME ĐỂ SYSTEMS HOÀN THÀNH
-        Gdx.app.postRunnable(new Runnable() {
-            @Override
-            public void run() {
-                // BÂY GIỜ MỚI XÓA
-                if (collisionSystem != null) {
-                    collisionSystem.dispose();
-                    collisionSystem = null;
-                }
-                if (world != null) {
-                    world.dispose();
-                    world = null;
-                }
-                if (engine != null) {
-                    engine.removeAllEntities();
-                    engine.clearPools();
-                    engine = null;
-                }
-                if (spriteBatch != null) {
-                    spriteBatch.dispose();
-                    spriteBatch = null;
-                }
-                if (hud != null) {
-                    hud.dispose();
-                    hud = null;
-                }
-                //if (levelManager != null) {
-                 //   levelManager.dispose();
-                 //   levelManager = null;
-                //}
-                BodyFactory.destroyInstance();
-                System.out.println("DỌN DẸP HOÀN TẤT");
+        Gdx.app.postRunnable(() -> {
+            // BÂY GIỜ MỚI XÓA
+            if (collisionSystem != null) {
+                collisionSystem.dispose();
+                collisionSystem = null;
             }
+            if (world != null) {
+                world.dispose();
+                world = null;
+            }
+            if (engine != null) {
+                engine.removeAllEntities();
+                engine.clearPools();
+                engine = null;
+            }
+            if (spriteBatch != null) {
+                spriteBatch.dispose();
+                spriteBatch = null;
+            }
+            if (hud != null) {
+                hud.dispose();
+                hud = null;
+            }
+            BodyFactory.destroyInstance();
+            if (ArkanoidGame.DEBUG_MODE) System.out.println("DỌN DẸP HOÀN TẤT");
         });
     }
 
