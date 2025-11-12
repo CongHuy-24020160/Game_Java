@@ -1,6 +1,11 @@
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 eclipse.project.name = appName + '-core'
 
+ext {
+  junitVersion = '5.10.2'      // bản mới ổn định của JUnit 5
+  mockitoVersion = '5.11.0'    // bản mới ổn định của Mockito
+}
+
 dependencies {
   api "com.badlogicgames.ashley:ashley:$ashleyVersion"
   api "com.badlogicgames.box2dlights:box2dlights:$box2dlightsVersion"
@@ -17,5 +22,38 @@ dependencies {
     implementation "io.github.berstanio:gdx-svmhelper-annotations:$graalHelperVersion"
   }
 
+  // --- UNIT TEST DEPENDENCIES (MỚI THÊM) ---
+
+  // 1. JUnit 5 (Jupiter) - Framework Test chính
+  testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
+  testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
+
+  // 2. Mockito - Thư viện Giả lập (để mock Body, MathUtils)
+  testImplementation "org.mockito:mockito-core:$mockitoVersion"
+  testImplementation "org.mockito:mockito-junit-jupiter:$mockitoVersion"
+
+  // 3. LibGDX Headless - Quan trọng! Cung cấp môi trường để chạy code LibGDX
+  //    (Vector2, Body, MathUtils) mà không cần giao diện đồ họa (GUI).
+  //    Vì code test của bạn dùng các class này.
+  testImplementation "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
+  // Thêm box2d platform để test các class Box2D
+  testImplementation "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
+  testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+  testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+  testImplementation 'org.mockito:mockito-core:4.6.1'
+  testImplementation 'org.mockito:mockito-junit-jupiter:4.6.1'
+
+
 }
-sourceSets.main.java.srcDirs = [ "src/" ]
+sourceSets {
+  main {
+    java.srcDirs = ["src/"]
+  }
+  test {
+    java.srcDirs = ["src/main/test/java/"]
+  }
+}
+
+test {
+  useJUnitPlatform()
+}
